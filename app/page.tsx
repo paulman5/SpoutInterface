@@ -9,15 +9,12 @@ import { Badge } from "@/components/ui/badge"
 import { Features } from "@/components/features"
 import DefaultFooter from "@/components/footer"
 import { Waves } from "@/components/wave-background"
-import { useReserveContract } from "@/hooks/view/onChain/useReserveContract"
-import { useTotalSupply } from "@/hooks/view/onChain/useTotalSupply"
-import { useMarketData } from "@/hooks/api/useMarketData"
 import { Input } from "@/components/ui/input"
 import { Button as JoinButton } from "@/components/ui/button"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { LoadingSpinner } from "@/components/loadingSpinner"
 import { motion, AnimatePresence } from "framer-motion"
 import { CheckCircle } from "lucide-react"
@@ -122,50 +119,7 @@ function JoinMailingList() {
 export default function HomePage() {
   const screenSize = useScreenSize()
 
-  // Hooks for proof-of-reserve calculation
-  const { totalSupply, isLoading: totalSupplyLoading } = useTotalSupply()
-  const { price: currentPrice, isLoading: priceLoading } = useMarketData("LQD")
-  const RESERVE_CONTRACT_ADDRESS = "0xf26c960Abf98875f87764502f64e8F5ef9134C20"
-  const { totalReserves } = useReserveContract(RESERVE_CONTRACT_ADDRESS)
-
-  const formatLargeNumber = (amount: number) => {
-    if (amount >= 1e9) {
-      return `$${(amount / 1e9).toFixed(1)}B`
-    } else if (amount >= 1e6) {
-      return `$${(amount / 1e6).toFixed(1)}M`
-    } else if (amount >= 1e3) {
-      return `$${(amount / 1e3).toFixed(1)}K`
-    } else {
-      return `$${amount.toFixed(0)}`
-    }
-  }
-
-  const getTotalVolume = () => {
-    if (totalSupplyLoading || priceLoading) {
-      return "Loading..."
-    }
-
-    if (totalReserves) {
-      // Use total reserves from contract (convert from wei) * price
-      return formatLargeNumber(
-        (Number(totalReserves) / 1e6) * (currentPrice || 0)
-      )
-    } else {
-      // Fallback to total supply * price
-      return formatLargeNumber(totalSupply * (currentPrice || 0))
-    }
-  }
-
-  const platformStats = [
-    // { value: getTotalVolume(), label: "Total Volume", change: "+12.5%" },
-    // { value: "1,247", label: "Active Users", change: "+8.2%" },
-    // { value: "99.9%", label: "Uptime", change: "Stable" },
-    // { value: "0.1%", label: "Trading Fees", change: "Low Cost" },
-  ]
-
   const {
-    register,
-    handleSubmit,
     formState: { errors },
     reset,
   } = useForm<MailingListFormData>({
@@ -200,10 +154,6 @@ export default function HomePage() {
     }
   }
 
-  useEffect(() => {
-    reset()
-  }, [reset])
-
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -218,7 +168,7 @@ export default function HomePage() {
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto px-6 py-20">
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 sm:max-w-3xl max-w-full mx-auto">
             <Badge
               variant="secondary"
               className="mb-6 px-4 py-2 text-sm font-medium bg-emerald-100 text-emerald-800 border-emerald-200 hover:bg-emerald-100 hover:text-emerald-800 hover:border-emerald-200"
@@ -231,10 +181,11 @@ export default function HomePage() {
               Spout Finance
             </h1>
 
-            <p className="text-lg md:text-xl text-slate-600 mb-12 max-w-3xl mx-auto font-light leading-relaxed">
-              Professional trading platform with real-time market data,
-              portfolio analytics, and seamless token swapping. Built for
-              serious investors.
+            <p className="text-base sm:text-lg md:text-xl text-slate-600 mb-12 mx-auto font-light leading-relaxed px-4 sm:px-8 text-center max-w-prose">
+              {" "}
+              Unlock the power of TradFi with DeFi. Verify, Buy and integrate
+              TradFi assets into your DeFi playbook and track your portfolio
+              through our on-chain analytics dashboard.
             </p>
           </div>
 
