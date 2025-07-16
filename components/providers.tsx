@@ -1,12 +1,15 @@
 "use client"
 
-import { ReactNode } from "react"
+import { ReactNode, useEffect } from "react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { WagmiProvider, http } from "wagmi"
 import { RainbowKitProvider, getDefaultConfig } from "@rainbow-me/rainbowkit"
 import { baseSepolia } from "wagmi/chains"
 import { AuthProvider } from "@/context/AuthContext"
 import { pharos } from "@/lib/chainconfigs/pharos"
+import { toast } from "sonner"
+import { useAccount } from "wagmi"
+import { useConnectModal } from "@rainbow-me/rainbowkit"
 
 const queryClient = new QueryClient()
 
@@ -22,11 +25,33 @@ const config = getDefaultConfig({
   ssr: true,
 })
 
+function WalletConnectionPrompt() {
+  const { isConnected } = useAccount()
+  const { openConnectModal } = useConnectModal()
+
+  useEffect(() => {
+    if (!isConnected) {
+      toast("Wallet not connected", {
+        description: "Please connect your wallet to continue.",
+        action: {
+          label: "Connect Wallet",
+          onClick: openConnectModal ?? (() => {}),
+        },
+      })
+    }
+  }, [isConnected, openConnectModal])
+
+  return null
+}
+
 const Providers = ({ children }: { children: ReactNode }) => (
   <WagmiProvider config={config}>
     <QueryClientProvider client={queryClient}>
       <RainbowKitProvider>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <WalletConnectionPrompt />
+          {children}
+        </AuthProvider>
       </RainbowKitProvider>
     </QueryClientProvider>
   </WagmiProvider>
