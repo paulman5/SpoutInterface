@@ -1,12 +1,18 @@
-import { useReadContract } from "wagmi"
+import { useReadContract, useChainId } from "wagmi"
 import erc20ABI from "@/abi/erc20.json"
 
-const USDC_ADDRESS = "0x036CbD53842c5426634e7929541eC2318f3dCF7e"
+const usdcAddresses: Record<number, string> = {
+  84532: "0x036CbD53842c5426634e7929541eC2318f3dCF7e", // Base Sepolia
+  688688: "0x72df0bcd7276f2dFbAc900D1CE63c272C4BCcCED", // Pharos
+}
 
 export function useUSDCTokenBalance(address: string | undefined) {
+  const chainId = useChainId()
+  const usdcAddress = usdcAddresses[chainId]
+
   // Get decimals
   const { data: decimals } = useReadContract({
-    address: USDC_ADDRESS,
+    address: usdcAddress as `0x${string}`,
     abi: erc20ABI,
     functionName: "decimals",
   })
@@ -18,7 +24,7 @@ export function useUSDCTokenBalance(address: string | undefined) {
     isLoading,
     refetch,
   } = useReadContract({
-    address: USDC_ADDRESS,
+    address: usdcAddress as `0x${string}`,
     abi: erc20ABI,
     functionName: "balanceOf",
     args: [address],
@@ -26,7 +32,7 @@ export function useUSDCTokenBalance(address: string | undefined) {
 
   // Get token symbol
   const { data: symbol } = useReadContract({
-    address: USDC_ADDRESS,
+    address: usdcAddress as `0x${string}`,
     abi: erc20ABI,
     functionName: "symbol",
   })
