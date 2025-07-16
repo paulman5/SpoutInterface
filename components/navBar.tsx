@@ -77,10 +77,10 @@ export default function Navbar() {
       <MobileNav>
         <MobileNavHeader>
           <NavbarLogo />
-          <MobileNavToggle
+          {/* <MobileNavToggle
             isOpen={mobileOpen}
             onClick={() => setMobileOpen((v) => !v)}
-          />
+          /> */}
         </MobileNavHeader>
         <MobileNavMenu isOpen={mobileOpen} onClose={() => setMobileOpen(false)}>
           <NavItems items={navItems} onItemClick={() => setMobileOpen(false)} />
