@@ -37,6 +37,7 @@ function WalletConnectionPrompt() {
           label: "Connect Wallet",
           onClick: openConnectModal ?? (() => {}),
         },
+        duration: Infinity,
       })
     }
   }, [isConnected, openConnectModal])
