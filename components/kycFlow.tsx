@@ -62,7 +62,7 @@ export default function KYCFlow() {
   const [error, setError] = useState<string>("")
   const [claimAdded, setClaimAdded] = useState(false)
   const gatewayAddress = useContractAddress("gateway")
-  const idFactoryAddress = useContractAddress("idFactory")
+  const idFactoryAddress = useContractAddress("idfactory")
   const issuerAddress = useContractAddress("issuer")
 
   // Contract interactions
