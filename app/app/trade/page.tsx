@@ -113,7 +113,7 @@ const Page = () => {
   function generateMockData(ticker: string) {
     const basePrice =
       {
-        LQD: 108.5, // iShares iBoxx $ Investment Grade Corporate Bond ETF
+        SLQD: 108.5, // iShares iBoxx $ Investment Grade Corporate Bond ETF
       }[ticker] || 150.0
 
     const data = []
@@ -284,9 +284,9 @@ const Page = () => {
           id: "1",
           time: new Date(Date.now() - 120000).toLocaleTimeString(),
           type: "ORDER_FILLED",
-          message: "Buy order filled: ***** USDC → ***** LQD",
+          message: "Buy order filled: ***** USDC → ***** SLQD",
           amount: "*****",
-          token: "LQD",
+          token: "SLQD",
         },
         {
           id: "2",
@@ -649,12 +649,12 @@ const Page = () => {
                   )}
                   <div>
                     <CardTitle className="text-xl">
-                      {tradeType === "buy" ? "Buy" : "Sell"} {selectedToken}
+                      {tradeType === "buy" ? "Buy" : "Sell"} S{selectedToken}
                     </CardTitle>
                     <CardDescription className="text-sm">
                       {tradeType === "buy"
-                        ? `Deposit USDC to receive ${selectedToken}`
-                        : `Sell ${selectedToken} for USDC`}
+                        ? `Deposit USDC to receive S${selectedToken}`
+                        : `Sell S${selectedToken} for USDC`}
                     </CardDescription>
                   </div>
                 </div>
@@ -662,7 +662,7 @@ const Page = () => {
                   <div className="text-xs text-slate-500">
                     {tradeType === "buy"
                       ? "USDC Balance"
-                      : `${selectedToken} Balance`}
+                      : `S${selectedToken} Balance`}
                   </div>
                   <div
                     className={`font-bold text-base ${
@@ -677,14 +677,14 @@ const Page = () => {
                           : `${usdcBalance.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })} USDC`
                       : balanceLoading
                         ? "Loading..."
-                        : `${tokenBalance.toLocaleString()} ${selectedToken}`}
+                        : `${tokenBalance.toLocaleString()} S${selectedToken}`}
                   </div>
                   {/* Show secondary balance */}
                   <div className="text-xs text-slate-400 mt-1">
                     {tradeType === "buy"
                       ? balanceLoading
                         ? "Loading..."
-                        : `${tokenBalance.toLocaleString()} ${selectedToken}`
+                        : `${tokenBalance.toLocaleString()} S${selectedToken}`
                       : usdcLoading
                         ? "Loading..."
                         : usdcError
@@ -795,13 +795,13 @@ const Page = () => {
                               You receive (est.):
                             </span>
                             <span className="font-bold text-emerald-700">
-                              {netReceiveTokens} {selectedToken}
+                              {netReceiveTokens} S{selectedToken}
                             </span>
                           </div>
                           <div className="flex justify-between text-sm">
                             <span className="text-slate-600">Rate:</span>
                             <span className="font-semibold">
-                              1 {selectedToken} = ${latestPrice.toFixed(2)}
+                              1 S{selectedToken} = ${latestPrice.toFixed(2)}
                             </span>
                           </div>
                         </div>
@@ -814,7 +814,7 @@ const Page = () => {
                             <span>Max slippage (1%):</span>
                             <span className="font-semibold">
                               {(parseFloat(netReceiveTokens) * 0.99).toFixed(4)}{" "}
-                              {selectedToken}
+                              S{selectedToken}
                             </span>
                           </div>
                           <div className="flex justify-between">
@@ -842,21 +842,21 @@ const Page = () => {
                   >
                     {isApprovePending || isBuyAssetPending
                       ? "Processing..."
-                      : `Buy ${selectedToken}`}
+                      : `Buy S${selectedToken}`}
                   </Button>
                 </>
               ) : (
                 <>
                   <div className="mb-4">
                     <label className="block text-sm text-slate-600 mb-2">
-                      {selectedToken} Amount
+                      S{selectedToken} Amount
                     </label>
                     <input
                       type="number"
                       min="0"
                       value={sellToken}
                       onChange={(e) => setSellToken(e.target.value)}
-                      placeholder={`Enter ${selectedToken} amount`}
+                      placeholder={`Enter S${selectedToken} amount`}
                       className="border border-blue-200 focus:border-blue-400 rounded-lg px-4 py-3 w-full bg-white shadow-sm focus:outline-none transition text-lg"
                     />
                   </div>
@@ -872,7 +872,7 @@ const Page = () => {
                           <div className="flex justify-between text-sm">
                             <span className="text-slate-600">You sell:</span>
                             <span className="font-semibold">
-                              {sellToken} {selectedToken}
+                              {sellToken} S{selectedToken}
                             </span>
                           </div>
                           <div className="flex justify-between text-sm">
@@ -902,7 +902,7 @@ const Page = () => {
                           <div className="flex justify-between text-sm">
                             <span className="text-slate-600">Rate:</span>
                             <span className="font-semibold">
-                              1 {selectedToken} = ${latestPrice.toFixed(2)}
+                              1 S{selectedToken} = ${latestPrice.toFixed(2)}
                             </span>
                           </div>
                         </div>
@@ -938,7 +938,7 @@ const Page = () => {
                     onClick={handleSell}
                     isDisabled={!sellToken}
                   >
-                    Sell {selectedToken}
+                    Sell S{selectedToken}
                   </Button>
                 </>
               )}

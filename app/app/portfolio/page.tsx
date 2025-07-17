@@ -51,9 +51,9 @@ function PortfolioPage() {
     previousClose,
     isLoading: priceLoading,
     error: priceError,
-  } = useMarketData("LQD") // Using LQD as price reference
+  } = useMarketData("SLQD") // Using SLQD as price reference
 
-  const { returns, isLoading: returnsLoading } = useReturns("LQD")
+  const { returns, isLoading: returnsLoading } = useReturns("SLQD")
 
   const { username, loading } = useCurrentUser()
 
@@ -649,4 +649,3 @@ export default function PortfolioPageWrapper() {
     </Suspense>
   )
 }
-

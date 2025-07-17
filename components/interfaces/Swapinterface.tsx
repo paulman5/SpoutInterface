@@ -36,7 +36,7 @@ export default function Swapinterface() {
 
   useEffect(() => {
     setLoading(true)
-    fetch("/api/marketdata?symbol=LQD")
+    fetch("/api/marketdata?symbol=SLQD")
       .then(async (res) => {
         if (!res.ok) {
           throw new Error(`Server error: ${res.status}`)
@@ -50,7 +50,7 @@ export default function Swapinterface() {
         return res.json()
       })
       .then((data) => {
-        const ap = data?.quotes?.LQD?.ap
+        const ap = data?.quotes?.SLQD?.ap
         if (typeof ap === "number") {
           setAskPrice(ap)
         } else {
@@ -357,7 +357,7 @@ export default function Swapinterface() {
                 {askPrice !== null &&
                   !loading &&
                   !error &&
-                  `1 LQD = ${askPrice} USD`}
+                  `1 S${buyToken} = ${askPrice} USD`}
               </span>
             </div>
             <div className="flex justify-between text-sm mt-1">
