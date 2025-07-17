@@ -156,15 +156,52 @@ export const Footer: React.FC<FooterProps> = ({
             </div>
           </div>
 
+          {/* Socials Section */}
           <div className="pt-6 border-t border-slate-700">
             <div className="flex items-center justify-end">
               <button
                 onClick={scrollToTop}
                 className="flex items-center gap-2 text-sm text-slate-300 hover:text-emerald-400 transition-colors duration-300 group"
+                style={{ alignSelf: "flex-start" }}
               >
                 <span>Back to top</span>
                 <ArrowUp className="h-4 w-4 group-hover:-translate-y-1 transition-transform duration-300" />
               </button>
+            </div>
+            {/* Socials Section */}
+            <div className="flex gap-4 mt-8" style={{ marginLeft: 0 }}>
+              <a
+                href="https://x.com/0xspout" // TODO: Replace with actual handle
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Twitter"
+                className="text-slate-300 hover:text-emerald-400 transition-colors duration-300"
+              >
+                <svg
+                  width="22"
+                  height="22"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M22.46 5.924c-.793.352-1.646.59-2.542.698a4.48 4.48 0 0 0 1.965-2.475 8.94 8.94 0 0 1-2.828 1.082 4.48 4.48 0 0 0-7.635 4.086A12.72 12.72 0 0 1 3.112 4.89a4.48 4.48 0 0 0 1.388 5.976 4.44 4.44 0 0 1-2.03-.561v.057a4.48 4.48 0 0 0 3.594 4.393 4.48 4.48 0 0 1-2.025.077 4.48 4.48 0 0 0 4.184 3.112A8.98 8.98 0 0 1 2 19.54a12.67 12.67 0 0 0 6.88 2.017c8.26 0 12.78-6.84 12.78-12.78 0-.195-.004-.39-.013-.583A9.14 9.14 0 0 0 24 4.59a8.93 8.93 0 0 1-2.54.697z" />
+                </svg>
+              </a>
+              <a
+                href="https://www.linkedin.com/company/spoutfinance/posts/?feedView=all" // TODO: Replace with actual company page
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="text-slate-300 hover:text-emerald-400 transition-colors duration-300"
+              >
+                <svg
+                  width="22"
+                  height="22"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11 19h-3v-9h3v9zm-1.5-10.28c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm15.5 10.28h-3v-4.5c0-1.07-.02-2.44-1.49-2.44-1.49 0-1.72 1.16-1.72 2.36v4.58h-3v-9h2.89v1.23h.04c.4-.76 1.38-1.56 2.84-1.56 3.04 0 3.6 2 3.6 4.59v4.74z" />
+                </svg>
+              </a>
             </div>
           </div>
         </div>
