@@ -30,6 +30,7 @@ import { useChainId } from "wagmi"
 
 export function useContractAddress(contract: keyof typeof contractaddresses) {
   const chainId = useChainId()
+  console.log("current chainID:", chainId)
   const mapping = contractaddresses[contract] as Record<number, string>
   return mapping[chainId]
 }

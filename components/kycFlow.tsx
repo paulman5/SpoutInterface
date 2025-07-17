@@ -141,13 +141,11 @@ export default function KYCFlow() {
       title: "KYC Verification",
       description: "Complete KYC verification with signature",
       icon: Shield,
-      status: hasExistingIdentity
+      status: kycSignature
         ? "completed"
-        : kycSignature
-          ? "completed"
-          : hasExistingIdentity || isDeployed
-            ? "current"
-            : "pending",
+        : hasExistingIdentity || isDeployed
+          ? "current"
+          : "pending",
     },
     {
       id: 4,
@@ -620,7 +618,7 @@ export default function KYCFlow() {
                       </div>
 
                       <Button
-                        onClick={handleKYCSignature}
+                        onClick={() => handleKYCSignature()}
                         isDisabled={isLoading || !hasExistingIdentity}
                         className="w-full"
                       >
