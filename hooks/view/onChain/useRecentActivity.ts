@@ -230,7 +230,7 @@ export function useRecentActivity(userAddress?: string) {
         }
 
         // Use chunked approach to avoid RPC limits
-        const chunkSize = BigInt(50000) // 50K blocks at a time (~28 hours)
+        const chunkSize = BigInt(10000) // 50K blocks at a time (~28 hours)
         const maxChunks = 20 // Up to 1M blocks total (~23 days)
         let allTransactions: any[] = []
 

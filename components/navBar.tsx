@@ -4,11 +4,9 @@ import {
   NavBody,
   NavItems,
   NavbarLogo,
-  NavbarButton,
   MobileNav,
   MobileNavHeader,
   MobileNavMenu,
-  MobileNavToggle,
 } from "./ui/resizable-navbar"
 import React, { useState } from "react"
 import Link from "next/link"

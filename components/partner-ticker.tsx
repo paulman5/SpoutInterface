@@ -21,7 +21,7 @@ const initialPartners = [
     link: "https://chain.link/",
   },
   {
-    src: "/partners/ERC3643Full.png",
+    src: "/partners/ERC3643.jpg",
     alt: "ERC3643",
     link: "https://www.erc3643.org/",
   },
