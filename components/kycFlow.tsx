@@ -39,6 +39,8 @@ import idFactoryABI from "@/abi/idfactory.json"
 import onchainidABI from "@/abi/onchainid.json"
 import { useContractAddress } from "@/lib/addresses"
 import { countryCodes } from "@/lib/utils"
+import { useOnchainID } from "@/hooks/view/onChain/useOnchainID"
+import { useAddClaim } from "@/hooks/writes/onChain/useAddClaim"
 interface KYCSignatureResponse {
   signature: {
     r: string
@@ -54,7 +56,8 @@ export default function KYCFlow() {
   const { address, isConnected } = useAccount()
   const [currentStep, setCurrentStep] = useState(1)
   const [selectedCountry, setSelectedCountry] = useState<number>(91)
-  const [onchainIDAddress, setOnchainIDAddress] = useState<string>("")
+  const [onchainIDAddressCurrent, setOnchainIDAddressCurrent] =
+    useState<string>("")
   const [kycSignature, setKycSignature] = useState<KYCSignatureResponse | null>(
     null
   )
@@ -76,30 +79,39 @@ export default function KYCFlow() {
       hash: deployHash,
     })
 
-  // Add claim to identity
+  // Add claim to identity using custom hook
   const {
-    writeContract: writeAddClaim,
-    data: addClaimHash,
-    isPending: isAddingClaim,
-  } = useWriteContract()
-  const { isLoading: isConfirmingClaim, isSuccess: isClaimAdded } =
-    useWaitForTransactionReceipt({
-      hash: addClaimHash,
-    })
+    addClaim,
+    isAddingClaim,
+    isConfirmingClaim,
+    isClaimAdded,
+    error: addClaimError,
+  } = useAddClaim()
 
-  // Read contract to get identity address from IdFactory
-  const { data: identityAddress, isLoading: isCheckingIdentity } =
-    useReadContract({
-      address: idFactoryAddress as `0x${string}`,
-      abi: idFactoryABI as any,
-      functionName: "getIdentity",
-      args: [address as `0x${string}`],
-      query: {
-        enabled: !!address,
-      },
-    })
+  // Use useOnchainID for all identity info
+  const {
+    hasOnchainID,
+    onchainIDAddress,
+    loading: isCheckingIdentity,
+    hasKYCClaim,
+    kycClaim,
+    kycLoading,
+    kycError,
+  } = useOnchainID({
+    userAddress: address,
+    idFactoryAddress,
+    issuer: issuerAddress,
+    topic: 1,
+  })
 
-  console.log("identityAddress", identityAddress)
+  // Sync local state with hook value
+  useEffect(() => {
+    if (typeof onchainIDAddress === "string") {
+      setOnchainIDAddressCurrent(onchainIDAddress)
+    }
+  }, [onchainIDAddress])
+
+  console.log("identityAddress", onchainIDAddress)
 
   // Console log wallet address when it changes
   useEffect(() => {
@@ -110,10 +122,12 @@ export default function KYCFlow() {
 
   // Check if identity exists (avoid unknown type in JSX)
   const hasExistingIdentity = Boolean(
-    identityAddress &&
-      typeof identityAddress === "string" &&
-      identityAddress !== "0x0000000000000000000000000000000000000000"
+    onchainIDAddress &&
+      typeof onchainIDAddress === "string" &&
+      onchainIDAddress !== "0x0000000000000000000000000000000000000000"
   )
+
+  console.log("hasclaimaddedtohim", hasKYCClaim)
 
   const steps = [
     {
@@ -141,30 +155,27 @@ export default function KYCFlow() {
       title: "KYC Verification",
       description: "Complete KYC verification with signature",
       icon: Shield,
-      status: kycSignature
-        ? "completed"
-        : hasExistingIdentity || isDeployed
-          ? "current"
-          : "pending",
+      status: hasKYCClaim ? "completed" : "pending",
     },
     {
       id: 4,
       title: "Add Claim to Identity",
       description: "Add KYC claim to your onchain identity",
       icon: Shield,
-      status: isClaimAdded ? "completed" : kycSignature ? "current" : "pending",
+      status: isClaimAdded ? "completed" : "pending",
     },
   ]
 
-  // Filter out Add Claim step if KYC is complete
-  const visibleSteps = hasExistingIdentity
-    ? steps.filter((step) => step.id !== 4)
-    : steps
+  // Filter out Add Claim step only if both OnchainID and KYC claim exist
+  const visibleSteps =
+    hasExistingIdentity && hasKYCClaim
+      ? steps.filter((step) => step.id !== 4)
+      : steps
 
   // Modify progress calculation to show 80% when KYC is verified but claim not added
   const progress = hasExistingIdentity
     ? 100
-    : kycSignature && !isClaimAdded
+    : hasKYCClaim && !isClaimAdded
       ? 80
       : ((currentStep - 1) / (steps.length - 1)) * 100
 
@@ -250,78 +261,17 @@ export default function KYCFlow() {
     }
   }
 
-  // Handle adding claim to identity - EXACT MATCH with working Solidity script
+  // Handler for add claim button
   const handleAddClaim = async () => {
-    if (!kycSignature || !onchainIDAddress) return
-
-    try {
-      setIsLoading(true)
-      setError("")
-
-      console.log("🔧 CORRECTED: Customer adds ClaimIssuer-signed claim")
-      console.log("🎯 Recipient address:", address)
-      console.log("🆔 OnchainID address:", onchainIDAddress)
-      console.log("🏢 ClaimIssuer:", kycSignature.issuerAddress)
-
-      const topic = 1
-      // EXACT MATCH: Use ethers.toUtf8Bytes (v6 syntax)
-      const claimData = ethers.toUtf8Bytes("KYC passed")
-      // Hash the claim data like the script
-      const claimDataHash = ethers.keccak256(claimData)
-
-      console.log("✅ Claim data prepared:", ethers.hexlify(claimData))
-      console.log("🔒 Claim data hash:", claimDataHash)
-
-      // Use the signature from backend (already prepared correctly)
-      // Reconstruct signature the same way as working script expects
-      const r = (
-        kycSignature.signature.r.startsWith("0x")
-          ? kycSignature.signature.r
-          : `0x${kycSignature.signature.r}`
-      ) as `0x${string}`
-      const s = (
-        kycSignature.signature.s.startsWith("0x")
-          ? kycSignature.signature.s
-          : `0x${kycSignature.signature.s}`
-      ) as `0x${string}`
-      const v =
-        `0x${kycSignature.signature.v.toString(16).padStart(2, "0")}` as `0x${string}`
-      const signature = concatHex([r, s, v])
-
-      console.log("🔍 Signature components:")
-      console.log("   r:", r)
-      console.log("   s:", s)
-      console.log("   v:", v)
-      console.log("   Final signature:", signature)
-
-      // EXACT MATCH: Contract arguments like working script
-      const contractArgs = [
-        topic, // topic (KYC)
-        1, // scheme
-        issuerAddress as `0x${string}`, // issuer address
-        signature as `0x${string}`, // signature
-        claimDataHash, // EXACT MATCH: Use hashed claim data
-        "", // uri
-      ]
-
-      console.log("📋 Contract arguments:", contractArgs)
-      console.log("🔄 Customer adding ClaimIssuer-signed claim...")
-
-      writeAddClaim({
-        address: onchainIDAddress as `0x${string}`,
-        abi: onchainidABI as any,
-        functionName: "addClaim",
-        args: contractArgs,
-        account: address as `0x${string}`,
-      })
-
-      console.log("📡 Add claim transaction initiated")
-    } catch (err) {
-      console.error("❌ Error in handleAddClaim:", err)
-      setError("Failed to add claim to identity")
-    } finally {
-      setIsLoading(false)
-    }
+    if (!kycSignature || !onchainIDAddressCurrent || !address) return
+    addClaim({
+      onchainIDAddress: onchainIDAddressCurrent,
+      issuerAddress: issuerAddress as `0x${string}`,
+      signature: kycSignature.signature,
+      topic: 1,
+      claimData: "KYC passed",
+      account: address,
+    })
   }
 
   console.log("kycsignature address", kycSignature?.issuerAddress)
@@ -333,29 +283,34 @@ export default function KYCFlow() {
       setCurrentStep(1)
     } else if (isConnected && !hasExistingIdentity && !isDeployed) {
       setCurrentStep(2)
-    } else if ((hasExistingIdentity || isDeployed) && !kycSignature) {
+    } else if ((hasExistingIdentity || isDeployed) && !hasKYCClaim) {
       setCurrentStep(3)
-    } else if (kycSignature && !isClaimAdded) {
+    } else if (hasKYCClaim && !isClaimAdded) {
       setCurrentStep(4)
     } else if (isClaimAdded) {
       setCurrentStep(4)
     }
-  }, [isConnected, isDeployed, kycSignature, hasExistingIdentity, isClaimAdded])
+  }, [isConnected, isDeployed, hasKYCClaim, isClaimAdded])
 
   // Update onchain ID address when identity is deployed or already exists
   useEffect(() => {
-    if (hasExistingIdentity && typeof identityAddress === "string") {
-      console.log("Identity address from contract:", identityAddress)
-      setOnchainIDAddress(identityAddress)
+    if (hasExistingIdentity && typeof onchainIDAddress === "string") {
+      console.log("Identity address from contract:", onchainIDAddress)
     } else if (
       isDeployed &&
-      identityAddress &&
-      typeof identityAddress === "string"
+      onchainIDAddress &&
+      typeof onchainIDAddress === "string"
     ) {
-      console.log("Identity address from contract:", identityAddress)
-      setOnchainIDAddress(identityAddress)
+      console.log("Identity address from contract:", onchainIDAddress)
     }
-  }, [isDeployed, identityAddress, hasExistingIdentity])
+  }, [isDeployed, onchainIDAddress, hasExistingIdentity])
+
+  // Update local state from hook when hook's value changes
+  useEffect(() => {
+    if (typeof onchainIDAddress === "string") {
+      setOnchainIDAddressCurrent(onchainIDAddress)
+    }
+  }, [onchainIDAddress])
 
   // Track when claim is successfully added
   useEffect(() => {
@@ -548,7 +503,8 @@ export default function KYCFlow() {
                             : "Identity Deployed Successfully"}
                         </p>
                         <p className="text-sm text-emerald-600">
-                          OnchainID Address: {onchainIDAddress || "Loading..."}
+                          OnchainID Address:{" "}
+                          {onchainIDAddressCurrent || "Loading..."}
                         </p>
                         {hasExistingIdentity && !isDeployed && (
                           <p className="text-xs text-emerald-500 mt-1">
@@ -565,7 +521,7 @@ export default function KYCFlow() {
               {/* Step 3: KYC Verification */}
               {step.id === 3 && (
                 <div className="space-y-4">
-                  {hasExistingIdentity ? (
+                  {hasKYCClaim ? (
                     <div className="flex items-center space-x-3 p-4 bg-emerald-50 rounded-lg">
                       <CheckCircle className="h-5 w-5 text-emerald-600" />
                       <div>
@@ -578,7 +534,7 @@ export default function KYCFlow() {
                         </p>
                       </div>
                     </div>
-                  ) : !kycSignature ? (
+                  ) : (
                     <div className="space-y-4">
                       <div className="p-4 bg-purple-50 rounded-lg">
                         <h4 className="font-medium text-purple-800 mb-2">
@@ -632,67 +588,36 @@ export default function KYCFlow() {
                         )}
                       </Button>
 
-                      {error && (
+                      {(error || addClaimError) && (
                         <div className="flex items-center space-x-2 p-3 bg-red-50 rounded-lg">
                           <AlertCircle className="h-4 w-4 text-red-600" />
-                          <span className="text-sm text-red-600">{error}</span>
+                          <span className="text-sm text-red-600">
+                            {error || addClaimError}
+                          </span>
                         </div>
                       )}
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-3 p-4 bg-emerald-50 rounded-lg">
-                        <CheckCircle className="h-5 w-5 text-emerald-600" />
-                        <div>
-                          <p className="font-medium text-emerald-800">
-                            KYC Verification Complete
-                          </p>
-                          <p className="text-sm text-emerald-600">
-                            Your identity has been verified successfully
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                        <h5 className="font-semibold text-gray-800 mb-3">
-                          Verification Details
-                        </h5>
-                        <div className="space-y-3">
-                          <div>
-                            <span className="text-sm font-medium text-gray-600">
-                              Issuer:
-                            </span>
-                            <p className="font-mono text-xs text-gray-800 mt-1 break-all leading-relaxed">
-                              {kycSignature.issuerAddress}
-                            </p>
-                          </div>
-                          <div>
-                            <span className="text-sm font-medium text-gray-600">
-                              Topic:
-                            </span>
-                            <p className="text-sm text-gray-800 mt-1 font-medium">
-                              {kycSignature.topic}
-                            </p>
-                          </div>
-                          <div>
-                            <span className="text-sm font-medium text-gray-600">
-                              Data Hash:
-                            </span>
-                            <p className="font-mono text-xs text-gray-800 mt-1 break-all leading-relaxed">
-                              {kycSignature.dataHash}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   )}
                 </div>
               )}
 
               {/* Step 4: Add Claim to Identity */}
-              {step.id === 4 && !hasExistingIdentity && (
+              {step.id === 4 && hasExistingIdentity && (
                 <div className="space-y-4">
-                  {!isClaimAdded ? (
+                  {hasKYCClaim ? (
+                    <div className="flex items-center space-x-3 p-4 bg-emerald-50 rounded-lg">
+                      <CheckCircle className="h-5 w-5 text-emerald-600" />
+                      <div>
+                        <p className="font-medium text-emerald-800">
+                          KYC Verification Completed
+                        </p>
+                        <p className="text-sm text-emerald-600">
+                          Your KYC claim is already present on your onchain
+                          identity.
+                        </p>
+                      </div>
+                    </div>
+                  ) : !isClaimAdded ? (
                     <div className="space-y-4">
                       <div className="p-4 bg-purple-50 rounded-lg">
                         <h4 className="font-medium text-purple-800 mb-2">
@@ -705,7 +630,7 @@ export default function KYCFlow() {
                       </div>
 
                       <Button
-                        onClick={() => handleAddClaim()}
+                        onClick={handleAddClaim}
                         isDisabled={
                           isAddingClaim || isConfirmingClaim || !kycSignature
                         }
@@ -723,10 +648,12 @@ export default function KYCFlow() {
                         )}
                       </Button>
 
-                      {error && (
+                      {(error || addClaimError) && (
                         <div className="flex items-center space-x-2 p-3 bg-red-50 rounded-lg">
                           <AlertCircle className="h-4 w-4 text-red-600" />
-                          <span className="text-sm text-red-600">{error}</span>
+                          <span className="text-sm text-red-600">
+                            {error || addClaimError}
+                          </span>
                         </div>
                       )}
                     </div>
@@ -777,7 +704,7 @@ export default function KYCFlow() {
               <div className="p-4 bg-white rounded-lg border border-gray-100 shadow-sm">
                 <p className="font-semibold text-gray-800 mb-2">OnchainID</p>
                 <p className="text-gray-600 font-mono text-xs break-all leading-relaxed">
-                  {onchainIDAddress}
+                  {onchainIDAddressCurrent}
                 </p>
               </div>
               <div className="p-4 bg-white rounded-lg border border-gray-100 shadow-sm">

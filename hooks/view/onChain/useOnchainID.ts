@@ -4,6 +4,7 @@ import { useReadContract } from "wagmi"
 import idFactoryABI from "@/abi/idfactory.json"
 import onchainidABI from "@/abi/onchainid.json"
 import { ethers } from "ethers"
+import { AbiCoder, keccak256 } from "ethers"
 
 export function useOnchainID({
   userAddress,
@@ -16,16 +17,18 @@ export function useOnchainID({
   issuer: string
   topic?: number
 }) {
+  // Defensive: Only run contract read if all required values are present
+  const canReadIdentity = !!userAddress && !!idFactoryAddress
   const {
     data: onchainID,
     isLoading,
     error,
   } = useReadContract({
-    address: idFactoryAddress as `0x${string}`,
+    address: canReadIdentity ? (idFactoryAddress as `0x${string}`) : undefined,
     abi: idFactoryABI,
     functionName: "getIdentity",
-    args: [userAddress as `0x${string}`],
-    query: { enabled: !!userAddress },
+    args: canReadIdentity ? [userAddress as `0x${string}`] : [],
+    query: { enabled: canReadIdentity },
   })
 
   const hasOnchainID =
@@ -33,37 +36,45 @@ export function useOnchainID({
     typeof onchainID === "string" &&
     onchainID !== "0x0000000000000000000000000000000000000000"
 
-  // Calculate claimId for KYC using ethers.js (v6)
+  // Calculate claimId for KYC using ethers.js (v6) only if issuer and topic are defined
   let claimId: `0x${string}` | undefined = undefined
   if (issuer && topic !== undefined) {
-    const abiCoder = ethers.AbiCoder.defaultAbiCoder()
-    claimId = ethers.keccak256(
+    const abiCoder = AbiCoder.defaultAbiCoder()
+    claimId = keccak256(
       abiCoder.encode(["address", "uint256"], [issuer as `0x${string}`, topic])
     ) as `0x${string}`
+    // Log only when all values are present
+    console.log("issuer address", issuer)
+    console.log("topic", topic)
+    console.log("claimId", claimId)
   }
 
-  // Fetch KYC claim from OnchainID contract
+  // Only read claim if onchainID and claimId are present
+  const canReadClaim = !!onchainID && !!claimId
   const {
     data: kycClaim,
     isLoading: kycLoading,
     error: kycError,
   } = useReadContract({
-    address: hasOnchainID ? (onchainID as `0x${string}`) : undefined,
+    address: canReadClaim ? (onchainID as `0x${string}`) : undefined,
     abi: onchainidABI,
     functionName: "getClaim",
-    args: claimId ? [claimId] : undefined,
-    query: { enabled: !!onchainID && !!claimId },
+    args: canReadClaim ? [claimId] : [],
+    query: { enabled: canReadClaim },
   })
 
   // Check if claim is valid (issuer should not be zero address and topic should match)
-  const claimObj = kycClaim as any
-  const hasKYCClaim =
-    claimObj &&
-    claimObj.issuer &&
-    claimObj.issuer !== "0x0000000000000000000000000000000000000000" &&
-    claimObj.topic !== undefined &&
-    Number(claimObj.topic) === topic &&
-    claimObj.issuer.toLowerCase() === issuer.toLowerCase()
+  let hasKYCClaim = false
+  console.log("kycClaim data:", kycClaim)
+  if (kycClaim && issuer && topic !== undefined && Array.isArray(kycClaim)) {
+    hasKYCClaim =
+      kycClaim[2] && // issuer
+      kycClaim[2].toLowerCase() === issuer.toLowerCase() &&
+      kycClaim[0] !== undefined &&
+      Number(kycClaim[0]) === topic &&
+      kycClaim[2] !== "0x0000000000000000000000000000000000000000"
+    console.log("hasKYCClaim", hasKYCClaim)
+  }
 
   return {
     hasOnchainID,
