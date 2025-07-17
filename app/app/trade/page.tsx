@@ -364,7 +364,7 @@ const Page = () => {
         // Use Orders contract: buyAsset(adfsFeedId, ticker, token, usdcAmount)
         // You may need to determine the correct adfsFeedId for your asset
         buyAsset(
-          BigInt(1), // adfsFeedId (replace with actual feed ID as needed)
+          BigInt(2000002), // adfsFeedId (replace with actual feed ID as needed)
           selectedToken,
           rwaTokenAddress,
           amount
