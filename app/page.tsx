@@ -155,9 +155,9 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white w-full overflow-x-hidden flex flex-col items-center justify-center">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="w-full flex flex-col items-center justify-center relative min-h-screen overflow-hidden">
         <div className="absolute inset-0 z-0">
           <PixelTrail
             fadeDuration={1200}
@@ -167,8 +167,8 @@ export default function HomePage() {
           />
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6 py-20">
-          <div className="text-center mb-16 sm:max-w-3xl max-w-full mx-auto">
+        <div className="relative z-10 w-full max-w-2xl mx-auto px-4 py-20 flex flex-col items-center justify-center">
+          <div className="text-center mb-16 w-full">
             <Badge
               variant="secondary"
               className="mb-6 px-4 py-2 text-sm font-medium bg-emerald-100 text-emerald-800 border-emerald-200 hover:bg-emerald-100 hover:text-emerald-800 hover:border-emerald-200"
@@ -181,15 +181,14 @@ export default function HomePage() {
               Spout Finance
             </h1>
 
-            <p className="text-base sm:text-lg md:text-xl text-slate-600 mb-12 mx-auto font-light leading-relaxed px-4 sm:px-8 text-center max-w-prose">
-              {" "}
+            <p className="text-lg md:text-xl text-slate-600 mb-12 font-light leading-relaxed break-words text-center w-full">
               Unlock the power of TradFi with DeFi. Verify, Buy and integrate
               TradFi assets into your DeFi playbook and track your portfolio
               through our on-chain analytics dashboard.
             </p>
           </div>
 
-          <div className="flex justify-center mb-20">
+          <div className="flex justify-center mb-20 w-full">
             <Link href="/app">
               <Button
                 size="lg"
