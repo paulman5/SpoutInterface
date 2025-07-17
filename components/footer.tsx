@@ -102,11 +102,6 @@ export const Footer: React.FC<FooterProps> = ({
             <span className="font-bold text-2xl text-white">Spout</span>
           </div>
 
-          <p className="text-slate-300 text-lg max-w-md leading-relaxed">
-            Professional trading platform with real-time market data, portfolio
-            analytics, and seamless token swapping for serious investors.
-          </p>
-
           <ul className="flex flex-wrap gap-6">
             {leftLinks.map((link, index) => (
               <li key={index}>
