@@ -37,6 +37,7 @@ import {
 import gatewayABI from "@/abi/gateway.json"
 import idFactoryABI from "@/abi/idfactory.json"
 import onchainidABI from "@/abi/onchainid.json"
+import { useContractAddress } from "@/lib/addresses"
 import { countryCodes } from "@/lib/utils"
 interface KYCSignatureResponse {
   signature: {
@@ -49,9 +50,6 @@ interface KYCSignatureResponse {
   topic: number
 }
 
-const gatewayAddress = "0xf04430Ffe6da40FE233c50909A9ebEA43dc8FDaB"
-const idFactoryAddress = "0xb04eAce0e3D886Bc514e84Ed42a7C43FC2183536"
-
 export default function KYCFlow() {
   const { address, isConnected } = useAccount()
   const [currentStep, setCurrentStep] = useState(1)
@@ -63,7 +61,9 @@ export default function KYCFlow() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string>("")
   const [claimAdded, setClaimAdded] = useState(false)
-  const issuerAddress = "0xfBbB54Ea804cC2570EeAba2fea09d0c66582498F"
+  const gatewayAddress = useContractAddress("gateway")
+  const idFactoryAddress = useContractAddress("idFactory")
+  const issuerAddress = useContractAddress("issuer")
 
   // Contract interactions
   const {

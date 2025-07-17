@@ -24,20 +24,17 @@ import React, { useEffect, useState, useCallback } from "react"
 import { useAccount, useConfig } from "wagmi"
 import { encryptValue } from "@/lib/inco-lite"
 import { useERC20Approve } from "@/hooks/writes/onChain/useERC20Approve"
-import { useConfidentialOrdersContract } from "@/hooks/useConfidentialOrdersContract"
+import { useOrdersContract } from "@/hooks/writes/onChain/useOrders"
 import { waitForTransactionReceipt } from "wagmi/actions"
 import { useTokenBalance } from "@/hooks/view/onChain/useTokenBalance"
 import { useUSDCTokenBalance } from "@/hooks/view/onChain/useUSDCTokenBalance"
+import { useContractAddress } from "@/lib/addresses"
 
 const TOKENS = [
   { label: "LQD", value: "LQD" },
   // { label: "MSFT", value: "MSFT" },
   // { label: "AAPL", value: "AAPL" },
 ]
-
-const CONFIDENTIAL_ORDERS_ADDRESS = "0x02A3bf058A4B74CeeA4A4cA141908Cef33990de0"
-const USDC_ADDRESS = "0x036CbD53842c5426634e7929541eC2318f3dCF7e"
-const RWA_TOKEN_ADDRESS = "0xB5F83286a6F8590B4d01eC67c885252Ec5d0bdDB"
 
 // Trading log types
 type LogType =
@@ -82,10 +79,11 @@ const Page = () => {
     symbol: tokenSymbol,
     isLoading: balanceLoading,
   } = useTokenBalance(userAddress)
-  const { approve, isPending: isApprovePending } = useERC20Approve(USDC_ADDRESS)
-  const { buyAsset, isBuyAssetPending } = useConfidentialOrdersContract(
-    CONFIDENTIAL_ORDERS_ADDRESS
-  )
+  const ordersAddress = useContractAddress("orders") as `0x${string}`
+  const usdcAddress = useContractAddress("usdc") as `0x${string}`
+  const rwaTokenAddress = useContractAddress("rwatoken") as `0x${string}`
+  const { approve, isPending: isApprovePending } = useERC20Approve(usdcAddress)
+  const { buyAsset, sellAsset, isPending: isOrderPending } = useOrdersContract()
   const config = useConfig()
   const {
     balance: usdcBalance,
@@ -335,7 +333,7 @@ const Page = () => {
 
     try {
       // Step 2: Silent USDC approval
-      const approveTx = await approve(CONFIDENTIAL_ORDERS_ADDRESS, amount)
+      const approveTx = await approve(ordersAddress, amount)
       await waitForTransactionReceipt(config, { hash: approveTx })
 
       // Step 3: Encryption with delay for realism
@@ -344,7 +342,7 @@ const Page = () => {
       const encryptedAmount = await encryptValue({
         value: amount,
         address: userAddress,
-        contractAddress: CONFIDENTIAL_ORDERS_ADDRESS,
+        contractAddress: ordersAddress,
       })
 
       // Small delay before next step
@@ -363,13 +361,13 @@ const Page = () => {
           }
         )
 
+        // Use Orders contract: buyAsset(adfsFeedId, ticker, token, usdcAmount)
+        // You may need to determine the correct adfsFeedId for your asset
         buyAsset(
-          selectedToken, // asset
-          selectedToken, // ticker
-          RWA_TOKEN_ADDRESS as `0x${string}`,
-          encryptedAmount as `0x${string}`,
-          BigInt(379), // subscriptionId (mock)
-          userAddress as `0x${string}`
+          BigInt(1), // adfsFeedId (replace with actual feed ID as needed)
+          selectedToken,
+          rwaTokenAddress,
+          amount
         )
       }, 4000)
 
@@ -492,17 +490,15 @@ const Page = () => {
       }
     )
 
-    // Simulate order processing
-    setTimeout(() => {
-      addTradeLog(
-        "ORDER_FILLED",
-        `Sell order filled: ***** ${selectedToken} → ***** USDC`,
-        {
-          amount: "*****",
-          token: selectedToken,
-        }
-      )
-    }, 2000)
+    // Use Orders contract: sellAsset(adfsFeedId, ticker, token, tokenAmount)
+    // You may need to determine the correct adfsFeedId for your asset
+    const tokenAmount = BigInt(Math.floor(Number(sellToken) * 1e6)) // Assuming 6 decimals
+    sellAsset(
+      BigInt(1), // adfsFeedId (replace with actual feed ID as needed)
+      selectedToken,
+      rwaTokenAddress,
+      tokenAmount
+    )
   }
 
   // LogEntry component following the pattern from LogBar
@@ -836,11 +832,9 @@ const Page = () => {
                     className="w-full mt-4 font-semibold text-lg py-3"
                     variant="success"
                     onClick={handleBuy}
-                    isDisabled={
-                      !buyUsdc || isApprovePending || isBuyAssetPending
-                    }
+                    isDisabled={!buyUsdc || isApprovePending || isOrderPending}
                   >
-                    {isApprovePending || isBuyAssetPending
+                    {isApprovePending || isOrderPending
                       ? "Processing..."
                       : `Buy S${selectedToken}`}
                   </Button>
