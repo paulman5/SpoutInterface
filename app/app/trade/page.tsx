@@ -674,7 +674,7 @@ const Page = () => {
                         ? "Loading..."
                         : usdcError
                           ? "-"
-                          : `${usdcBalance} USDC`
+                          : `${usdcBalance.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })} USDC`
                       : balanceLoading
                         ? "Loading..."
                         : `${tokenBalance.toLocaleString()} ${selectedToken}`}
@@ -689,7 +689,7 @@ const Page = () => {
                         ? "Loading..."
                         : usdcError
                           ? "-"
-                          : `${usdcBalance} USDC`}
+                          : `${usdcBalance.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })} USDC`}
                   </div>
                 </div>
               </div>
