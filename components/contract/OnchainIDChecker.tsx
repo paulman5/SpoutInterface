@@ -5,13 +5,17 @@ import { toast } from "sonner"
 import { useOnchainID } from "@/hooks/view/onChain/useOnchainID"
 import React from "react"
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
+import { useContractAddress } from "@/lib/addresses"
 
 export default function OnchainIDChecker() {
   const { address: userAddress } = useAccount()
   const idFactoryAddress = "0xb04eAce0e3D886Bc514e84Ed42a7C43FC2183536"
+  const issuerAddress = useContractAddress("issuer")
   const { hasOnchainID, loading: onchainIDLoading } = useOnchainID({
     userAddress,
     idFactoryAddress,
+    issuer: issuerAddress,
+    topic: 1,
   })
   const router = useRouter()
   const pathname = usePathname()
