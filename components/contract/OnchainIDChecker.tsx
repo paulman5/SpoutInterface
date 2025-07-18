@@ -31,12 +31,12 @@ export default function OnchainIDChecker() {
     }
   }, [pathname, searchParams])
 
-  // Show 'Claim USDC' Sonner if user has no USDC
+  // Show 'Claim USDC' Sonner if user has no USDC, but only on the trade page
   React.useEffect(() => {
     if (
       !usdcLoading &&
       usdcBalance === 0 &&
-      !(pathname === "/app/profile" && searchParams?.get("tab") === "kyc")
+      String(pathname) === "/app/trade"
     ) {
       toast.warning(
         "You need USDC to start trading. Claim your testnet USDC to begin.",

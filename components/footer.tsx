@@ -216,7 +216,7 @@ const DefaultFooter = () => {
 
   const rightLinks = [
     { href: "/contact", label: "Contact Us" },
-    { href: "/company", label: "Company" },
+    // { href: "/company", label: "Company" }, // Removed company link
     // { href: "/help", label: "Help Center" },
     // { href: "/privacy", label: "Privacy Policy" },
     // { href: "/terms", label: "Terms of Service" },
