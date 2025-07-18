@@ -215,7 +215,10 @@ const DefaultFooter = () => {
   ]
 
   const rightLinks = [
-    { href: "/contact", label: "Contact Us" },
+    {
+      href: "https://drive.google.com/file/d/1fklbqmZhgxzIzXN0aEjsf2NFat2QdpFp/view",
+      label: "Whitepaper",
+    },
     // { href: "/company", label: "Company" }, // Removed company link
     // { href: "/help", label: "Help Center" },
     // { href: "/privacy", label: "Privacy Policy" },
