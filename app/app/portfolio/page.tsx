@@ -36,6 +36,7 @@ import { useReturns } from "@/hooks/api/useReturns"
 
 import { format } from "date-fns"
 import { Suspense } from "react"
+import Image from "next/image"
 
 function PortfolioPage() {
   const { address: userAddress } = useAccount()
@@ -312,10 +313,21 @@ function PortfolioPage() {
                         className="flex items-center justify-between p-6 bg-slate-50 rounded-2xl hover:bg-slate-100 transition-colors"
                       >
                         <div className="flex items-center space-x-4">
-                          <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
-                            <span className="font-bold text-white text-lg">
-                              {holding.symbol[0]}
-                            </span>
+                          <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center relative overflow-hidden">
+                            {/* Show SLQD logo if symbol is SLQD */}
+                            {holding.symbol === "SLQD" ? (
+                              <Image
+                                src="/partners/SLQD.png"
+                                alt="SLQD logo"
+                                fill
+                                style={{ objectFit: "cover" }}
+                                className="rounded-2xl"
+                              />
+                            ) : (
+                              <span className="font-bold text-white text-lg">
+                                {holding.symbol[0]}
+                              </span>
+                            )}
                           </div>
                           <div>
                             <h3 className="font-semibold text-lg">
