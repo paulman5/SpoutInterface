@@ -26,11 +26,13 @@ import Image from "next/image"
 import CustomConnectWallet from "@/components/custom-connect-wallet"
 import SignOutButton from "@/components/signOutButton"
 import React from "react"
+import { useAccount } from "wagmi"
 
 export function DashboardSidebarNavClient() {
   const { open } = useSidebar()
   const router = useRouter()
   const pathname = usePathname()
+  const { isConnected } = useAccount()
 
   const isActive = (path: string) => {
     if (path === "/app") {
@@ -124,15 +126,22 @@ export function DashboardSidebarNavClient() {
       </SidebarContent>
       <SidebarFooter className="p-4 border-t">
         <div className="space-y-3">
+          {/* Connection status indicator */}
           <div className="flex items-center gap-3 px-2 py-1">
-            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-            <span className="text-sm text-gray-600">Signed in</span>
+            <div
+              className={`w-2 h-2 rounded-full ${isConnected ? "bg-green-500" : "bg-red-500"}`}
+            ></div>
+            <span
+              className={`text-sm ${isConnected ? "text-gray-600" : "text-red-600"}`}
+            >
+              {isConnected ? "Signed in" : "Not connected"}
+            </span>
           </div>
           <CustomConnectWallet />
-          <SignOutButton className="w-full flex items-center gap-3 px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
+          {/* <SignOutButton className="w-full flex items-center gap-3 px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
             <LogOut className="h-4 w-4" />
             <span>Sign Out</span>
-          </SignOutButton>
+          </SignOutButton> */}
           <div className="text-xs text-gray-500 text-center pt-2 border-t">
             © 2024 Spout Finance
           </div>
