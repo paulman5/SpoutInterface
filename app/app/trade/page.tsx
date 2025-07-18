@@ -572,8 +572,14 @@ const Page = () => {
   return (
     <div className="space-y-8 max-w-5xl mx-auto px-2 md:px-0">
       {/* Header Section */}
-      <div className="bg-gradient-to-r from-purple-600 via-purple-700 to-purple-800 rounded-3xl p-8 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(255,255,255,0.1),transparent_50%)]"></div>
+      <div
+        className="bg-gradient-to-br rounded-3xl p-8 text-white relative overflow-hidden"
+        style={{
+          background:
+            "linear-gradient(120deg, #7F1DFF 0%, #4F46E5 60%, #0EA5E9 100%)",
+        }}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_40%,rgba(255,255,255,0.08),transparent_70%)]"></div>
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-4">
             <Badge
