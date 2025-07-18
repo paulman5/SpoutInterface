@@ -107,11 +107,12 @@ export function DashboardSidebarNavClient() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={isActive("/app/markets")}>
-              <Link href="/app/markets" className="flex items-center gap-3">
-                <Store className="h-4 w-4" />
-                <span>Markets</span>
-              </Link>
+            <SidebarMenuButton className="flex items-center gap-3 opacity-75 cursor-not-allowed">
+              <Store className="h-4 w-4" />
+              <span>Markets</span>
+              <Badge variant="secondary" className="ml-auto">
+                Soon
+              </Badge>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
