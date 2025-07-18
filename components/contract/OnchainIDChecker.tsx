@@ -6,6 +6,7 @@ import { useOnchainID } from "@/hooks/view/onChain/useOnchainID"
 import React from "react"
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
 import { useContractAddress } from "@/lib/addresses"
+import { useUSDCTokenBalance } from "@/hooks/view/onChain/useUSDCTokenBalance"
 
 export default function OnchainIDChecker() {
   const { address: userAddress } = useAccount()
@@ -17,6 +18,8 @@ export default function OnchainIDChecker() {
     issuer: issuerAddress,
     topic: 1,
   })
+  const { balance: usdcBalance, isLoading: usdcLoading } =
+    useUSDCTokenBalance(userAddress)
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -28,8 +31,31 @@ export default function OnchainIDChecker() {
     }
   }, [pathname, searchParams])
 
+  // Show 'Claim USDC' Sonner if user has no USDC
   React.useEffect(() => {
-    // Only show the toast if NOT already on the KYC tab
+    if (
+      !usdcLoading &&
+      usdcBalance === 0 &&
+      !(pathname === "/app/profile" && searchParams?.get("tab") === "kyc")
+    ) {
+      toast.warning(
+        "You need USDC to start trading. Claim your testnet USDC to begin.",
+        {
+          action: {
+            label: "Claim USDC",
+            onClick: () => {
+              window.open("https://testnet.zenithswap.xyz/swap", "_blank")
+              toast.dismiss()
+            },
+          },
+          duration: Infinity,
+        }
+      )
+    }
+  }, [usdcBalance, usdcLoading, pathname, searchParams])
+
+  // Show 'Complete Profile' Sonner if user has not completed KYC
+  React.useEffect(() => {
     if (
       hasOnchainID === false &&
       !onchainIDLoading &&
