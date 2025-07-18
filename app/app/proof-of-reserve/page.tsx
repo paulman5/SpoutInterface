@@ -50,7 +50,7 @@ function ProofOfReservePage() {
   const { price: currentPrice, isLoading: priceLoading } = useMarketData("LQD")
   const { data: lqdYield, isLoading: lqdYieldLoading } = useYieldData("LQD")
 
-  const RESERVE_CONTRACT_ADDRESS = "0xf26c960Abf98875f87764502f64e8F5ef9134C20"
+  const RESERVE_CONTRACT_ADDRESS = "0x9D11687f26C27e21771908aE248f13411477B589"
   const { requestReserves, isRequestPending, totalReserves, refetchReserves } =
     useReserveContract(RESERVE_CONTRACT_ADDRESS)
 
