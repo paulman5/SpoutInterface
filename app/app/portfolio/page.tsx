@@ -33,8 +33,6 @@ import {
 import { useRecentActivity } from "@/hooks/view/onChain/useRecentActivity"
 import { Activity } from "lucide-react"
 import { useReturns } from "@/hooks/api/useReturns"
-
-import { format } from "date-fns"
 import { Suspense } from "react"
 import Image from "next/image"
 
@@ -52,11 +50,11 @@ function PortfolioPage() {
     previousClose,
     isLoading: priceLoading,
     error: priceError,
-  } = useMarketData("SLQD") // Using SLQD as price reference
+  } = useMarketData("LQD") // Using SLQD as price reference
 
   const { returns, isLoading: returnsLoading } = useReturns("SLQD")
 
-  const { username, loading } = useCurrentUser()
+  const { username } = useCurrentUser()
 
   const {
     activities,
