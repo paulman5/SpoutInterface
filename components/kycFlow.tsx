@@ -33,10 +33,10 @@ import {
   Wallet,
   UserCheck,
   Shield,
+  RefreshCw,
 } from "lucide-react"
 import gatewayABI from "@/abi/gateway.json"
-import idFactoryABI from "@/abi/idfactory.json"
-import onchainidABI from "@/abi/onchainid.json"
+
 import { useContractAddress } from "@/lib/addresses"
 import { countryCodes } from "@/lib/utils"
 import { useOnchainID } from "@/hooks/view/onChain/useOnchainID"
@@ -97,6 +97,7 @@ export default function KYCFlow() {
     kycClaim,
     kycLoading,
     kycError,
+    refetch: refetchOnchainID,
   } = useOnchainID({
     userAddress: address,
     idFactoryAddress,
@@ -110,6 +111,19 @@ export default function KYCFlow() {
       setOnchainIDAddressCurrent(onchainIDAddress)
     }
   }, [onchainIDAddress])
+
+  // Refetch identity data when deployment is successful
+  useEffect(() => {
+    if (isDeployed) {
+      console.log("✅ Identity deployed successfully, refetching data...")
+      // Add a small delay to ensure the blockchain state has updated
+      const timer = setTimeout(async () => {
+        await refetchOnchainID()
+      }, 2000) // 2 second delay
+
+      return () => clearTimeout(timer)
+    }
+  }, [isDeployed, refetchOnchainID])
 
   console.log("identityAddress", onchainIDAddress)
 
@@ -496,16 +510,28 @@ export default function KYCFlow() {
                   ) : (
                     <div className="flex items-center space-x-3 p-4 bg-emerald-50 rounded-lg">
                       <CheckCircle className="h-5 w-5 text-emerald-600" />
-                      <div>
+                      <div className="flex-1">
                         <p className="font-medium text-emerald-800">
                           {hasExistingIdentity && !isDeployed
                             ? "Identity Already Exists"
                             : "Identity Deployed Successfully"}
                         </p>
-                        <p className="text-sm text-emerald-600">
+                        <div className="text-sm text-emerald-600">
                           OnchainID Address:{" "}
-                          {onchainIDAddressCurrent || "Loading..."}
-                        </p>
+                          {(isDeployed && !onchainIDAddressCurrent) ||
+                          isCheckingIdentity ? (
+                            <div className="flex items-center space-x-2 mt-1">
+                              <Loader2 className="h-3 w-3 animate-spin" />
+                              <span>Loading identity address...</span>
+                            </div>
+                          ) : onchainIDAddressCurrent ? (
+                            <span className="font-mono text-xs break-all">
+                              {onchainIDAddressCurrent}
+                            </span>
+                          ) : (
+                            <span>Loading...</span>
+                          )}
+                        </div>
                         {hasExistingIdentity && !isDeployed && (
                           <p className="text-xs text-emerald-500 mt-1">
                             Your onchain identity was already created.

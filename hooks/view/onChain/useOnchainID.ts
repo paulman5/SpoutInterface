@@ -23,6 +23,7 @@ export function useOnchainID({
     data: onchainID,
     isLoading,
     error,
+    refetch: refetchIdentity,
   } = useReadContract({
     address: canReadIdentity ? (idFactoryAddress as `0x${string}`) : undefined,
     abi: idFactoryABI,
@@ -35,6 +36,14 @@ export function useOnchainID({
     onchainID &&
     typeof onchainID === "string" &&
     onchainID !== "0x0000000000000000000000000000000000000000"
+
+  // Return null instead of zero address to prevent UI from showing it
+  const onchainIDAddress =
+    onchainID &&
+    typeof onchainID === "string" &&
+    onchainID !== "0x0000000000000000000000000000000000000000"
+      ? onchainID
+      : null
 
   // Calculate claimId for KYC using ethers.js (v6) only if issuer and topic are defined
   let claimId: `0x${string}` | undefined = undefined
@@ -55,6 +64,7 @@ export function useOnchainID({
     data: kycClaim,
     isLoading: kycLoading,
     error: kycError,
+    refetch: refetchClaim,
   } = useReadContract({
     address: canReadClaim ? (onchainID as `0x${string}`) : undefined,
     abi: onchainidABI,
@@ -76,14 +86,24 @@ export function useOnchainID({
     console.log("hasKYCClaim", hasKYCClaim)
   }
 
+  // Combined refetch function that refetches both identity and claim data
+  const refetch = async () => {
+    console.log("🔄 Refetching onchain identity data...")
+    await refetchIdentity()
+    if (canReadClaim) {
+      await refetchClaim()
+    }
+  }
+
   return {
     hasOnchainID,
-    onchainIDAddress: onchainID,
+    onchainIDAddress: onchainIDAddress,
     loading: isLoading,
     error,
     hasKYCClaim,
     kycClaim,
     kycLoading,
     kycError,
+    refetch, // Export the refetch function
   }
 }
