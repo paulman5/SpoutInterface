@@ -1,3 +1,5 @@
+"use client"
+
 import { useEffect, useState } from "react"
 
 // Define the possible screen sizes as a const array for better type inference

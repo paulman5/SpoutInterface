@@ -42,7 +42,7 @@ const initialPartners = [
   },
 ]
 
-export default function PartnerTicker() {
+export function PartnerTicker() {
   const [offset, setOffset] = useState(0)
   const tickerRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)

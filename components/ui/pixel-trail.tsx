@@ -1,3 +1,5 @@
+"use client"
+
 import React, { RefObject, useCallback, useMemo, useRef } from "react"
 import { motion, useAnimationControls } from "framer-motion"
 import { v4 as uuidv4 } from "uuid"
@@ -21,7 +23,9 @@ const PixelTrail: React.FC<PixelTrailProps> = ({
   pixelClassName,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null)
-  const dimensions = useDimensions(containerRef as RefObject<HTMLElement | SVGElement>)
+  const dimensions = useDimensions(
+    containerRef as RefObject<HTMLElement | SVGElement>
+  )
   const trailId = useRef(uuidv4())
 
   const handleMouseMove = useCallback(
