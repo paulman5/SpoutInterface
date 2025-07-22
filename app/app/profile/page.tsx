@@ -2,14 +2,15 @@
 
 import ProfileHeader from "@/components/features/profile/profileheader"
 import ProfileTabs from "@/components/features/profile/profiletabs"
+import { Suspense } from "react"
 
-function ProfilePage() {
+export default function ProfilePage() {
   return (
     <div className="space-y-8">
       <ProfileHeader />
-      <ProfileTabs />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ProfileTabs />
+      </Suspense>
     </div>
   )
 }
-
-export default ProfilePage

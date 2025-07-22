@@ -4,11 +4,9 @@ import React, { useState, useEffect } from "react"
 import {
   useAccount,
   useWriteContract,
-  useReadContract,
   useWaitForTransactionReceipt,
 } from "wagmi"
-import { concatHex } from "viem"
-import { ethers } from "ethers"
+
 import {
   Card,
   CardContent,
@@ -33,7 +31,6 @@ import {
   Wallet,
   UserCheck,
   Shield,
-  RefreshCw,
 } from "lucide-react"
 import gatewayABI from "@/abi/gateway.json"
 
@@ -90,13 +87,9 @@ export default function KYCFlow() {
 
   // Use useOnchainID for all identity info
   const {
-    hasOnchainID,
     onchainIDAddress,
     loading: isCheckingIdentity,
     hasKYCClaim,
-    kycClaim,
-    kycLoading,
-    kycError,
     refetch: refetchOnchainID,
   } = useOnchainID({
     userAddress: address,
@@ -304,7 +297,7 @@ export default function KYCFlow() {
     } else if (isClaimAdded) {
       setCurrentStep(4)
     }
-  }, [isConnected, isDeployed, hasKYCClaim, isClaimAdded])
+  }, [isConnected, isDeployed, hasKYCClaim, isClaimAdded, hasExistingIdentity])
 
   // Update onchain ID address when identity is deployed or already exists
   useEffect(() => {
