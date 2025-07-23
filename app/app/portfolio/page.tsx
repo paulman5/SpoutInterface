@@ -3,6 +3,8 @@
 import PortfolioHeader from "@/components/features/portfolio/portfolioheader"
 import PortfolioSummaryCards from "@/components/features/portfolio/portfoliosummarycards"
 import PortfolioHoldings from "@/components/features/portfolio/portfolioholdings"
+import PortfolioPerformance from "@/components/features/portfolio/portfolioPerformance"
+import PortfolioActivity from "@/components/features/portfolio/portfolioActivity"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { useTokenBalance } from "@/hooks/view/onChain/useTokenBalance"
 import { useMarketData } from "@/hooks/api/useMarketData"
@@ -10,9 +12,7 @@ import { useAccount } from "wagmi"
 import { useCurrentUser } from "@/hooks/auth/useCurrentUser"
 import { useRecentActivity } from "@/hooks/view/onChain/useRecentActivity"
 import { useReturns } from "@/hooks/api/useReturns"
-import { Activity } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+
 import { RefreshCw } from "lucide-react"
 
 function PortfolioPage() {
@@ -41,7 +41,7 @@ function PortfolioPage() {
   } = useRecentActivity(userAddress)
 
   const formatNumber = (num: number) => Math.round(num).toLocaleString()
-  const formatPercent = (num: number) => Number(num.toFixed(2))
+  const formatPercent = (num: number) => num.toFixed(2)
 
   const portfolioValue =
     tokenBalance && currentPrice ? tokenBalance * currentPrice : 0
@@ -63,8 +63,8 @@ function PortfolioPage() {
       avgPrice: previousClose || 0,
       currentPrice: currentPrice ?? 0,
       value: portfolioValue,
-      dayChange: formatPercent(dayChangePercent),
-      totalReturn: formatPercent(totalReturnPercent),
+      dayChange: dayChangePercent, // number, not formatted string
+      totalReturn: totalReturnPercent, // number, not formatted string
       allocation: 100,
     },
   ]
@@ -124,7 +124,21 @@ function PortfolioPage() {
                 formatNumber={formatNumber}
               />
             </TabsContent>
-            {/* Performance and Activity tabs can be modularized next */}
+            <TabsContent value="performance" className="space-y-6">
+              <PortfolioPerformance
+                holdings={holdings}
+                returns={returns}
+                formatPercent={formatPercent}
+              />
+            </TabsContent>
+            <TabsContent value="activity" className="space-y-6">
+              <PortfolioActivity
+                activities={activities}
+                activitiesLoading={activitiesLoading}
+                hasMore={hasMore}
+                loadMore={loadMore}
+              />
+            </TabsContent>
           </Tabs>
         </>
       )}
