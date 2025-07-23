@@ -3,8 +3,8 @@
 import PortfolioHeader from "@/components/features/portfolio/portfolioheader"
 import PortfolioSummaryCards from "@/components/features/portfolio/portfoliosummarycards"
 import PortfolioHoldings from "@/components/features/portfolio/portfolioholdings"
-import PortfolioPerformance from "@/components/features/portfolio/portfolioPerformance"
-import PortfolioActivity from "@/components/features/portfolio/portfolioActivity"
+import PortfolioPerformance from "@/components/features/portfolio/portfolioperformance"
+import PortfolioActivity from "@/components/features/portfolio/portfolioactivity"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { useTokenBalance } from "@/hooks/view/onChain/useTokenBalance"
 import { useMarketData } from "@/hooks/api/useMarketData"
@@ -12,7 +12,6 @@ import { useAccount } from "wagmi"
 import { useCurrentUser } from "@/hooks/auth/useCurrentUser"
 import { useRecentActivity } from "@/hooks/view/onChain/useRecentActivity"
 import { useReturns } from "@/hooks/api/useReturns"
-
 import { RefreshCw } from "lucide-react"
 
 function PortfolioPage() {
