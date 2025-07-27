@@ -31,7 +31,6 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip"
 import { useRecentActivity } from "@/hooks/view/onChain/useRecentActivity"
-import { Activity } from "lucide-react"
 import { useReturns } from "@/hooks/api/useReturns"
 import PortfolioPerformance from "@/components/features/portfolio/portfolioperformance"
 import PortfolioActivity from "@/components/features/portfolio/portfolioactivity"

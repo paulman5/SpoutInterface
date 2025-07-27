@@ -12,7 +12,7 @@ export const contractaddresses = {
     688688: "0xA5C77b623BEB3bC0071fA568de99e15Ccc06C7cb", // Pharos Testnet
   },
   orders: {
-    84532: "0xBa20ef0d4A8015f92E70dfdf73964EbD5f67bAd1", // Base Sepolia
+    84532: "0x6c9C17Fb0cAB271A235552fC8db6c169a55CCf72", // Base Sepolia
     688688: "0x9538f2F5a1a9528696665275D2bC12291266a557", // Pharos Testnet
   },
   usdc: {
