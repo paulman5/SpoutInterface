@@ -93,7 +93,7 @@ export default function PortfolioHoldings({
                   className={`text-sm font-medium ${holding.dayChange >= 0 ? "text-green-600" : "text-red-600"}`}
                 >
                   {holding.dayChange >= 0 ? "+" : ""}
-                  {holding.dayChange}%
+                  {holding.dayChange.toFixed(3)}%
                 </p>
                 <p className="text-xs text-gray-500">
                   {holding.allocation}% of portfolio
