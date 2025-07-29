@@ -76,14 +76,33 @@ export function useOnchainID({
   // Check if claim is valid (issuer should not be zero address and topic should match)
   let hasKYCClaim = false
   console.log("kycClaim data:", kycClaim)
+  console.log("🔍 KYC Claim Verification Debug:")
+  console.log("Claim data:", kycClaim)
+  console.log("Expected issuer:", issuer)
+  console.log("Expected topic:", topic)
+  console.log("ClaimId:", claimId)
+  
   if (kycClaim && issuer && topic !== undefined && Array.isArray(kycClaim)) {
-    hasKYCClaim =
-      kycClaim[2] && // issuer
-      kycClaim[2].toLowerCase() === issuer.toLowerCase() &&
-      kycClaim[0] !== undefined &&
-      Number(kycClaim[0]) === topic &&
-      kycClaim[2] !== "0x0000000000000000000000000000000000000000"
-    console.log("hasKYCClaim", hasKYCClaim)
+    const claimIssuer = kycClaim[2]
+    const claimTopic = kycClaim[0]
+    const isIssuerMatch = claimIssuer && claimIssuer.toLowerCase() === issuer.toLowerCase()
+    const isTopicMatch = claimTopic !== undefined && Number(claimTopic) === topic
+    const isNotZeroAddress = claimIssuer !== "0x0000000000000000000000000000000000000000"
+    
+    console.log("Claim issuer:", claimIssuer)
+    console.log("Claim topic:", claimTopic)
+    console.log("Issuer match:", isIssuerMatch)
+    console.log("Topic match:", isTopicMatch)
+    console.log("Not zero address:", isNotZeroAddress)
+    
+    hasKYCClaim = isIssuerMatch && isTopicMatch && isNotZeroAddress
+    console.log("Final hasKYCClaim:", hasKYCClaim)
+  } else {
+    console.log("❌ KYC claim verification failed - missing data:")
+    console.log("kycClaim exists:", !!kycClaim)
+    console.log("issuer exists:", !!issuer)
+    console.log("topic defined:", topic !== undefined)
+    console.log("is array:", Array.isArray(kycClaim))
   }
 
   // Combined refetch function that refetches both identity and claim data

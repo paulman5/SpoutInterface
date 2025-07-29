@@ -5,6 +5,7 @@ import {
   useAccount,
   useWriteContract,
   useWaitForTransactionReceipt,
+  useChainId,
 } from "wagmi"
 
 import {
@@ -38,6 +39,7 @@ import { useContractAddress } from "@/lib/addresses"
 import { countryCodes } from "@/lib/utils"
 import { useOnchainID } from "@/hooks/view/onChain/useOnchainID"
 import { useAddClaim } from "@/hooks/writes/onChain/useAddClaim"
+import { useIdentityVerification } from "@/hooks/view/onChain/useIdentityVerification"
 interface KYCSignatureResponse {
   signature: {
     r: string
@@ -98,6 +100,13 @@ export default function KYCFlow() {
     topic: 1,
   })
 
+  // Check identity verification status
+  const {
+    isVerified: isIdentityVerified,
+    isLoading: isCheckingVerification,
+    refetch: refetchVerification,
+  } = useIdentityVerification(address)
+
   // Sync local state with hook value
   useEffect(() => {
     if (typeof onchainIDAddress === "string") {
@@ -117,6 +126,18 @@ export default function KYCFlow() {
       return () => clearTimeout(timer)
     }
   }, [isDeployed, refetchOnchainID])
+
+  // Refetch verification status when KYC is complete but identity is not verified
+  useEffect(() => {
+    if (hasKYCClaim && !isIdentityVerified && !isCheckingVerification) {
+      console.log("🔄 KYC complete but identity not verified, checking verification status...")
+      const timer = setTimeout(async () => {
+        await refetchVerification()
+      }, 3000) // Check every 3 seconds
+
+      return () => clearTimeout(timer)
+    }
+  }, [hasKYCClaim, isIdentityVerified, isCheckingVerification, refetchVerification])
 
   console.log("identityAddress", onchainIDAddress)
 
@@ -171,20 +192,39 @@ export default function KYCFlow() {
       icon: Shield,
       status: isClaimAdded ? "completed" : "pending",
     },
+    {
+      id: 5,
+      title: "Identity Registration",
+      description: "Register identity in the identity registry",
+      icon: Shield,
+      status: isIdentityVerified ? "completed" : "pending",
+    },
   ]
 
   // Filter out Add Claim step only if both OnchainID and KYC claim exist
-  const visibleSteps =
-    hasExistingIdentity && hasKYCClaim
-      ? steps.filter((step) => step.id !== 4)
-      : steps
+  // Show identity registration step only if KYC is complete but identity is not verified
+  const visibleSteps = (() => {
+    if (hasExistingIdentity && hasKYCClaim && isIdentityVerified) {
+      return steps.filter((step) => step.id !== 4 && step.id !== 5)
+    } else if (hasExistingIdentity && hasKYCClaim && !isIdentityVerified) {
+      return steps.filter((step) => step.id !== 4) // Keep identity registration step
+    } else {
+      return steps
+    }
+  })()
 
-  // Modify progress calculation to show 80% when KYC is verified but claim not added
-  const progress = hasExistingIdentity
-    ? 100
-    : hasKYCClaim && !isClaimAdded
-      ? 80
-      : ((currentStep - 1) / (steps.length - 1)) * 100
+  // Modify progress calculation
+  const progress = (() => {
+    if (hasExistingIdentity && hasKYCClaim && isIdentityVerified) {
+      return 100
+    } else if (hasExistingIdentity && hasKYCClaim && !isIdentityVerified) {
+      return 80 // KYC complete but identity not verified
+    } else if (hasKYCClaim && !isClaimAdded) {
+      return 60
+    } else {
+      return ((currentStep - 1) / (steps.length - 1)) * 100
+    }
+  })()
 
   // Handle identity deployment
   const handleDeployIdentity = async () => {
@@ -284,6 +324,19 @@ export default function KYCFlow() {
   console.log("kycsignature address", kycSignature?.issuerAddress)
   console.log("issuerAddress", issuerAddress)
 
+  // Add comprehensive debugging logs
+  console.log("🔍 KYC Debug Information:")
+  console.log("Current chain ID:", useChainId())
+  console.log("Expected issuer address:", issuerAddress)
+  console.log("KYC signature issuer address:", kycSignature?.issuerAddress)
+  console.log("OnchainID address:", onchainIDAddress)
+  console.log("Has KYC claim:", hasKYCClaim)
+  console.log("Is claim added:", isClaimAdded)
+  console.log("Current step:", currentStep)
+  console.log("Has existing identity:", hasExistingIdentity)
+  console.log("Is identity verified:", isIdentityVerified)
+  console.log("Is checking verification:", isCheckingVerification)
+
   // Update current step based on state
   useEffect(() => {
     if (!isConnected) {
@@ -294,10 +347,13 @@ export default function KYCFlow() {
       setCurrentStep(3)
     } else if (hasKYCClaim && !isClaimAdded) {
       setCurrentStep(4)
-    } else if (isClaimAdded) {
-      setCurrentStep(4)
+    } else if (hasKYCClaim && isClaimAdded && !isIdentityVerified) {
+      // Stay at step 3 (KYC Verification) if KYC is complete but identity is not verified
+      setCurrentStep(3)
+    } else if (isClaimAdded && isIdentityVerified) {
+      setCurrentStep(5)
     }
-  }, [isConnected, isDeployed, hasKYCClaim, isClaimAdded, hasExistingIdentity])
+  }, [isConnected, isDeployed, hasKYCClaim, isClaimAdded, hasExistingIdentity, isIdentityVerified])
 
   // Update onchain ID address when identity is deployed or already exists
   useEffect(() => {
@@ -541,60 +597,72 @@ export default function KYCFlow() {
               {step.id === 3 && (
                 <div className="space-y-4">
                   {hasKYCClaim ? (
-                    <div className="flex items-center space-x-3 p-4 bg-emerald-50 rounded-lg">
-                      <CheckCircle className="h-5 w-5 text-emerald-600" />
-                      <div>
-                        <p className="font-medium text-emerald-800">
-                          KYC Verification Completed
-                        </p>
-                        <p className="text-sm text-emerald-600">
-                          Your KYC verification is complete and your onchain
-                          identity is active.
-                        </p>
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-3 p-4 bg-emerald-50 rounded-lg">
+                        <CheckCircle className="h-5 w-5 text-emerald-600" />
+                        <div className="flex-1">
+                          <p className="font-medium text-emerald-800">
+                            KYC Verification Complete
+                          </p>
+                          <p className="text-sm text-emerald-600">
+                            Your KYC verification has been completed successfully.
+                            {!isIdentityVerified && (
+                              <span className="block mt-1 text-orange-600">
+                                ⚠️ Identity registration pending - this may take a few moments.
+                              </span>
+                            )}
+                          </p>
+                        </div>
                       </div>
+
+                      {!isIdentityVerified && (
+                        <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
+                          <div className="flex items-center space-x-2">
+                            <Loader2 className="h-4 w-4 text-orange-600 animate-spin" />
+                            <div>
+                              <p className="text-sm font-medium text-orange-800">
+                                Registering Identity
+                              </p>
+                              <p className="text-xs text-orange-600">
+                                Your identity is being registered in the identity registry.
+                                This process may take a few moments.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {isIdentityVerified && (
+                        <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+                          <div className="flex items-center space-x-2">
+                            <CheckCircle className="h-4 w-4 text-emerald-600" />
+                            <div>
+                              <p className="text-sm font-medium text-emerald-800">
+                                Identity Registered
+                              </p>
+                              <p className="text-xs text-emerald-600">
+                                Your identity has been successfully registered and verified.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      <div className="p-4 bg-purple-50 rounded-lg">
-                        <h4 className="font-medium text-purple-800 mb-2">
+                      <div className="p-4 bg-blue-50 rounded-lg">
+                        <h4 className="font-medium text-blue-800 mb-2">
                           Complete KYC Verification
                         </h4>
-                        <p className="text-sm text-purple-600">
-                          Select your country and submit for KYC verification.
-                          This will generate a cryptographic signature for your
-                          identity.
+                        <p className="text-sm text-blue-600">
+                          Get your KYC signature to verify your identity on-chain.
+                          This is required for trading ERC3643 compliant tokens.
                         </p>
                       </div>
 
-                      <div className="space-y-3">
-                        <label className="text-sm font-medium text-gray-700">
-                          Country
-                        </label>
-                        <Select
-                          value={selectedCountry.toString()}
-                          onValueChange={(value: string) =>
-                            setSelectedCountry(parseInt(value))
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select your country" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {countryCodes.map((country, index) => (
-                              <SelectItem
-                                key={`${country.code}-${country.name}`}
-                                value={country.code.toString()}
-                              >
-                                {country.name} (+{country.code})
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
                       <Button
-                        onClick={() => handleKYCSignature()}
-                        isDisabled={isLoading || !hasExistingIdentity}
+                        onClick={handleKYCSignature}
+                        isDisabled={!address || !onchainIDAddress || isLoading}
                         className="w-full"
                       >
                         {isLoading ? (
@@ -607,12 +675,10 @@ export default function KYCFlow() {
                         )}
                       </Button>
 
-                      {(error || addClaimError) && (
+                      {error && (
                         <div className="flex items-center space-x-2 p-3 bg-red-50 rounded-lg">
                           <AlertCircle className="h-4 w-4 text-red-600" />
-                          <span className="text-sm text-red-600">
-                            {error || addClaimError}
-                          </span>
+                          <span className="text-sm text-red-600">{error}</span>
                         </div>
                       )}
                     </div>
@@ -687,6 +753,64 @@ export default function KYCFlow() {
                           KYC claim has been added to your identity
                         </p>
                       </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Step 5: Identity Registration */}
+              {step.id === 5 && (
+                <div className="space-y-4">
+                  {isIdentityVerified ? (
+                    <div className="flex items-center space-x-3 p-4 bg-emerald-50 rounded-lg">
+                      <CheckCircle className="h-5 w-5 text-emerald-600" />
+                      <div>
+                        <p className="font-medium text-emerald-800">
+                          Identity Registered
+                        </p>
+                        <p className="text-sm text-emerald-600">
+                          Your onchain identity is now registered in the
+                          identity registry.
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="p-4 bg-purple-50 rounded-lg">
+                        <h4 className="font-medium text-purple-800 mb-2">
+                          Register Identity
+                        </h4>
+                        <p className="text-sm text-purple-600">
+                          Register your onchain identity in the identity
+                          registry to make it publicly verifiable.
+                        </p>
+                      </div>
+
+                      <Button
+                        onClick={() => {
+                          // This step is not directly user-interactive in the current flow
+                          // as identity registration is handled by the backend
+                          // or when the user completes KYC and identity is verified.
+                          // For now, we'll just show a message.
+                          alert(
+                            "Identity registration is handled by the backend. Once KYC is complete and identity is verified, it will be registered."
+                          )
+                        }}
+                        isDisabled={true} // Disable interaction for now
+                        className="w-full"
+                      >
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Registering Identity...
+                      </Button>
+
+                      {(error || addClaimError) && (
+                        <div className="flex items-center space-x-2 p-3 bg-red-50 rounded-lg">
+                          <AlertCircle className="h-4 w-4 text-red-600" />
+                          <span className="text-sm text-red-600">
+                            {error || addClaimError}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

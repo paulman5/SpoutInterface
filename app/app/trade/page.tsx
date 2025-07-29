@@ -11,6 +11,8 @@ import { waitForTransactionReceipt } from "wagmi/actions"
 import { useTokenBalance } from "@/hooks/view/onChain/useTokenBalance"
 import { useUSDCTokenBalance } from "@/hooks/view/onChain/useUSDCTokenBalance"
 import { useContractAddress } from "@/lib/addresses"
+import { useReadContract } from "wagmi"
+import erc3643ABI from "@/abi/erc3643.json"
 
 const TOKENS = [{ label: "LQD", value: "LQD" }]
 
@@ -44,6 +46,15 @@ const TradePage = () => {
     isLoading: usdcLoading,
     isError: usdcError,
   } = useUSDCTokenBalance(userAddress)
+
+  // Get token decimals dynamically
+  const { data: tokenDecimals } = useReadContract({
+    address: rwaTokenAddress,
+    abi: erc3643ABI.abi,
+    functionName: "decimals",
+  })
+
+  const actualTokenDecimals = tokenDecimals ? Number(tokenDecimals) : 6
 
   useEffect(() => {
     async function fetchETFData() {
@@ -166,6 +177,15 @@ const TradePage = () => {
   const handleBuy = async () => {
     if (!userAddress || !buyUsdc) return
     const amount = BigInt(Math.floor(Number(buyUsdc) * 1e6))
+    
+    console.log("🔍 Buy Order Debug:")
+    console.log("Input buyUsdc:", buyUsdc)
+    console.log("Parsed number:", Number(buyUsdc))
+    console.log("USDC decimals: 6")
+    console.log("Multiplier: 1e6")
+    console.log("Calculated amount:", Number(buyUsdc) * 1e6)
+    console.log("Final BigInt amount:", amount.toString())
+    
     const usdcAmount = parseFloat(buyUsdc)
     const estimatedTokenAmount = latestPrice > 0 ? usdcAmount / latestPrice : 0
     try {
@@ -181,7 +201,18 @@ const TradePage = () => {
   }
   const handleSell = () => {
     if (!sellToken) return
-    const tokenAmount = BigInt(Math.floor(Number(sellToken) * 1e6))
+    
+    // Use dynamic token decimals
+    const tokenAmount = BigInt(Math.floor(Number(sellToken) * Math.pow(10, actualTokenDecimals)))
+    
+    console.log("🔍 Sell Order Debug:")
+    console.log("Input sellToken:", sellToken)
+    console.log("Parsed number:", Number(sellToken))
+    console.log("Token decimals:", actualTokenDecimals)
+    console.log("Multiplier:", Math.pow(10, actualTokenDecimals))
+    console.log("Calculated amount:", Number(sellToken) * Math.pow(10, actualTokenDecimals))
+    console.log("Final BigInt amount:", tokenAmount.toString())
+    
     sellAsset(BigInt(1), selectedToken, rwaTokenAddress, tokenAmount)
   }
 
