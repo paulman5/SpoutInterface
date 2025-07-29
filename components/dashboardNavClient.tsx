@@ -15,16 +15,13 @@ import {
   FlaskConical,
   BarChart3,
   Users,
-  Shield,
   TrendingUp,
-  LogOut,
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useSidebar } from "@/components/ui/sidebar"
 import Image from "next/image"
 import CustomConnectWallet from "@/components/custom-connect-wallet"
-import SignOutButton from "@/components/signOutButton"
 import React from "react"
 import { useAccount } from "wagmi"
 
