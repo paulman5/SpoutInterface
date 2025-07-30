@@ -91,15 +91,12 @@ export const Footer: React.FC<FooterProps> = ({
       <div className="container mx-auto flex flex-col md:flex-row justify-between w-full gap-8 py-16 px-6 lg:px-12">
         <div className="space-y-6">
           <div className="flex items-center space-x-3 mb-6">
-            <div className="w-10 h-10 bg-emerald-600 rounded-2xl flex items-center justify-center">
-              <Image
-                src="/Whale.png"
-                alt="spout finance logo"
-                width={32}
-                height={32}
-              />
-            </div>
-            <span className="font-bold text-2xl text-white">Spout</span>
+            <Image
+              src="/SpoutWhite.png"
+              alt="spout finance logo"
+              width={120}
+              height={120}
+            />
           </div>
 
           <ul className="flex flex-wrap gap-6">

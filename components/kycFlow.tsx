@@ -557,38 +557,51 @@ export default function KYCFlow() {
                       )}
                     </div>
                   ) : (
-                    <div className="flex items-center space-x-3 p-4 bg-emerald-50 rounded-lg">
-                      <CheckCircle className="h-5 w-5 text-emerald-600" />
-                      <div className="flex-1">
-                        <p className="font-medium text-emerald-800">
-                          {hasExistingIdentity && !isDeployed
-                            ? "Identity Already Exists"
-                            : "Identity Deployed Successfully"}
-                        </p>
-                        <div className="text-sm text-emerald-600">
-                          OnchainID Address:{" "}
-                          {(isDeployed && !onchainIDAddressCurrent) ||
-                          isCheckingIdentity ? (
-                            <div className="flex items-center space-x-2 mt-1">
-                              <Loader2 className="h-3 w-3 animate-spin" />
-                              <span>Loading identity address...</span>
-                            </div>
-                          ) : onchainIDAddressCurrent ? (
-                            <span className="font-mono text-xs break-all">
-                              {onchainIDAddressCurrent}
-                            </span>
-                          ) : (
-                            <span>Loading...</span>
-                          )}
-                        </div>
-                        {hasExistingIdentity && !isDeployed && (
-                          <p className="text-xs text-emerald-500 mt-1">
+                    <>
+                      <div className="flex items-center space-x-3 p-4 bg-emerald-50 rounded-lg">
+                        <CheckCircle className="h-5 w-5 text-emerald-600" />
+                        <div>
+                          <p className="font-medium text-emerald-800">
+                            Identity Already Exists
+                          </p>
+                          <p className="text-sm text-emerald-600">
+                            OnchainID Address:{" "}
+                            {(isDeployed && !onchainIDAddressCurrent) ||
+                            isCheckingIdentity ? (
+                              <div className="flex items-center space-x-2 mt-1">
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                                <span>Loading identity address...</span>
+                              </div>
+                            ) : onchainIDAddressCurrent ? (
+                              <span className="font-mono text-xs break-all">
+                                {onchainIDAddressCurrent}
+                              </span>
+                            ) : (
+                              <span>Loading...</span>
+                            )}
+                          </p>
+                          <p className="text-xs text-emerald-600">
                             Your onchain identity was already created.
                             Proceeding to KYC verification.
                           </p>
-                        )}
+                        </div>
                       </div>
-                    </div>
+                      {isIdentityVerified && (
+                        <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+                          <div className="flex items-center space-x-2">
+                            <CheckCircle className="h-4 w-4 text-emerald-600" />
+                            <div>
+                              <p className="text-sm font-medium text-emerald-800">
+                                Identity Registered
+                              </p>
+                              <p className="text-xs text-emerald-600">
+                                Your identity has been successfully registered and verified.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               )}
