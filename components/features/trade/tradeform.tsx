@@ -6,8 +6,11 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ArrowDownCircle, ArrowUpCircle, TrendingUp } from "lucide-react"
+import { ArrowDownCircle, ArrowUpCircle, TrendingUp, Shield } from "lucide-react"
 import React from "react"
+import { useOnchainID } from "@/hooks/view/onChain/useOnchainID"
+import { useContractAddress } from "@/lib/addresses"
+import { useAccount } from "wagmi"
 
 type TradeFormProps = {
   tradeType: "buy" | "sell"
@@ -60,6 +63,20 @@ export default function TradeForm({
   priceChangePercent,
   priceChange,
 }: TradeFormProps) {
+  const { address: userAddress } = useAccount()
+  const idFactoryAddress = useContractAddress("idfactory")
+  const issuerAddress = useContractAddress("issuer")
+
+  const { hasKYCClaim, kycLoading } = useOnchainID({
+    userAddress,
+    idFactoryAddress,
+    issuer: issuerAddress || "",
+    topic: 1,
+  })
+
+  // Determine if buy button should be disabled
+  const isBuyDisabled = !buyUsdc || isApprovePending || isOrderPending || !hasKYCClaim || kycLoading
+
   return (
     <div className="w-full max-w-xl mx-auto">
       <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-slate-50 hover:shadow-xl transition-shadow duration-200">
@@ -256,15 +273,33 @@ export default function TradeForm({
                 </div>
               )}
 
+              {/* KYC Verification Warning */}
+              {!hasKYCClaim && !kycLoading && (
+                <div className="mb-4 p-4 rounded-lg bg-amber-50 border border-amber-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Shield className="w-4 h-4 text-amber-600" />
+                    <span className="text-sm font-medium text-amber-800">
+                      KYC Verification Required
+                    </span>
+                  </div>
+                  <p className="text-xs text-amber-700">
+                    You need to complete KYC verification before you can buy tokens. 
+                    Please complete the verification process in your profile.
+                  </p>
+                </div>
+              )}
+
               <Button
                 className="w-full mt-4 font-semibold text-lg py-3"
                 variant="success"
                 onClick={handleBuy}
-                isDisabled={!buyUsdc || isApprovePending || isOrderPending}
+                isDisabled={isBuyDisabled}
               >
                 {isApprovePending || isOrderPending
                   ? "Processing..."
-                  : `Buy S${selectedToken}`}
+                  : !hasKYCClaim && !kycLoading
+                    ? "KYC Required"
+                    : `Buy S${selectedToken}`}
               </Button>
             </>
           ) : (
