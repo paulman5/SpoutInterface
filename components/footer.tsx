@@ -86,7 +86,7 @@ export const Footer: React.FC<FooterProps> = ({
   return (
     <footer
       ref={footerRef}
-      className="bg-slate-900 text-white relative flex flex-col w-full h-full justify-between select-none"
+      className="bg-[#2A423D] text-white relative flex flex-col w-full h-full justify-between select-none"
     >
       <div className="container mx-auto flex flex-col md:flex-row justify-between w-full gap-8 py-16 px-6 lg:px-12">
         <div className="space-y-6">
