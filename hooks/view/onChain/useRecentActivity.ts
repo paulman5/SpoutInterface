@@ -169,35 +169,59 @@ export function useRecentActivity(userAddress?: string) {
 
   // Fetch recent mint events on mount
   useEffect(() => {
+    console.log("🔄 Starting transaction fetch...")
     console.log("Current state:", {
       decimals,
       currentPrice,
       hasUserAddress: !!userAddress,
+      userAddress,
+      chainId,
+      rwaTokenAddress,
+      hasPublicClient: !!publicClient,
     })
+    
     const fetchRecentMints = async () => {
       if (!publicClient || !userAddress) {
+        console.log("❌ Missing required data:", {
+          hasPublicClient: !!publicClient,
+          hasUserAddress: !!userAddress,
+        })
         setIsLoading(false)
         return
       }
 
       try {
+        console.log("🔍 Starting block number fetch...")
         const currentBlock = await publicClient.getBlockNumber()
+        console.log(`✅ Current block: ${currentBlock}`)
 
         console.log(`🔍 Debugging Recent Activity:`)
         console.log(`Current block: ${currentBlock}`)
         console.log(`Contract address: ${rwaTokenAddress}`)
         console.log(`Filtering for user address: ${userAddress}`)
         console.log(`Token decimals: ${decimals}`)
+        console.log(`Chain ID: ${chainId}`)
 
         // Verify contract exists
         try {
+          console.log("🔍 Checking if contract exists...")
           const contractCode = await publicClient.getBytecode({
             address: rwaTokenAddress,
           })
           console.log(`📋 Contract exists: ${contractCode ? "YES" : "NO"}`)
           console.log(`📋 Contract code length: ${contractCode?.length || 0}`)
+          
+          if (!contractCode) {
+            console.error("❌ Contract does not exist on this network!")
+            setActivities([])
+            setIsLoading(false)
+            return
+          }
         } catch (error) {
           console.error("❌ Error checking contract:", error)
+          setActivities([])
+          setIsLoading(false)
+          return
         }
 
         // Find Transfer event from the ABI
@@ -213,27 +237,9 @@ export function useRecentActivity(userAddress?: string) {
           return
         }
 
-        // Try a simple recent block first to test
-        console.log("🧪 Testing with recent 1000 blocks first...")
-        const testFromBlock = currentBlock - BigInt(1000)
-
-        try {
-          const testLogs = await publicClient.getLogs({
-            address: rwaTokenAddress,
-            event: transferEvent,
-            fromBlock: testFromBlock,
-            toBlock: currentBlock,
-          })
-          console.log(
-            `🧪 Test search found ${testLogs.length} Transfer events in last 1000 blocks`
-          )
-        } catch (testError) {
-          console.error("❌ Test search failed:", testError)
-        }
-
-        // Use chunked approach to avoid RPC limits
-        const chunkSize = BigInt(10000) // 50K blocks at a time (~28 hours)
-        const maxChunks = 20 // Up to 1M blocks total (~23 days)
+        // Use a much more conservative approach to avoid RPC timeouts
+        const chunkSize = BigInt(100) // Only search 100 blocks at a time
+        const maxChunks = 1 // Only search 1 chunk (100 blocks total)
         let allTransactions: any[] = []
 
         for (let i = 0; i < maxChunks; i++) {
@@ -245,12 +251,18 @@ export function useRecentActivity(userAddress?: string) {
           )
 
           try {
-            const logs = await publicClient.getLogs({
-              address: rwaTokenAddress,
-              event: transferEvent,
-              fromBlock,
-              toBlock,
-            })
+            // Add timeout to the request with shorter timeout
+            const logs = await Promise.race([
+              publicClient.getLogs({
+                address: rwaTokenAddress,
+                event: transferEvent,
+                fromBlock,
+                toBlock,
+              }),
+              new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Request timeout')), 3000) // Reduced to 3 seconds
+              )
+            ]) as any[]
 
             console.log(
               `📋 Chunk ${i + 1}: Found ${logs.length} Transfer events`
@@ -360,11 +372,24 @@ export function useRecentActivity(userAddress?: string) {
               `🔥 Chunk ${i + 1}: Found ${chunkTransactions.length} YOUR transactions (mints/burns) (total: ${allTransactions.length})`
             )
 
+            // If we found transactions, we can stop searching
+            if (allTransactions.length > 0) {
+              console.log("✅ Found transactions, stopping search...")
+              break
+            }
+
             // Continue collecting all transactions (no early exit)
           } catch (chunkError) {
             console.error(`❌ Chunk ${i + 1} failed:`, chunkError)
-            // Continue with next chunk
+            // If any chunk fails, just stop and show what we have
+            console.log("⚠️ RPC timeout detected, stopping search...")
+            break
           }
+        }
+
+        // If we found no transactions, show empty state
+        if (allTransactions.length === 0) {
+          console.log("📭 No transactions found in recent blocks")
         }
 
         // Sort transactions by block number (most recent first)
