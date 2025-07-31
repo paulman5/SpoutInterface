@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react"
-import { useWatchContractEvent, usePublicClient, useReadContract } from "wagmi"
+import { useWatchContractEvent, usePublicClient, useReadContract, useChainId } from "wagmi"
 import { useMarketData } from "@/hooks/api/useMarketData"
 import erc3643ABI from "@/abi/erc3643.json"
+import { useContractAddress } from "@/lib/addresses"
 
 export interface ActivityEvent {
   id: string
@@ -14,9 +15,6 @@ export interface ActivityEvent {
   transactionType: string
 }
 
-const RWA_TOKEN_ADDRESS =
-  "0xB5F83286a6F8590B4d01eC67c885252Ec5d0bdDB" as `0x${string}`
-
 export function useRecentActivity(userAddress?: string) {
   const [activities, setActivities] = useState<ActivityEvent[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -24,7 +22,11 @@ export function useRecentActivity(userAddress?: string) {
   const [allTransactions, setAllTransactions] = useState<any[]>([])
   const [showCount, setShowCount] = useState(5)
   const publicClient = usePublicClient()
+  const chainId = useChainId()
   const { price: currentPrice } = useMarketData("LQD")
+
+  // Get the correct contract address for the current network
+  const rwaTokenAddress = useContractAddress("rwatoken") as `0x${string}`
 
   // Add a constant for fallback price
   const FALLBACK_PRICE = 108.725
@@ -96,7 +98,7 @@ export function useRecentActivity(userAddress?: string) {
 
   // Get the actual decimals from the contract
   const { data: contractDecimals } = useReadContract({
-    address: RWA_TOKEN_ADDRESS,
+    address: rwaTokenAddress,
     abi: erc3643ABI.abi,
     functionName: "decimals",
   })
@@ -118,7 +120,7 @@ export function useRecentActivity(userAddress?: string) {
 
   // Watch for new mint/burn events (Transfer from/to zero address involving user's address)
   useWatchContractEvent({
-    address: RWA_TOKEN_ADDRESS,
+    address: rwaTokenAddress,
     abi: erc3643ABI.abi as any,
     eventName: "Transfer",
     onLogs(logs) {
@@ -183,14 +185,14 @@ export function useRecentActivity(userAddress?: string) {
 
         console.log(`🔍 Debugging Recent Activity:`)
         console.log(`Current block: ${currentBlock}`)
-        console.log(`Contract address: ${RWA_TOKEN_ADDRESS}`)
+        console.log(`Contract address: ${rwaTokenAddress}`)
         console.log(`Filtering for user address: ${userAddress}`)
         console.log(`Token decimals: ${decimals}`)
 
         // Verify contract exists
         try {
           const contractCode = await publicClient.getBytecode({
-            address: RWA_TOKEN_ADDRESS,
+            address: rwaTokenAddress,
           })
           console.log(`📋 Contract exists: ${contractCode ? "YES" : "NO"}`)
           console.log(`📋 Contract code length: ${contractCode?.length || 0}`)
@@ -217,7 +219,7 @@ export function useRecentActivity(userAddress?: string) {
 
         try {
           const testLogs = await publicClient.getLogs({
-            address: RWA_TOKEN_ADDRESS,
+            address: rwaTokenAddress,
             event: transferEvent,
             fromBlock: testFromBlock,
             toBlock: currentBlock,
@@ -244,7 +246,7 @@ export function useRecentActivity(userAddress?: string) {
 
           try {
             const logs = await publicClient.getLogs({
-              address: RWA_TOKEN_ADDRESS,
+              address: rwaTokenAddress,
               event: transferEvent,
               fromBlock,
               toBlock,
@@ -385,7 +387,7 @@ export function useRecentActivity(userAddress?: string) {
     }
 
     fetchRecentMints()
-  }, [publicClient, currentPrice, userAddress, decimals])
+  }, [publicClient, currentPrice, userAddress, decimals, rwaTokenAddress])
 
   // Update displayed activities when showCount changes
   useEffect(() => {

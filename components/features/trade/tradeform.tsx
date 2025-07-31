@@ -186,8 +186,7 @@ export default function TradeForm({
                   USDC Amount
                 </label>
                 <input
-                  type="number"
-                  min="0"
+                  type="text"
                   value={buyUsdc}
                   onChange={(e) => setBuyUsdc(e.target.value)}
                   placeholder="Enter USDC amount"
@@ -275,8 +274,7 @@ export default function TradeForm({
                   S{selectedToken} Amount
                 </label>
                 <input
-                  type="number"
-                  min="0"
+                  type="text"
                   value={sellToken}
                   onChange={(e) => setSellToken(e.target.value)}
                   placeholder={`Enter S${selectedToken} amount`}

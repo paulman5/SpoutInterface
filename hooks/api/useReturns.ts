@@ -9,6 +9,11 @@ export function useReturns(symbol: string) {
   const calculateReturn = (days: number) => {
     if (!marketData || !yieldData) return 0
 
+    // Validate that we have valid numbers
+    if (!marketData.price || !marketData.previousClose || marketData.previousClose === 0) {
+      return 0
+    }
+
     // Get the annual yield rate
     const annualYieldRate = yieldData.yield || 0
 
@@ -25,7 +30,10 @@ export function useReturns(symbol: string) {
     const yieldReturn = dailyYieldRate * days
 
     // Total return is price return plus yield return
-    return priceReturn + yieldReturn
+    const totalReturn = priceReturn + yieldReturn
+
+    // Check for NaN and return 0 if invalid
+    return isNaN(totalReturn) ? 0 : totalReturn
   }
 
   const returns = {
