@@ -18,7 +18,10 @@ export default function PortfolioHeader({
   dayChangePercent,
   onRefresh,
 }: PortfolioHeaderProps) {
-  const formatNumber = (num: number) => Math.round(num).toLocaleString()
+  // Format number to 3 decimals, matching holdings value
+  const formatNumber = (num: number) => {
+    return num.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })
+  }
   const formatPercent = (num: number) => Number(num.toFixed(2))
   return (
     <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 rounded-3xl p-8 text-white relative overflow-hidden">

@@ -18,7 +18,10 @@ export default function PortfolioSummaryCards({
   totalReturnPercent,
   holdings,
 }: PortfolioSummaryCardsProps) {
-  const formatNumber = (num: number) => Math.round(num).toLocaleString()
+  // Format number to 3 decimals, matching holdings value
+  const formatNumber = (num: number) => {
+    return num.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })
+  }
   const formatPercent = (num: number) => Number(num.toFixed(2))
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -62,9 +62,9 @@ export default function PortfolioPage() {
     loadMore,
   } = useRecentActivity(userAddress)
 
-  // Format number to whole numbers without decimals
+  // Format number to 3 decimals, matching holdings value
   const formatNumber = (num: number) => {
-    return Math.round(num).toLocaleString()
+    return num.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })
   }
 
   // Format percentage to 2 decimal places for cleaner display
@@ -330,7 +330,7 @@ export default function PortfolioPage() {
                         </div>
                         <div className="text-right">
                           <p className="font-semibold text-lg">
-                            ${holding.value.toLocaleString()}
+                            ${formatNumber(holding.value)}
                           </p>
                           <p
                             className={`text-sm font-medium ${holding.dayChange >= 0 ? "text-green-600" : "text-red-600"}`}

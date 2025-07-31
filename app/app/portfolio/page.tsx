@@ -39,7 +39,10 @@ function PortfolioPage() {
     loadMore,
   } = useRecentActivity(userAddress)
 
-  const formatNumber = (num: number) => Math.round(num).toLocaleString()
+  // Format number to 3 decimals, matching holdings value
+  const formatNumber = (num: number) => {
+    return num.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })
+  }
   const formatPercent = (num: number) => num.toFixed(2)
 
   const portfolioValue =

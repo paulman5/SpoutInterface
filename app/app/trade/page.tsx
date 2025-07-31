@@ -204,7 +204,7 @@ const TradePage = () => {
     
     // Use dynamic token decimals
     const tokenAmount = BigInt(Math.floor(Number(sellToken) * Math.pow(10, actualTokenDecimals)))
-    
+
     console.log("🔍 Sell Order Debug:")
     console.log("Input sellToken:", sellToken)
     console.log("Parsed number:", Number(sellToken))

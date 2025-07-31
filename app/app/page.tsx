@@ -47,9 +47,9 @@ function DashboardPage() {
     loadMore,
   } = useRecentActivity(userAddress)
 
-  // Format number to 3 decimal places
+  // Format number to 3 decimals, matching portfolio holdings
   const formatNumber = (num: number) => {
-    return Number(num.toFixed(3)).toLocaleString()
+    return num.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })
   }
   // Format percentage to 2 decimal places
   const formatPercent = (num: number) => {
