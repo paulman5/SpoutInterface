@@ -32,7 +32,7 @@ const team = [
 ]
 
 export default function AboutPage() {
-  const [isHovered, setIsHovered] = useState(false)
+  const [hoveredMember, setHoveredMember] = useState<string | null>(null)
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -59,6 +59,8 @@ export default function AboutPage() {
       </section>
       <section className="relative z-10 max-w-4xl mx-auto px-6 py-12 space-y-24">
         {team.map((member, idx) => {
+          const isHovered = hoveredMember === member.name
+          
           return (
             <div
               key={member.name}
@@ -66,10 +68,10 @@ export default function AboutPage() {
             >
               <div
                 className="w-full md:w-1/2 flex justify-center relative group"
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-                onFocus={() => setIsHovered(true)}
-                onBlur={() => setIsHovered(false)}
+                onMouseEnter={() => setHoveredMember(member.name)}
+                onMouseLeave={() => setHoveredMember(null)}
+                onFocus={() => setHoveredMember(member.name)}
+                onBlur={() => setHoveredMember(null)}
                 tabIndex={0}
               >
                 <Image
