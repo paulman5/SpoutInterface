@@ -2,7 +2,7 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { User, Shield, Settings as SettingsIcon } from "lucide-react"
+import { User, Shield } from "lucide-react"
 import KYCFlow from "@/components/kycFlow"
 import { useSearchParams, useRouter } from "next/navigation"
 import { useEffect, useState, Suspense } from "react"
@@ -44,11 +44,11 @@ export default function ProfilePage() {
               variant="secondary"
               className="bg-white/20 text-white border-white/30 hover:bg-white/20"
             >
-              <SettingsIcon className="w-4 h-4 mr-2" />
-              Account Settings
+              <User className="w-4 h-4 mr-2" />
+              Profile
             </Badge>
           </div>
-          <h1 className="text-4xl font-bold mb-3">Settings</h1>
+          <h1 className="text-4xl font-bold mb-3">Profile</h1>
           <p className="text-slate-200 text-lg">
             Manage your account preferences, security settings, and platform
             configuration
