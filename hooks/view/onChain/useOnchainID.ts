@@ -32,10 +32,11 @@ export function useOnchainID({
     query: { enabled: canReadIdentity },
   })
 
-  const hasOnchainID =
+  const hasOnchainID = Boolean(
     onchainID &&
     typeof onchainID === "string" &&
     onchainID !== "0x0000000000000000000000000000000000000000"
+  )
 
   // Return null instead of zero address to prevent UI from showing it
   const onchainIDAddress =

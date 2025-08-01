@@ -33,12 +33,13 @@ export default function OnchainIDChecker() {
 
   // Show 'Claim USDC' Sonner if user has no USDC, but only on the trade page
   React.useEffect(() => {
-    console.log('[OnchainIDChecker Debug] usdcBalance:', usdcBalance, 'usdcLoading:', usdcLoading, 'pathname:', pathname)
+    console.log('[USDC Sonner Debug] usdcBalance:', usdcBalance, 'usdcLoading:', usdcLoading, 'pathname:', pathname)
     if (
       !usdcLoading &&
       Number(usdcBalance) <= 0 &&
       String(pathname) === "/app/trade"
     ) {
+      console.log('[USDC Sonner Debug] ✅ Conditions met, showing USDC Sonner')
       toast.warning(
         "You need USDC to start trading. Claim your testnet USDC to begin.",
         {
@@ -52,16 +53,24 @@ export default function OnchainIDChecker() {
           duration: Infinity,
         }
       )
+    } else {
+      console.log('[USDC Sonner Debug] ❌ Conditions not met:')
+      console.log('  - !usdcLoading:', !usdcLoading)
+      console.log('  - Number(usdcBalance) <= 0:', Number(usdcBalance) <= 0)
+      console.log('  - pathname === "/app/trade":', String(pathname) === "/app/trade")
     }
   }, [usdcBalance, usdcLoading, pathname, searchParams])
 
   // Show 'Complete Profile' Sonner if user has not completed KYC
   React.useEffect(() => {
+    console.log('[KYC Sonner Debug] hasOnchainID:', hasOnchainID, 'onchainIDLoading:', onchainIDLoading, 'pathname:', pathname, 'searchParams:', searchParams?.get("tab"))
+    
     if (
       hasOnchainID === false &&
       !onchainIDLoading &&
       !(pathname === "/app/profile" && searchParams?.get("tab") === "kyc")
     ) {
+      console.log('[KYC Sonner Debug] ✅ Conditions met, showing KYC Sonner')
       toast.warning(
         "Complete KYC and create your onchainIdentity to buy Spout tokens",
         {
@@ -75,6 +84,11 @@ export default function OnchainIDChecker() {
           duration: Infinity,
         }
       )
+    } else {
+      console.log('[KYC Sonner Debug] ❌ Conditions not met:')
+      console.log('  - hasOnchainID === false:', hasOnchainID === false)
+      console.log('  - !onchainIDLoading:', !onchainIDLoading)
+      console.log('  - Not on KYC page:', !(pathname === "/app/profile" && searchParams?.get("tab") === "kyc"))
     }
   }, [hasOnchainID, onchainIDLoading, router, pathname, searchParams])
 
