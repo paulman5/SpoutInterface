@@ -6,7 +6,7 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ArrowDownCircle, ArrowUpCircle, TrendingUp, Shield } from "lucide-react"
+import { ArrowDownCircle, ArrowUpCircle, TrendingUp, Shield, Loader2 } from "lucide-react"
 import React from "react"
 import { useOnchainID } from "@/hooks/view/onChain/useOnchainID"
 import { useContractAddress } from "@/lib/addresses"
@@ -141,7 +141,11 @@ export default function TradeForm({
             <Button
               variant={tradeType === "buy" ? "success" : "ghost"}
               onClick={() => setTradeType("buy")}
-              className="flex-1"
+              className={`flex-1 transition-all duration-200 ${
+                tradeType === "buy" 
+                  ? "shadow-lg transform scale-[0.98] ring-2 ring-emerald-200" 
+                  : "hover:scale-[1.02]"
+              }`}
             >
               <ArrowDownCircle className="w-4 h-4 mr-2" />
               Buy
@@ -149,7 +153,11 @@ export default function TradeForm({
             <Button
               variant={tradeType === "sell" ? "default" : "ghost"}
               onClick={() => setTradeType("sell")}
-              className={`flex-1 ${tradeType === "sell" ? "bg-blue-500 hover:bg-blue-600 text-white" : "text-slate-600"}`}
+              className={`flex-1 transition-all duration-200 ${
+                tradeType === "sell" 
+                  ? "bg-blue-500 hover:bg-blue-600 text-white shadow-lg transform scale-[0.98] ring-2 ring-blue-200 shadow-blue-500/25" 
+                  : "text-slate-600 hover:scale-[1.02]"
+              }`}
             >
               <ArrowUpCircle className="w-4 h-4 mr-2" />
               Sell
@@ -295,11 +303,16 @@ export default function TradeForm({
                 onClick={handleBuy}
                 isDisabled={isBuyDisabled}
               >
-                {isApprovePending || isOrderPending
-                  ? "Processing..."
-                  : !hasKYCClaim && !kycLoading
-                    ? "KYC Required"
-                    : `Buy S${selectedToken}`}
+                {isApprovePending || isOrderPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {isApprovePending ? "Approving..." : "Processing..."}
+                  </>
+                ) : !hasKYCClaim && !kycLoading ? (
+                  "KYC Required"
+                ) : (
+                  `Buy S${selectedToken}`
+                )}
               </Button>
             </>
           ) : (
@@ -389,9 +402,16 @@ export default function TradeForm({
               <Button
                 className="w-full mt-4 font-semibold text-lg py-3 bg-blue-500 hover:bg-blue-600"
                 onClick={handleSell}
-                isDisabled={!sellToken}
+                isDisabled={!sellToken || isApprovePending || isOrderPending}
               >
-                Sell S{selectedToken}
+                {isApprovePending || isOrderPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {isApprovePending ? "Approving..." : "Processing..."}
+                  </>
+                ) : (
+                  `Sell S${selectedToken}`
+                )}
               </Button>
             </>
           )}
