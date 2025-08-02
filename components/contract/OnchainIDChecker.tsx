@@ -44,7 +44,7 @@ export default function OnchainIDChecker() {
       const timer = setTimeout(() => {
         console.log('[KYC Sonner Debug] ✅ Data settled, hasOnchainID:', hasOnchainID, 'hasEverHadOnchainID:', hasEverHadOnchainID)
         setHasWaitedForSettlement(true)
-      }, 5000) // Wait 2 seconds for data to settle
+      }, 1000) // Wait 2 seconds for data to settle
       
       return () => clearTimeout(timer)
     }
