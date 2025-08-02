@@ -5,6 +5,7 @@ import idFactoryABI from "@/abi/idfactory.json"
 import onchainidABI from "@/abi/onchainid.json"
 import { ethers } from "ethers"
 import { AbiCoder, keccak256 } from "ethers"
+import { useState, useEffect } from "react"
 
 export function useOnchainID({
   userAddress,
@@ -37,6 +38,53 @@ export function useOnchainID({
     typeof onchainID === "string" &&
     onchainID !== "0x0000000000000000000000000000000000000000"
   )
+
+  // Persistent state to track if user has ever had an onchain ID
+  const [hasEverHadOnchainID, setHasEverHadOnchainID] = useState(false)
+
+  // Effect to load hasEverHadOnchainID from localStorage once userAddress is available
+  useEffect(() => {
+    if (typeof window !== 'undefined' && userAddress) {
+      const stored = localStorage.getItem(`hasEverHadOnchainID_${userAddress}`)
+      const initialValue = stored === 'true'
+      console.log('[useOnchainID] 🔍 Loading from localStorage (useEffect):', { userAddress, stored, initialValue })
+      setHasEverHadOnchainID(initialValue)
+    }
+  }, [userAddress]) // Dependency on userAddress
+
+
+  // Track when user has an onchain ID and persist that state
+  useEffect(() => {
+    console.log('[useOnchainID] 🔄 Effect triggered:', { hasOnchainID, isLoading, userAddress })
+    
+    if (hasOnchainID === true && !isLoading && userAddress) {
+      console.log('[useOnchainID] ✅ User has onchain ID, setting persistent state')
+      setHasEverHadOnchainID(true)
+      // Store in localStorage for persistence across remounts
+      localStorage.setItem(`hasEverHadOnchainID_${userAddress}`, 'true')
+      console.log('[useOnchainID] 💾 Stored in localStorage:', `hasEverHadOnchainID_${userAddress}`)
+    }
+  }, [hasOnchainID, isLoading, userAddress])
+
+  // Debug: Log any changes to hasEverHadOnchainID
+  useEffect(() => {
+    console.log('[useOnchainID] 🎯 hasEverHadOnchainID changed to:', hasEverHadOnchainID)
+    
+    // Check if localStorage still has the value
+    if (userAddress && typeof window !== 'undefined') {
+      const stored = localStorage.getItem(`hasEverHadOnchainID_${userAddress}`)
+      console.log('[useOnchainID] 🔍 localStorage check:', { 
+        key: `hasEverHadOnchainID_${userAddress}`, 
+        stored, 
+        matches: stored === 'true' && hasEverHadOnchainID === true 
+      })
+    }
+  }, [hasEverHadOnchainID, userAddress])
+
+  // Debug: Track userAddress changes
+  useEffect(() => {
+    console.log('[useOnchainID] 👤 userAddress changed to:', userAddress)
+  }, [userAddress])
 
   // Return null instead of zero address to prevent UI from showing it
   const onchainIDAddress =
@@ -115,8 +163,11 @@ export function useOnchainID({
     }
   }
 
+  console.log("user has the OnchainID?", hasOnchainID)
+
   return {
     hasOnchainID,
+    hasEverHadOnchainID, // Export the persistent state
     onchainIDAddress: onchainIDAddress,
     loading: isLoading,
     error,
