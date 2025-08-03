@@ -30,8 +30,6 @@ export default function OnchainIDChecker() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  console.log("hasHISONCHAINID", hasEverHadOnchainID)
-
 
 
   // Wait for data to settle before making any decisions
