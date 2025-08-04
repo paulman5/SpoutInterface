@@ -64,7 +64,7 @@ export default function PortfolioHoldings({
                 <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center relative overflow-hidden">
                   {holding.symbol === "SLQD" ? (
                     <Image
-                      src="/partners/SLQD.png"
+                      src="/SLQD.png"
                       alt="SLQD logo"
                       fill
                       style={{ objectFit: "cover" }}

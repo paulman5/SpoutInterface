@@ -21,6 +21,7 @@ function PortfolioPage() {
     symbol: tokenSymbol,
     isLoading: balanceLoading,
     isError: balanceError,
+    refetch: refetchTokenBalance,
   } = useTokenBalance(userAddress)
 
   const {
@@ -28,7 +29,7 @@ function PortfolioPage() {
     previousClose,
     isLoading: priceLoading,
     error: priceError,
-  } = useMarketData("LQD")
+  } = useMarketData("SLQD")
 
   const { returns, isLoading: returnsLoading } = useReturns("SLQD")
   const { username } = useCurrentUser()
@@ -73,6 +74,12 @@ function PortfolioPage() {
 
   const isLoading = balanceLoading || priceLoading || returnsLoading
 
+  // Function to refresh portfolio data
+  const handleRefresh = () => {
+    console.log("🔄 Refreshing portfolio balances...")
+    refetchTokenBalance()
+  }
+
   return (
     <div className="space-y-8">
       <PortfolioHeader
@@ -80,7 +87,7 @@ function PortfolioPage() {
         portfolioValue={portfolioValue}
         dayChange={dayChange}
         dayChangePercent={dayChangePercent}
-        onRefresh={() => window.location.reload()}
+        onRefresh={handleRefresh}
       />
       {isLoading ? (
         <div className="flex items-center justify-center py-12">

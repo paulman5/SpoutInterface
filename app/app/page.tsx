@@ -39,7 +39,7 @@ function DashboardPage() {
     previousClose,
     isLoading: priceLoading,
     error: priceError,
-  } = useMarketData("LQD")
+  } = useMarketData("SLQD")
   const {
     activities,
     isLoading: activitiesLoading,
