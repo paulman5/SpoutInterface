@@ -611,6 +611,20 @@ export default function KYCFlow() {
                         </div>
                       </div>
                     </div>
+                  ) : kycSignature ? (
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-3 p-4 bg-emerald-50 rounded-lg">
+                        <CheckCircle className="h-5 w-5 text-emerald-600" />
+                        <div className="flex-1">
+                          <p className="font-medium text-emerald-800">
+                            Verification Signature Obtained
+                          </p>
+                          <p className="text-sm text-emerald-600">
+                            Your verification signature has been obtained successfully.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   ) : (
                     <div className="space-y-4">
                       <div className="p-4 bg-blue-50 rounded-lg">
