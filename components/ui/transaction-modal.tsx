@@ -188,7 +188,7 @@ export default function TransactionModal({
                   Transaction Failed
                 </h3>
                 <p className="text-gray-600 text-sm">
-                  {error || "An error occurred while processing your transaction"}
+                  {error || "Transaction timed out. Please try again."}
                 </p>
               </div>
             </>

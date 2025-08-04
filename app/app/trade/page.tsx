@@ -45,6 +45,7 @@ const TradePage = () => {
     balance: tokenBalance,
     symbol: tokenSymbol,
     isLoading: balanceLoading,
+    refetch: refetchTokenBalance,
   } = useTokenBalance(userAddress)
   const ordersAddress = useContractAddress("orders") as `0x${string}`
   const usdcAddress = useContractAddress("usdc") as `0x${string}`
@@ -56,6 +57,7 @@ const TradePage = () => {
     balance: usdcBalance,
     isLoading: usdcLoading,
     isError: usdcError,
+    refetch: refetchUSDCBalance,
   } = useUSDCTokenBalance(userAddress)
 
   // Get token decimals dynamically
@@ -77,20 +79,25 @@ const TradePage = () => {
           status: "completed",
         }))
         
+        // Refetch balances to show updated amounts
+        console.log("🔄 Refetching balances after successful transaction...")
+        refetchTokenBalance()
+        refetchUSDCBalance()
+        
         // Auto-close modal after 3 seconds
         setTimeout(() => {
           setTransactionModal(prev => ({ ...prev, isOpen: false }))
         }, 3000)
       } else if (orderError) {
-        // Transaction failed
+        // Transaction failed - show simple error message
         setTransactionModal(prev => ({
           ...prev,
           status: "failed",
-          error: orderError.message || "Transaction failed",
+          error: "Transaction timed out. Please try again.",
         }))
       }
     }
-  }, [isOrderSuccess, orderError, transactionModal.isOpen, transactionModal.status])
+  }, [isOrderSuccess, orderError, transactionModal.isOpen, transactionModal.status, refetchTokenBalance, refetchUSDCBalance])
 
   useEffect(() => {
     async function fetchETFData() {
@@ -259,11 +266,11 @@ const TradePage = () => {
         `Order failed: ${err instanceof Error ? err.message : "Unknown error"}`
       )
       
-      // Show error modal
+      // Show error modal with simple message
       setTransactionModal(prev => ({
         ...prev,
         status: "failed",
-        error: err instanceof Error ? err.message : "Unknown error",
+        error: "Transaction timed out. Please try again.",
       }))
     }
   }
@@ -309,11 +316,11 @@ const TradePage = () => {
         `Sell order failed: ${err instanceof Error ? err.message : "Unknown error"}`
       )
       
-      // Show error modal
+      // Show error modal with simple message
       setTransactionModal(prev => ({
         ...prev,
         status: "failed",
-        error: err instanceof Error ? err.message : "Unknown error",
+        error: "Transaction timed out. Please try again.",
       }))
     }
   }
