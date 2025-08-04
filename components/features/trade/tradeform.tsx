@@ -11,6 +11,12 @@ import React from "react"
 import { useOnchainID } from "@/hooks/view/onChain/useOnchainID"
 import { useContractAddress } from "@/lib/addresses"
 import { useAccount } from "wagmi"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 type TradeFormProps = {
   tradeType: "buy" | "sell"
@@ -150,18 +156,31 @@ export default function TradeForm({
               <ArrowDownCircle className="w-4 h-4 mr-2" />
               Buy
             </Button>
-            <Button
-              variant={tradeType === "sell" ? "default" : "ghost"}
-              onClick={() => setTradeType("sell")}
-              className={`flex-1 transition-all duration-200 ${
-                tradeType === "sell" 
-                  ? "bg-blue-500 hover:bg-blue-600 text-white shadow-lg transform scale-[0.98] ring-2 ring-blue-200 shadow-blue-500/25" 
-                  : "text-slate-600 hover:scale-[1.02]"
-              }`}
-            >
-              <ArrowUpCircle className="w-4 h-4 mr-2" />
-              Sell
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="flex-1 relative">
+                    <Button
+                      variant={tradeType === "sell" ? "default" : "ghost"}
+                      onClick={() => setTradeType("sell")}
+                      isDisabled={true}
+                      className={`w-full transition-all duration-200 opacity-50 cursor-not-allowed pointer-events-none ${
+                        tradeType === "sell" 
+                          ? "bg-blue-500 hover:bg-blue-600 text-white shadow-lg transform scale-[0.98] ring-2 ring-blue-200 shadow-blue-500/25" 
+                          : "text-slate-600 hover:scale-[1.02]"
+                      }`}
+                    >
+                      <ArrowUpCircle className="w-4 h-4 mr-2" />
+                      Sell
+                    </Button>
+                    <div className="absolute inset-0" />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" align="center">
+                  Selling will soon be available
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </CardHeader>
 
