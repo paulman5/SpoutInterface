@@ -4,6 +4,7 @@ import TradeHeader from "@/components/features/trade/tradeheader"
 import TradeTokenSelector from "@/components/features/trade/tradetokenselector"
 import TradeChart from "@/components/features/trade/tradechart"
 import TradeForm from "@/components/features/trade/tradeform"
+import TransactionModal from "@/components/ui/transaction-modal"
 import { useAccount, useConfig } from "wagmi"
 import { useERC20Approve } from "@/hooks/writes/onChain/useERC20Approve"
 import { useOrdersContract } from "@/hooks/writes/onChain/useOrders"
@@ -28,6 +29,16 @@ const TradePage = () => {
     "real"
   )
   const [etfData, setEtfData] = useState<any>(null)
+  
+  // Transaction modal state
+  const [transactionModal, setTransactionModal] = useState({
+    isOpen: false,
+    status: "waiting" as "waiting" | "completed" | "failed",
+    transactionType: "buy" as "buy" | "sell",
+    amount: "",
+    receivedAmount: "",
+    error: "",
+  })
 
   const { address: userAddress } = useAccount()
   const {
@@ -39,7 +50,7 @@ const TradePage = () => {
   const usdcAddress = useContractAddress("usdc") as `0x${string}`
   const rwaTokenAddress = useContractAddress("rwatoken") as `0x${string}`
   const { approve, isPending: isApprovePending } = useERC20Approve(usdcAddress)
-  const { buyAsset, sellAsset, isPending: isOrderPending } = useOrdersContract()
+  const { buyAsset, sellAsset, isPending: isOrderPending, isSuccess: isOrderSuccess, error: orderError } = useOrdersContract()
   const config = useConfig()
   const {
     balance: usdcBalance,
@@ -55,6 +66,31 @@ const TradePage = () => {
   })
 
   const actualTokenDecimals = tokenDecimals ? Number(tokenDecimals) : 6
+
+  // Monitor order transaction state
+  useEffect(() => {
+    if (transactionModal.isOpen && transactionModal.status === "waiting") {
+      if (isOrderSuccess) {
+        // Transaction completed successfully
+        setTransactionModal(prev => ({
+          ...prev,
+          status: "completed",
+        }))
+        
+        // Auto-close modal after 3 seconds
+        setTimeout(() => {
+          setTransactionModal(prev => ({ ...prev, isOpen: false }))
+        }, 3000)
+      } else if (orderError) {
+        // Transaction failed
+        setTransactionModal(prev => ({
+          ...prev,
+          status: "failed",
+          error: orderError.message || "Transaction failed",
+        }))
+      }
+    }
+  }, [isOrderSuccess, orderError, transactionModal.isOpen, transactionModal.status])
 
   useEffect(() => {
     async function fetchETFData() {
@@ -188,18 +224,50 @@ const TradePage = () => {
     
     const usdcAmount = parseFloat(buyUsdc)
     const estimatedTokenAmount = latestPrice > 0 ? usdcAmount / latestPrice : 0
+    
+    // Show transaction modal
+    setTransactionModal({
+      isOpen: true,
+      status: "waiting",
+      transactionType: "buy",
+      amount: `${buyUsdc} USDC`,
+      receivedAmount: netReceiveTokens,
+      error: "",
+    })
+    
     try {
+      // Step 1: Approve USDC
+      console.log("🔄 Starting USDC approval...")
       const approveTx = await approve(ordersAddress, amount)
       await waitForTransactionReceipt(config, { hash: approveTx })
+      console.log("✅ USDC approval completed")
+      
+      // Step 2: Execute buy transaction
+      console.log("🔄 Starting buy transaction...")
       buyAsset(BigInt(2000002), selectedToken, rwaTokenAddress, amount)
       setBuyUsdc("")
+      
+      // Keep modal open for buy transaction to complete
+      // The modal will stay in "waiting" state until the buy transaction is processed
+      console.log("⏳ Buy transaction submitted, keeping modal open...")
+      
+      // Note: We don't set status to "completed" here because we need to wait
+      // for the actual buy transaction to complete, not just the approval
+      
     } catch (err) {
       console.error(
         `Order failed: ${err instanceof Error ? err.message : "Unknown error"}`
       )
+      
+      // Show error modal
+      setTransactionModal(prev => ({
+        ...prev,
+        status: "failed",
+        error: err instanceof Error ? err.message : "Unknown error",
+      }))
     }
   }
-  const handleSell = () => {
+  const handleSell = async () => {
     if (!sellToken) return
     
     // Use dynamic token decimals
@@ -213,7 +281,45 @@ const TradePage = () => {
     console.log("Calculated amount:", Number(sellToken) * Math.pow(10, actualTokenDecimals))
     console.log("Final BigInt amount:", tokenAmount.toString())
     
-    sellAsset(BigInt(1), selectedToken, rwaTokenAddress, tokenAmount)
+    // Show transaction modal
+    setTransactionModal({
+      isOpen: true,
+      status: "waiting",
+      transactionType: "sell",
+      amount: `${sellToken} S${selectedToken}`,
+      receivedAmount: netReceiveUsdc,
+      error: "",
+    })
+    
+    try {
+      // Execute sell transaction
+      console.log("🔄 Starting sell transaction...")
+      sellAsset(BigInt(1), selectedToken, rwaTokenAddress, tokenAmount)
+      setSellToken("")
+      
+      // Keep modal open for sell transaction to complete
+      // The modal will stay in "waiting" state until the sell transaction is processed
+      console.log("⏳ Sell transaction submitted, keeping modal open...")
+      
+      // Note: We don't set status to "completed" here because we need to wait
+      // for the actual sell transaction to complete
+      
+    } catch (err) {
+      console.error(
+        `Sell order failed: ${err instanceof Error ? err.message : "Unknown error"}`
+      )
+      
+      // Show error modal
+      setTransactionModal(prev => ({
+        ...prev,
+        status: "failed",
+        error: err instanceof Error ? err.message : "Unknown error",
+      }))
+    }
+  }
+
+  const closeTransactionModal = () => {
+    setTransactionModal(prev => ({ ...prev, isOpen: false }))
   }
 
   return (
@@ -253,6 +359,18 @@ const TradePage = () => {
         netReceiveUsdc={netReceiveUsdc}
         priceChangePercent={priceChangePercent}
         priceChange={priceChange}
+      />
+      
+      {/* Transaction Modal */}
+      <TransactionModal
+        isOpen={transactionModal.isOpen}
+        onClose={closeTransactionModal}
+        status={transactionModal.status}
+        transactionType={transactionModal.transactionType}
+        tokenSymbol={selectedToken}
+        amount={transactionModal.amount}
+        receivedAmount={transactionModal.receivedAmount}
+        error={transactionModal.error}
       />
     </div>
   )

@@ -37,12 +37,12 @@ export default function OnchainIDChecker() {
     const isLoading = onchainIDLoading || kycLoading
     
     if (!isLoading && !hasWaitedForSettlement) {
-      console.log('[KYC Sonner Debug] ⏳ Data loaded, waiting 2 seconds for settlement...')
+      console.log('[KYC Sonner Debug] ⏳ Data loaded, waiting 0.5 seconds for settlement...')
       
       const timer = setTimeout(() => {
         console.log('[KYC Sonner Debug] ✅ Data settled, hasOnchainID:', hasOnchainID, 'hasEverHadOnchainID:', hasEverHadOnchainID)
         setHasWaitedForSettlement(true)
-      }, 1000) // Wait 2 seconds for data to settle
+      }, 500) // Reduced from 1000ms to 500ms for faster response
       
       return () => clearTimeout(timer)
     }
@@ -114,7 +114,8 @@ export default function OnchainIDChecker() {
   React.useEffect(() => {
     console.log('[KYC Sonner Debug] hasOnchainID:', hasOnchainID, 'hasEverHadOnchainID:', hasEverHadOnchainID, 'hasKYCClaim:', hasKYCClaim, 'onchainIDLoading:', onchainIDLoading, 'kycLoading:', kycLoading, 'pathname:', pathname, 'searchParams:', searchParams?.get("tab"), 'hasShownKYCToast:', hasShownKYCToast, 'hasWaitedForSettlement:', hasWaitedForSettlement)
     
-    const isLoading = onchainIDLoading || kycLoading
+    // Only wait for onchainIDLoading, not kycLoading for faster response
+    const isLoading = onchainIDLoading
     
     // Don't do anything while loading or before data has settled
     if (isLoading || !hasWaitedForSettlement) {
@@ -158,7 +159,7 @@ export default function OnchainIDChecker() {
       console.log('  - Not on KYC page:', !(pathname === "/app/profile" && searchParams?.get("tab") === "kyc"))
       console.log('  - !hasShownKYCToast:', !hasShownKYCToast)
     }
-  }, [hasOnchainID, hasEverHadOnchainID, hasKYCClaim, onchainIDLoading, kycLoading, router, pathname, searchParams, hasShownKYCToast, hasWaitedForSettlement])
+  }, [hasOnchainID, hasEverHadOnchainID, hasKYCClaim, onchainIDLoading, router, pathname, searchParams, hasShownKYCToast, hasWaitedForSettlement])
 
   // Always dismiss KYC toast if user has ever had onchain ID and data has settled (runs on every render as backup)
   if (hasEverHadOnchainID === true && !onchainIDLoading && !kycLoading && hasWaitedForSettlement) {
