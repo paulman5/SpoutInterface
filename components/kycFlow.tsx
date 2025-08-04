@@ -149,7 +149,7 @@ export default function KYCFlow() {
     {
       id: 1,
       title: "Connect Wallet",
-      description: "Connect your wallet to start the KYC process",
+              description: "Connect your wallet to start the verification process",
       icon: Wallet,
       status: isConnected ? "completed" : "current",
     },
@@ -168,15 +168,15 @@ export default function KYCFlow() {
     },
     {
       id: 3,
-      title: "KYC Verification",
-      description: "Complete KYC verification with signature",
+              title: "Verification",
+        description: "Complete verification with signature",
       icon: Shield,
       status: hasKYCClaim ? "completed" : "pending",
     },
     {
       id: 4,
       title: "Add Claim to Identity",
-      description: "Add KYC claim to your onchain identity",
+              description: "Add verification claim to your onchain identity",
       icon: Shield,
       status: isClaimAdded ? "completed" : "pending",
     },
@@ -229,8 +229,8 @@ export default function KYCFlow() {
     }
   }
 
-  // Handle KYC signature request
-  const handleKYCSignature = async () => {
+          // Handle KYC signature request
+        const handleKYCSignature = async () => {
     if (!address || !onchainIDAddress) return
 
     try {
@@ -284,7 +284,7 @@ export default function KYCFlow() {
         console.error("Error parsing success response:", parseError)
         throw new Error("Invalid response format from server")
       }
-      console.log("KYC signature response:", data)
+              console.log("KYC signature response:", data)
       setKycSignature(data)
       setCurrentStep(3)
     } catch (err) {
@@ -307,7 +307,7 @@ export default function KYCFlow() {
       issuerAddress: issuerAddress as `0x${string}`,
       signature: kycSignature.signature,
       topic: 1,
-      claimData: "KYC passed",
+              claimData: "KYC passed",
       account: address,
     })
   }
@@ -415,12 +415,12 @@ export default function KYCFlow() {
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       {/* Header */}
       <div className="text-center space-y-4">
-        <h1 className="text-3xl font-bold text-gray-900">KYC Verification</h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Complete your Know Your Customer verification to access advanced
-          trading features. This process creates your onchain identity and
-          verifies your credentials.
-        </p>
+        <h1 className="text-3xl font-bold text-gray-900">Verification</h1>
+                  <p className="text-gray-600 max-w-2xl mx-auto">
+            Complete your verification to access advanced
+            trading features. This process creates your onchain identity and
+            verifies your credentials.
+          </p>
       </div>
 
       {/* Progress Bar */}
@@ -570,7 +570,7 @@ export default function KYCFlow() {
                           </p>
                           <p className="text-xs text-emerald-600">
                             Your onchain identity was already created.
-                            Proceeding to KYC verification.
+                            Proceeding to verification.
                           </p>
                         </div>
                       </div>
@@ -603,10 +603,10 @@ export default function KYCFlow() {
                         <CheckCircle className="h-5 w-5 text-emerald-600" />
                         <div className="flex-1">
                           <p className="font-medium text-emerald-800">
-                            KYC Verification Complete
+                            Verification Complete
                           </p>
                           <p className="text-sm text-emerald-600">
-                            Your KYC verification has been completed successfully.
+                            Your verification has been completed successfully.
                           </p>
                         </div>
                       </div>
@@ -615,10 +615,10 @@ export default function KYCFlow() {
                     <div className="space-y-4">
                       <div className="p-4 bg-blue-50 rounded-lg">
                         <h4 className="font-medium text-blue-800 mb-2">
-                          Complete KYC Verification
+                          Complete Verification
                         </h4>
                         <p className="text-sm text-blue-600">
-                          Get your KYC signature to verify your identity on-chain.
+                          Get your verification signature to verify your identity on-chain.
                           This is required for trading ERC3643 compliant tokens.
                         </p>
                       </div>
@@ -657,10 +657,10 @@ export default function KYCFlow() {
                       <CheckCircle className="h-5 w-5 text-emerald-600" />
                       <div>
                         <p className="font-medium text-emerald-800">
-                          KYC Verification Completed
+                          Verification Completed
                         </p>
                         <p className="text-sm text-emerald-600">
-                          Your KYC claim is already present on your onchain
+                          Your verification claim is already present on your onchain
                           identity.
                         </p>
                       </div>
@@ -669,10 +669,10 @@ export default function KYCFlow() {
                     <div className="space-y-4">
                       <div className="p-4 bg-purple-50 rounded-lg">
                         <h4 className="font-medium text-purple-800 mb-2">
-                          Add KYC Claim to Identity
+                          Add Verification Claim to Identity
                         </h4>
                         <p className="text-sm text-purple-600">
-                          Add KYC claim to your onchain identity to complete the
+                          Add verification claim to your onchain identity to complete the
                           verification process.
                         </p>
                       </div>
@@ -688,11 +688,11 @@ export default function KYCFlow() {
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             {isAddingClaim
-                              ? "Adding KYC Claim..."
+                              ? "Adding Verification Claim..."
                               : "Confirming Transaction..."}
                           </>
                         ) : (
-                          "Add KYC Claim"
+                          "Add Verification Claim"
                         )}
                       </Button>
 

@@ -281,17 +281,17 @@ export default function TradeForm({
                 </div>
               )}
 
-              {/* KYC Verification Warning */}
+              {/* Verification Warning */}
               {!hasKYCClaim && !kycLoading && (
                 <div className="mb-4 p-4 rounded-lg bg-amber-50 border border-amber-200">
                   <div className="flex items-center gap-2 mb-2">
                     <Shield className="w-4 h-4 text-amber-600" />
                     <span className="text-sm font-medium text-amber-800">
-                      KYC Verification Required
+                      Verification Required
                     </span>
                   </div>
                   <p className="text-xs text-amber-700">
-                    You need to complete KYC verification before you can buy tokens. 
+                    You need to complete verification before you can buy tokens. 
                     Please complete the verification process in your profile.
                   </p>
                 </div>

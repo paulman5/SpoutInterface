@@ -59,7 +59,7 @@ export default function ProfileTabs() {
             className="flex items-center gap-2 data-[state=active]:bg-slate-100 rounded-xl"
           >
             <Shield className="h-4 w-4" />
-            <span className="hidden sm:inline">KYC</span>
+            <span className="hidden sm:inline">Verification</span>
           </TabsTrigger>
         </TabsList>
       </div>
