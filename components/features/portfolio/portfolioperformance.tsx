@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import React from "react"
+import Image from "next/image"
 
 type Holding = {
   symbol: string
@@ -41,17 +42,29 @@ const PortfolioPerformance: React.FC<PortfolioPerformanceProps> = ({ holdings, r
                 className="flex items-center justify-between p-3 bg-slate-50 rounded-xl"
               >
                 <div className="flex items-center space-x-3">
-                  <div
-                    className={`w-4 h-4 rounded-full ${
-                      index === 0
-                        ? "bg-blue-500"
-                        : index === 1
-                        ? "bg-emerald-500"
-                        : index === 2
-                        ? "bg-purple-500"
-                        : "bg-orange-500"
-                    }`}
-                  ></div>
+                  {holding.symbol === "SLQD" ? (
+                    <div className="w-4 h-4 relative">
+                      <Image
+                        src="/SLQD.png"
+                        alt="SLQD logo"
+                        fill
+                        style={{ objectFit: "contain" }}
+                        className="rounded-sm"
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className={`w-4 h-4 rounded-full ${
+                        index === 0
+                          ? "bg-blue-500"
+                          : index === 1
+                          ? "bg-emerald-500"
+                          : index === 2
+                          ? "bg-purple-500"
+                          : "bg-orange-500"
+                      }`}
+                    ></div>
+                  )}
                   <span className="text-sm font-medium">{holding.symbol}</span>
                 </div>
                 <span className="text-sm text-gray-600 font-semibold">
@@ -90,14 +103,6 @@ const PortfolioPerformance: React.FC<PortfolioPerformanceProps> = ({ holdings, r
                 {returns.yearReturn >= 0 ? "+" : ""}
                 {formatPercent(returns.yearReturn)}%
               </span>
-            </div>
-            <div className="flex justify-between p-3 bg-slate-50 rounded-xl">
-              <span className="text-sm text-gray-600">Volatility</span>
-              <span className="text-sm font-medium">18.4%</span>
-            </div>
-            <div className="flex justify-between p-3 bg-slate-50 rounded-xl">
-              <span className="text-sm text-gray-600">Sharpe Ratio</span>
-              <span className="text-sm font-medium">1.24</span>
             </div>
           </div>
         </CardContent>
