@@ -111,34 +111,6 @@ const TradePage = () => {
     fetchETFData()
   }, [selectedToken])
 
-  function generateMockData(ticker: string) {
-    const basePrice = { SLQD: 108.5 }[ticker] || 150.0
-    const data = []
-    const today = new Date()
-    for (let i = 99; i >= 0; i--) {
-      const date = new Date(today)
-      date.setDate(date.getDate() - i)
-      if (date.getDay() === 0 || date.getDay() === 6) continue
-      const randomFactor = 0.95 + Math.random() * 0.1
-      const price = basePrice * randomFactor
-      const variance = price * 0.02
-      const open = price + (Math.random() - 0.5) * variance
-      const close = price + (Math.random() - 0.5) * variance
-      const high = Math.max(open, close) + Math.random() * variance * 0.5
-      const low = Math.min(open, close) - Math.random() * variance * 0.5
-      const volume = Math.floor(50000000 + Math.random() * 100000000)
-      data.push({
-        time: date.toISOString().split("T")[0],
-        open: Math.round(open * 100) / 100,
-        high: Math.round(high * 100) / 100,
-        low: Math.round(low * 100) / 100,
-        close: Math.round(close * 100) / 100,
-        volume,
-      })
-    }
-    return data
-  }
-
   useEffect(() => {
     async function fetchChartData() {
       setLoading(true)
@@ -146,17 +118,19 @@ const TradePage = () => {
         const res = await fetch(`/api/stocks/${selectedToken}`)
         const json = await res.json()
         if (json.error) {
-          const mockData = generateMockData(selectedToken)
-          setTokenData(mockData)
-          setChartDataSource("mock")
+          // Don't use mock data, just keep the loading state
+          console.log("📊 Chart data error:", json.error)
+          setTokenData([])
+          setChartDataSource("real")
         } else {
           setTokenData(json.data || [])
           setChartDataSource(json.dataSource)
         }
       } catch (e) {
-        const mockData = generateMockData(selectedToken)
-        setTokenData(mockData)
-        setChartDataSource("mock")
+        // Don't use mock data, just keep the loading state
+        console.log("📊 Chart data fetch error:", e)
+        setTokenData([])
+        setChartDataSource("real")
       } finally {
         setLoading(false)
       }
