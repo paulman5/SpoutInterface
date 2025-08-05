@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { promises as fs } from "fs"
 import path from "path"
 
-const MAILING_LIST_PATH = path.resolve(process.cwd(), "mailing-list.json")
+const MAILING_LIST_PATH = path.resolve(process.cwd(), "public", "mailing-list.json")
 
 export async function POST(req: NextRequest) {
   try {
