@@ -1,12 +1,8 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { RefreshCw } from "lucide-react"
-import { formatCurrency } from "@/lib/utils/formatters"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { BarChart3, CheckCircle } from "lucide-react"
+import { formatCurrency, formatNumber } from "@/lib/utils/formatters"
+import { LoadingSpinner } from "@/components/loadingSpinner"
 
 interface CorporateBondsProps {
   totalSupply: number
@@ -48,7 +44,7 @@ export function CorporateBonds({
             <div className="text-center p-4 bg-purple-50 rounded-lg">
               <div className="text-2xl font-bold text-purple-600">
                 {priceLoading ? (
-                  <RefreshCw className="h-5 w-5 animate-spin text-gray-400 mx-auto" />
+                  <LoadingSpinner size="sm" />
                 ) : (
                   formatCurrency(totalSupply * (currentPrice || 0))
                 )}
@@ -58,7 +54,7 @@ export function CorporateBonds({
             <div className="text-center p-4 bg-blue-50 rounded-lg">
               <div className="text-2xl font-bold text-blue-600">
                 {priceLoading ? (
-                  <RefreshCw className="h-5 w-5 animate-spin text-gray-400 mx-auto" />
+                  <LoadingSpinner size="sm" />
                 ) : (
                   currentPrice?.toFixed(2)
                 )}
@@ -68,7 +64,7 @@ export function CorporateBonds({
             <div className="text-center p-4 bg-green-50 rounded-lg">
               <div className="text-2xl font-bold text-green-600">
                 {lqdYieldLoading ? (
-                  <RefreshCw className="h-5 w-5 animate-spin text-gray-400 mx-auto" />
+                  <LoadingSpinner size="sm" />
                 ) : (
                   `${yieldRate.toFixed(2)}%`
                 )}
@@ -95,14 +91,14 @@ export function CorporateBonds({
                     <td className="py-3 px-4">{holding.name}</td>
                     <td className="py-3 px-4 text-right">
                       {priceLoading ? (
-                        <RefreshCw className="h-4 w-4 animate-spin text-gray-400 ml-auto" />
+                        <LoadingSpinner size="sm" />
                       ) : (
                         currentPrice?.toFixed(2)
                       )}
                     </td>
                     <td className="py-3 px-4 text-right">
                       {lqdYieldLoading ? (
-                        <RefreshCw className="h-4 w-4 animate-spin text-gray-400 ml-auto" />
+                        <LoadingSpinner size="sm" />
                       ) : (
                         `${holding.yieldRate.toFixed(2)}%`
                       )}

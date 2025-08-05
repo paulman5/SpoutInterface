@@ -1,23 +1,17 @@
 "use client"
 
-import * as React from "react"
+import React from "react"
 import {
   Area,
   AreaChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
   ResponsiveContainer,
   Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { LoadingSpinner } from "@/components/loadingSpinner"
 
 interface StockData {
   time: string
@@ -67,7 +61,7 @@ export default function StockChart({
         style={{ height: `${height}px` }}
       >
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+          <LoadingSpinner />
           <p className="text-gray-600">Loading {ticker} chart...</p>
         </div>
       </div>
@@ -167,7 +161,6 @@ export default function StockChart({
                 <stop offset="95%" stopColor="#10b981" stopOpacity={0.1} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
             <XAxis
               dataKey="date"
               tickFormatter={(value) => {

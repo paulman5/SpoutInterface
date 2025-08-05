@@ -6,7 +6,7 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ArrowDownCircle, ArrowUpCircle, TrendingUp, Shield, Loader2 } from "lucide-react"
+import { ArrowDownCircle, ArrowUpCircle, TrendingUp, Shield } from "lucide-react"
 import React from "react"
 import { useOnchainID } from "@/hooks/view/onChain/useOnchainID"
 import { useContractAddress } from "@/lib/addresses"
@@ -17,6 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { LoadingSpinner } from "@/components/loadingSpinner"
 
 type TradeFormProps = {
   tradeType: "buy" | "sell"
@@ -195,7 +196,7 @@ export default function TradeForm({
                   <p className="text-xs text-slate-500">Current Price</p>
                   {priceLoading || !latestPrice || latestPrice === 0 ? (
                     <div className="flex items-center gap-2">
-                      <Loader2 className="h-5 w-5 animate-spin text-slate-400" />
+                      <LoadingSpinner />
                       <span className="text-slate-400">Loading...</span>
                     </div>
                   ) : (
@@ -339,7 +340,7 @@ export default function TradeForm({
               >
                 {isApprovePending || isOrderPending ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <LoadingSpinner />
                     {isApprovePending ? "Approving..." : "Processing..."}
                   </>
                 ) : !hasKYCClaim && !kycLoading ? (
@@ -440,7 +441,7 @@ export default function TradeForm({
               >
                 {isApprovePending || isOrderPending ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <LoadingSpinner />
                     {isApprovePending ? "Approving..." : "Processing..."}
                   </>
                 ) : (

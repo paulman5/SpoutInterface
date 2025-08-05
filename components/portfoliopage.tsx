@@ -15,10 +15,10 @@ import {
   TrendingDown,
   DollarSign,
   Plus,
-  RefreshCw,
   Zap,
   Clock,
 } from "lucide-react"
+import { LoadingSpinner } from "@/components/loadingSpinner"
 import Link from "next/link"
 import { useTokenBalance } from "@/hooks/view/onChain/useTokenBalance"
 import { useMarketData } from "@/hooks/api/useMarketData"
@@ -181,8 +181,8 @@ export default function PortfolioPage() {
       {isLoading && (
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
-            <RefreshCw className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
-            <p className="text-gray-600">Loading your portfolio...</p>
+            <LoadingSpinner size="lg" />
+            <p className="text-gray-600 mt-4">Loading your portfolio...</p>
           </div>
         </div>
       )}

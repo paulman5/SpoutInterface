@@ -12,7 +12,7 @@ import { useAccount } from "wagmi"
 import { useCurrentUser } from "@/hooks/auth/useCurrentUser"
 import { useRecentActivity } from "@/hooks/view/onChain/useRecentActivity"
 import { useReturns } from "@/hooks/api/useReturns"
-import { RefreshCw } from "lucide-react"
+import { LoadingSpinner } from "@/components/loadingSpinner"
 
 function PortfolioPage() {
   const { address: userAddress } = useAccount()
@@ -77,7 +77,7 @@ function PortfolioPage() {
   // Function to refresh portfolio data
   const handleRefresh = () => {
     console.log("🔄 Refreshing portfolio balances...")
-    refetchTokenBalance()
+    window.location.reload()
   }
 
   return (
@@ -92,8 +92,8 @@ function PortfolioPage() {
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
-            <RefreshCw className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
-            <p className="text-gray-600">Loading your portfolio...</p>
+            <LoadingSpinner size="lg" />
+            <p className="text-gray-600 mt-4">Loading your portfolio...</p>
           </div>
         </div>
       ) : (

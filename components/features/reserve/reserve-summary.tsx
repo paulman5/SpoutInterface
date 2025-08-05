@@ -5,9 +5,9 @@ import {
   Percent,
   BarChart3,
   CheckCircle,
-  RefreshCw,
 } from "lucide-react"
 import { formatCurrency, formatNumber } from "@/lib/utils/formatters"
+import { LoadingSpinner } from "@/components/loadingSpinner"
 
 interface ReserveSummaryProps {
   totalSupply: number
@@ -34,7 +34,7 @@ export function ReserveSummary({
     if (isDataLoading) {
       return (
         <div className="flex items-center text-gray-500">
-          <RefreshCw className="h-5 w-5 animate-spin mr-2" />
+          <LoadingSpinner className="h-5 w-5 animate-spin mr-2" />
           <span className="text-lg">Fetching...</span>
         </div>
       )
@@ -94,7 +94,7 @@ export function ReserveSummary({
           <div className="text-2xl font-bold">
             {isDataLoading ? (
               <div className="flex items-center text-gray-500">
-                <RefreshCw className="h-5 w-5 animate-spin mr-2" />
+                <LoadingSpinner className="h-5 w-5 animate-spin mr-2" />
                 <span className="text-lg">Fetching...</span>
               </div>
             ) : (
