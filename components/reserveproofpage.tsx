@@ -81,7 +81,7 @@ export default function ProofOfReservePage() {
           </p>
         </div>
         <div className="flex items-center space-x-4">
-          {/* <Button
+          <Button
             onClick={handleRequestReserves}
             className="flex items-center space-x-2"
             variant="outline"
@@ -92,7 +92,7 @@ export default function ProofOfReservePage() {
             <span>
               {isRequestPending ? "Requesting..." : "Request Reserves"}
             </span>
-          </Button> */}
+          </Button>
         </div>
       </div>
 
@@ -107,20 +107,45 @@ export default function ProofOfReservePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {totalSupplyLoading || priceLoading ? (
-                <RefreshCw className="h-5 w-5 animate-spin text-gray-400" />
-              ) : totalReserves ? (
-                formatCurrency(
-                  (Number(totalReserves) / 1e6) * (currentPrice || 0)
-                )
-              ) : (
-                formatCurrency(totalSupply * (currentPrice || 0))
-              )}
+              {(() => {
+                const hasValidPrice = currentPrice !== null && currentPrice > 0
+                const hasValidSupply = totalSupply > 0
+                const isDataLoading = totalSupplyLoading || priceLoading || !hasValidPrice || !hasValidSupply
+                
+                if (isDataLoading) {
+                  return (
+                    <div className="flex items-center text-gray-500">
+                      <RefreshCw className="h-5 w-5 animate-spin mr-2" />
+                      <span className="text-lg">Fetching...</span>
+                    </div>
+                  )
+                }
+                
+                if (totalReserves) {
+                  return formatCurrency((Number(totalReserves) / 1e6) * currentPrice!)
+                } else {
+                  return formatCurrency(totalSupply * currentPrice!)
+                }
+              })()}
             </div>
             <div className="flex items-center text-xs text-emerald-600">
               <CheckCircle className="h-3 w-3 mr-1" />
-              {formatNumber(totalSupply)} LQD @ $
-              {currentPrice?.toFixed(2) || "0.00"}
+              {(() => {
+                const hasValidPrice = currentPrice !== null && currentPrice > 0
+                const hasValidSupply = totalSupply > 0
+                const isDataLoading = totalSupplyLoading || priceLoading || !hasValidPrice || !hasValidSupply
+                
+                if (isDataLoading) {
+                  return <span className="text-gray-400">Loading...</span>
+                }
+                
+                return (
+                  <>
+                    {formatNumber(totalSupply)} LQD @ $
+                    {currentPrice?.toFixed(2) || "0.00"}
+                  </>
+                )
+              })()}
             </div>
           </CardContent>
         </Card>
@@ -145,17 +170,40 @@ export default function ProofOfReservePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {totalSupplyLoading || priceLoading ? (
-                <RefreshCw className="h-5 w-5 animate-spin text-gray-400" />
-              ) : (
-                formatCurrency(totalSupply * (currentPrice || 0))
-              )}
+              {(() => {
+                const hasValidPrice = currentPrice !== null && currentPrice > 0
+                const hasValidSupply = totalSupply > 0
+                const isDataLoading = totalSupplyLoading || priceLoading || !hasValidPrice || !hasValidSupply
+                
+                if (isDataLoading) {
+                  return (
+                    <div className="flex items-center text-gray-500">
+                      <RefreshCw className="h-5 w-5 animate-spin mr-2" />
+                      <span className="text-lg">Fetching...</span>
+                    </div>
+                  )
+                }
+                
+                return formatCurrency(totalSupply * currentPrice!)
+              })()}
             </div>
             <div className="flex items-center text-xs text-purple-600">
               <Badge variant="secondary" className="text-xs">
                 AAA-Rated
               </Badge>
-              <span className="ml-2">{formatNumber(totalSupply)} LQD</span>
+              <span className="ml-2">
+                {(() => {
+                  const hasValidPrice = currentPrice !== null && currentPrice > 0
+                  const hasValidSupply = totalSupply > 0
+                  const isDataLoading = totalSupplyLoading || priceLoading || !hasValidPrice || !hasValidSupply
+                  
+                  if (isDataLoading) {
+                    return <span className="text-gray-400">Loading...</span>
+                  }
+                  
+                  return `${formatNumber(totalSupply)} LQD`
+                })()}
+              </span>
             </div>
           </CardContent>
         </Card>

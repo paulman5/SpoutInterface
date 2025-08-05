@@ -24,6 +24,29 @@ export function ReserveSummary({
   totalSupplyLoading,
   priceLoading,
 }: ReserveSummaryProps) {
+  // Check if we have valid data for calculations
+  const hasValidPrice = currentPrice !== null && currentPrice > 0
+  const hasValidSupply = totalSupply > 0
+  const isDataLoading = totalSupplyLoading || priceLoading || !hasValidPrice || !hasValidSupply
+
+  // Calculate reserve value
+  const getReserveValue = () => {
+    if (isDataLoading) {
+      return (
+        <div className="flex items-center text-gray-500">
+          <RefreshCw className="h-5 w-5 animate-spin mr-2" />
+          <span className="text-lg">Fetching...</span>
+        </div>
+      )
+    }
+
+    if (totalReserves) {
+      return formatCurrency((Number(totalReserves) / 1e6) * currentPrice!)
+    } else {
+      return formatCurrency(totalSupply * currentPrice!)
+    }
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <Card>
@@ -35,20 +58,18 @@ export function ReserveSummary({
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {totalSupplyLoading || priceLoading ? (
-              <RefreshCw className="h-5 w-5 animate-spin text-gray-400" />
-            ) : totalReserves ? (
-              formatCurrency(
-                (Number(totalReserves) / 1e6) * (currentPrice || 0)
-              )
-            ) : (
-              formatCurrency(totalSupply * (currentPrice || 0))
-            )}
+            {getReserveValue()}
           </div>
           <div className="flex items-center text-xs text-emerald-600">
             <CheckCircle className="h-3 w-3 mr-1" />
-            {formatNumber(totalSupply)} LQD @ $
-            {currentPrice?.toFixed(2) || "0.00"}
+            {isDataLoading ? (
+              <span className="text-gray-400">Loading...</span>
+            ) : (
+              <>
+                {formatNumber(totalSupply)} LQD @ $
+                {currentPrice?.toFixed(2) || "0.00"}
+              </>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -71,17 +92,26 @@ export function ReserveSummary({
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {totalSupplyLoading || priceLoading ? (
-              <RefreshCw className="h-5 w-5 animate-spin text-gray-400" />
+            {isDataLoading ? (
+              <div className="flex items-center text-gray-500">
+                <RefreshCw className="h-5 w-5 animate-spin mr-2" />
+                <span className="text-lg">Fetching...</span>
+              </div>
             ) : (
-              formatCurrency(totalSupply * (currentPrice || 0))
+              formatCurrency(totalSupply * currentPrice!)
             )}
           </div>
           <div className="flex items-center text-xs text-purple-600">
             <Badge variant="secondary" className="text-xs">
               AAA-Rated
             </Badge>
-            <span className="ml-2">{formatNumber(totalSupply)} LQD</span>
+            <span className="ml-2">
+              {isDataLoading ? (
+                <span className="text-gray-400">Loading...</span>
+              ) : (
+                `${formatNumber(totalSupply)} LQD`
+              )}
+            </span>
           </div>
         </CardContent>
       </Card>
