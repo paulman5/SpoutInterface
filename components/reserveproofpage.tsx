@@ -81,7 +81,7 @@ export default function ProofOfReservePage() {
           </p>
         </div>
         <div className="flex items-center space-x-4">
-          <Button
+          {/* <Button
             onClick={handleRequestReserves}
             className="flex items-center space-x-2"
             variant="outline"
@@ -92,7 +92,7 @@ export default function ProofOfReservePage() {
             <span>
               {isRequestPending ? "Requesting..." : "Request Reserves"}
             </span>
-          </Button>
+          </Button> */}
         </div>
       </div>
 

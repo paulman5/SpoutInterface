@@ -20,7 +20,7 @@ export function ReserveHeader({
           Real-time verification of our reserve holdings and backing
         </p>
       </div>
-      <div className="flex items-center space-x-4">
+      {/* <div className="flex items-center space-x-4">
         <Button
           onClick={onRequestReserves}
           className="flex items-center space-x-2"
@@ -31,7 +31,7 @@ export function ReserveHeader({
           />
           <span>{isRequestPending ? "Requesting..." : "Request Reserves"}</span>
         </Button>
-      </div>
+      </div> */}
     </div>
   )
 }
