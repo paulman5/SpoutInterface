@@ -66,6 +66,23 @@ export async function GET(request: Request) {
     const currentBar = sortedBars[0] ?? null
     const previousBar = sortedBars[1] ?? null
 
+    // Step 3: Fetch actual yield data
+    let actualYield = 4.95 // Fallback value
+    try {
+      const yieldUrl = `${request.headers.get('origin') || 'http://localhost:3000'}/api/marketdata/yields?symbol=${symbol}`
+      console.log("📡 Fetching yield from:", yieldUrl)
+      const yieldRes = await fetch(yieldUrl)
+      if (yieldRes.ok) {
+        const yieldData = await yieldRes.json()
+        actualYield = yieldData.yield || 4.44
+        console.log("📊 Actual yield from API:", actualYield)
+      } else {
+        console.log("⚠️ Failed to fetch yield, using fallback")
+      }
+    } catch (yieldError) {
+      console.log("⚠️ Error fetching yield, using fallback:", yieldError)
+    }
+
     const response = {
       symbol,
       price: currentBar?.c ?? askPrice ?? null,
@@ -73,7 +90,7 @@ export async function GET(request: Request) {
       bidPrice: bidPrice,
       previousClose: previousBar?.c ?? askPrice ?? null,
       timestamp: currentBar?.t ?? latestQuote?.t ?? null,
-      yield: 4.95, // LQD's current yield is around 4.95% as of Feb 2024
+      yield: actualYield, // Use actual yield from API
       fallbackUsed: previousBar == null,
       dates: {
         current: currentBar?.t ?? null,

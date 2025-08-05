@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect } from "react"
 
 // This matches what our API returns
@@ -15,7 +17,8 @@ interface MarketDataError {
   error: string
 }
 
-export function useMarketData(symbol: string) {
+export function 
+useMarketData(symbol: string) {
   const [data, setData] = useState<MarketDataResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)

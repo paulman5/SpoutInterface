@@ -181,9 +181,9 @@ function DashboardPage() {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
-            <Link href="/app/markets">
+            {/* <Link href="/app/markets">
               <Button variant="white-outline">View Markets</Button>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>

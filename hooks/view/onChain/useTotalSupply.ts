@@ -1,3 +1,5 @@
+"use client"
+
 import { useReadContract, useChainId } from "wagmi"
 import erc3643ABI from "@/abi/erc3643.json"
 

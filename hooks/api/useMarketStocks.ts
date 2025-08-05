@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect, useCallback } from "react"
 import { StockData } from "@/lib/types/markets"
 import { fetchAllStocks } from "@/lib/services/marketData"
