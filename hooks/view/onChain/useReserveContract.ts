@@ -1,3 +1,5 @@
+"use client"
+
 import { useAccount, useReadContract, useWriteContract } from "wagmi"
 import reserveABI from "@/abi/proof-of-reserve.json"
 
@@ -25,7 +27,7 @@ export function useReserveContract(reserveAddress: `0x${string}`) {
   })
 
   // Function calls
-  const executeRequestReserves = (subscriptionId: bigint) => {
+  const executeRequestReserves = (subscriptionId: number) => {
     requestReserves({
       address: reserveAddress,
       abi: reserveABI as any,

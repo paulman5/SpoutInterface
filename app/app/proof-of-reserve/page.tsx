@@ -30,7 +30,7 @@ function ProofOfReservePage() {
   const yieldRate = lqdYield?.yield || 0
 
   const handleRequestReserves = () => {
-    requestReserves(BigInt(379))
+    requestReserves(379)
   }
 
   return (

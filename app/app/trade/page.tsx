@@ -332,7 +332,7 @@ const TradePage = () => {
         setBuyUsdc={setBuyUsdc}
         sellToken={sellToken}
         setSellToken={setSellToken}
-        latestPrice={latestPrice || 0}
+        latestPrice={latestPrice}
         priceLoading={priceLoading}
         usdcBalance={usdcBalance}
         tokenBalance={tokenBalance}

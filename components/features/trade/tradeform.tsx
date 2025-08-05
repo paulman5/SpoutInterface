@@ -26,7 +26,7 @@ type TradeFormProps = {
   setBuyUsdc: (v: string) => void
   sellToken: string
   setSellToken: (v: string) => void
-  latestPrice: number
+  latestPrice: number | null
   priceLoading: boolean
   usdcBalance: number
   tokenBalance: number
@@ -253,7 +253,7 @@ export default function TradeForm({
                 />
               </div>
 
-              {buyUsdc && latestPrice > 0 && (
+              {buyUsdc && latestPrice && latestPrice > 0 && (
                 <div className="mb-4 space-y-3">
                   {/* Estimation Summary */}
                   <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-100">
@@ -364,7 +364,7 @@ export default function TradeForm({
                 />
               </div>
 
-              {sellToken && latestPrice > 0 && (
+              {sellToken && latestPrice && latestPrice > 0 && (
                 <div className="mb-4 space-y-3">
                   {/* Estimation Summary */}
                   <div className="p-4 rounded-lg bg-blue-50 border border-blue-100">

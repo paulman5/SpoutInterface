@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect } from "react"
 import { useWatchContractEvent, usePublicClient, useReadContract, useChainId } from "wagmi"
 import { useMarketData } from "@/hooks/api/useMarketData"

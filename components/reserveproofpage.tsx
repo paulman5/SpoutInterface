@@ -65,7 +65,7 @@ export default function ProofOfReservePage() {
   }
 
   const handleRequestReserves = () => {
-    requestReserves(BigInt(379))
+    requestReserves(Number(379))
   }
 
   return (
