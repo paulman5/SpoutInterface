@@ -20,7 +20,8 @@ const TOKENS = [{ label: "LQD", value: "LQD" }]
 const TradePage = () => {
   const [selectedToken, setSelectedToken] = useState("LQD")
   const [tokenData, setTokenData] = useState<any[]>([])
-  const [currentPrice, setCurrentPrice] = useState<number>(0)
+  const [currentPrice, setCurrentPrice] = useState<number | null>(null)
+  const [priceLoading, setPriceLoading] = useState(true)
   const [loading, setLoading] = useState(true)
   const [buyUsdc, setBuyUsdc] = useState("")
   const [sellToken, setSellToken] = useState("")
@@ -165,37 +166,58 @@ const TradePage = () => {
 
   useEffect(() => {
     let isMounted = true
+    let lastKnownPrice: number | null = null
+    
     async function fetchPriceData() {
       try {
+        setPriceLoading(true)
         const res = await fetch(`/api/marketdata?symbol=${selectedToken}`)
         const json = await res.json()
         if (!isMounted) return
-        if (json.price) {
-          setCurrentPrice(json.price)
+        
+        if (json.price && json.price > 0) {
+          // Only update if price has actually changed
+          if (lastKnownPrice !== json.price) {
+            setCurrentPrice(json.price)
+            lastKnownPrice = json.price
+            console.log("💰 Price updated:", json.price)
+          }
         } else {
-          setCurrentPrice(108.5)
+          setCurrentPrice(null) // No valid price data
         }
       } catch (e) {
         if (isMounted) {
-          setCurrentPrice(108.5)
+          setCurrentPrice(null) // Error fetching price
+        }
+      } finally {
+        if (isMounted) {
+          setPriceLoading(false)
         }
       }
     }
+    
+    // Initial fetch
     fetchPriceData()
-    const interval = setInterval(fetchPriceData, 5000)
+    
+    // Only refetch every 30 seconds instead of 5 seconds
+    const interval = setInterval(fetchPriceData, 30000)
+    
     return () => {
       isMounted = false
       clearInterval(interval)
     }
   }, [selectedToken])
 
-  const latestPrice =
-    currentPrice ||
-    (tokenData.length > 0 ? tokenData[tokenData.length - 1].close : 108.5)
-  const prevPrice =
-    tokenData.length > 1 ? tokenData[tokenData.length - 2].close : latestPrice
-  const priceChange = latestPrice - prevPrice
-  const priceChangePercent = prevPrice > 0 ? (priceChange / prevPrice) * 100 : 0
+  // Use chart data as primary source for price calculations
+  const chartLatestPrice = tokenData.length > 0 ? tokenData[tokenData.length - 1].close : null
+  const chartPrevPrice = tokenData.length > 1 ? tokenData[tokenData.length - 2].close : null
+  
+  // Use currentPrice (from market data API) as fallback only if chart data is not available
+  const latestPrice = chartLatestPrice || currentPrice
+  const prevPrice = chartPrevPrice || (tokenData.length > 0 ? tokenData[tokenData.length - 1].close : latestPrice)
+  
+  const priceChange = latestPrice && prevPrice ? latestPrice - prevPrice : 0
+  const priceChangePercent = prevPrice > 0 && latestPrice ? ((latestPrice - prevPrice) / prevPrice) * 100 : 0
 
   const tradingFee = 0.0025
   const estimatedTokens =
@@ -218,7 +240,7 @@ const TradePage = () => {
     : ""
 
   const handleBuy = async () => {
-    if (!userAddress || !buyUsdc) return
+    if (!userAddress || !buyUsdc || !latestPrice) return
     const amount = BigInt(Math.floor(Number(buyUsdc) * 1e6))
     
     console.log("🔍 Buy Order Debug:")
@@ -257,43 +279,39 @@ const TradePage = () => {
       // Keep modal open for buy transaction to complete
       // The modal will stay in "waiting" state until the buy transaction is processed
       console.log("⏳ Buy transaction submitted, keeping modal open...")
-      
-      // Note: We don't set status to "completed" here because we need to wait
-      // for the actual buy transaction to complete, not just the approval
-      
-    } catch (err) {
-      console.error(
-        `Order failed: ${err instanceof Error ? err.message : "Unknown error"}`
-      )
-      
-      // Show error modal with simple message
+    } catch (error) {
+      console.error("❌ Error in buy transaction:", error)
       setTransactionModal(prev => ({
         ...prev,
         status: "failed",
-        error: "Transaction timed out. Please try again.",
+        error: "Transaction failed. Please try again.",
       }))
     }
   }
-  const handleSell = async () => {
-    if (!sellToken) return
-    
-    // Use dynamic token decimals
-    const tokenAmount = BigInt(Math.floor(Number(sellToken) * Math.pow(10, actualTokenDecimals)))
 
+  const handleSell = async () => {
+    if (!userAddress || !sellToken || !latestPrice) return
+    
+    // Convert token amount to BigInt (assuming 6 decimals)
+    const tokenAmount = BigInt(Math.floor(parseFloat(sellToken) * Math.pow(10, actualTokenDecimals)))
+    
     console.log("🔍 Sell Order Debug:")
     console.log("Input sellToken:", sellToken)
-    console.log("Parsed number:", Number(sellToken))
+    console.log("Parsed number:", parseFloat(sellToken))
     console.log("Token decimals:", actualTokenDecimals)
     console.log("Multiplier:", Math.pow(10, actualTokenDecimals))
-    console.log("Calculated amount:", Number(sellToken) * Math.pow(10, actualTokenDecimals))
+    console.log("Calculated amount:", parseFloat(sellToken) * Math.pow(10, actualTokenDecimals))
     console.log("Final BigInt amount:", tokenAmount.toString())
+    
+    const tokenAmountNum = parseFloat(sellToken)
+    const estimatedUsdcAmount = latestPrice > 0 ? tokenAmountNum * latestPrice : 0
     
     // Show transaction modal
     setTransactionModal({
       isOpen: true,
       status: "waiting",
       transactionType: "sell",
-      amount: `${sellToken} S${selectedToken}`,
+      amount: `${sellToken} ${selectedToken}`,
       receivedAmount: netReceiveUsdc,
       error: "",
     })
@@ -301,26 +319,16 @@ const TradePage = () => {
     try {
       // Execute sell transaction
       console.log("🔄 Starting sell transaction...")
-      sellAsset(BigInt(1), selectedToken, rwaTokenAddress, tokenAmount)
+      sellAsset(BigInt(2000002), selectedToken, rwaTokenAddress, tokenAmount)
       setSellToken("")
       
-      // Keep modal open for sell transaction to complete
-      // The modal will stay in "waiting" state until the sell transaction is processed
       console.log("⏳ Sell transaction submitted, keeping modal open...")
-      
-      // Note: We don't set status to "completed" here because we need to wait
-      // for the actual sell transaction to complete
-      
-    } catch (err) {
-      console.error(
-        `Sell order failed: ${err instanceof Error ? err.message : "Unknown error"}`
-      )
-      
-      // Show error modal with simple message
+    } catch (error) {
+      console.error("❌ Error in sell transaction:", error)
       setTransactionModal(prev => ({
         ...prev,
         status: "failed",
-        error: "Transaction timed out. Please try again.",
+        error: "Transaction failed. Please try again.",
       }))
     }
   }
@@ -350,7 +358,8 @@ const TradePage = () => {
         setBuyUsdc={setBuyUsdc}
         sellToken={sellToken}
         setSellToken={setSellToken}
-        latestPrice={latestPrice}
+        latestPrice={latestPrice || 0}
+        priceLoading={priceLoading}
         usdcBalance={usdcBalance}
         tokenBalance={tokenBalance}
         usdcLoading={usdcLoading}

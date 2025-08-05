@@ -27,6 +27,7 @@ type TradeFormProps = {
   sellToken: string
   setSellToken: (v: string) => void
   latestPrice: number
+  priceLoading: boolean
   usdcBalance: number
   tokenBalance: number
   usdcLoading: boolean
@@ -53,6 +54,7 @@ export default function TradeForm({
   sellToken,
   setSellToken,
   latestPrice,
+  priceLoading,
   usdcBalance,
   tokenBalance,
   usdcLoading,
@@ -191,34 +193,47 @@ export default function TradeForm({
               <div className="flex items-center gap-4">
                 <div>
                   <p className="text-xs text-slate-500">Current Price</p>
-                  <p className="font-bold text-lg">${latestPrice.toFixed(2)}</p>
+                  {priceLoading || !latestPrice || latestPrice === 0 ? (
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="h-5 w-5 animate-spin text-slate-400" />
+                      <span className="text-slate-400">Loading...</span>
+                    </div>
+                  ) : (
+                    <p className="font-bold text-lg">${latestPrice.toFixed(2)}</p>
+                  )}
                 </div>
-                <div
-                  className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                    priceChangePercent >= 0
-                      ? "bg-emerald-100 text-emerald-700"
-                      : "bg-red-100 text-red-700"
-                  }`}
-                >
-                  <TrendingUp
-                    className={`w-3 h-3 ${priceChangePercent < 0 ? "rotate-180" : ""}`}
-                  />
-                  {priceChangePercent >= 0 ? "+" : ""}
-                  {priceChangePercent.toFixed(2)}%
-                </div>
+                {!priceLoading && latestPrice && latestPrice > 0 && (
+                  <div
+                    className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                      priceChangePercent >= 0
+                        ? "bg-emerald-100 text-emerald-700"
+                        : "bg-red-100 text-red-700"
+                    }`}
+                  >
+                    <TrendingUp
+                      className={`w-3 h-3 ${priceChangePercent < 0 ? "rotate-180" : ""}`}
+                    />
+                    {priceChangePercent >= 0 ? "+" : ""}
+                    {priceChangePercent.toFixed(2)}%
+                  </div>
+                )}
               </div>
               <div className="text-right">
                 <p className="text-xs text-slate-500">24h Change</p>
-                <p
-                  className={`font-semibold ${
-                    priceChangePercent >= 0
-                      ? "text-emerald-600"
-                      : "text-red-600"
-                  }`}
-                >
-                  ${priceChange >= 0 ? "+" : ""}
-                  {priceChange.toFixed(2)}
-                </p>
+                {priceLoading || !latestPrice || latestPrice === 0 ? (
+                  <p className="text-slate-400 text-sm">--</p>
+                ) : (
+                  <p
+                    className={`font-semibold ${
+                      priceChangePercent >= 0
+                        ? "text-emerald-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    ${priceChange >= 0 ? "+" : ""}
+                    {priceChange.toFixed(2)}
+                  </p>
+                )}
               </div>
             </div>
           </div>
