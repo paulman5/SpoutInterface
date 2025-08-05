@@ -1,5 +1,8 @@
 "use client"
 
+// Mailing list functionality temporarily disabled
+// TODO: Re-enable when email service is set up
+
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Button as JoinButton } from "@/components/ui/button"
@@ -8,6 +11,10 @@ import { AnimatePresence, motion } from "framer-motion"
 import { CheckCircle } from "lucide-react"
 
 export function JoinMailingList() {
+  // Temporarily disabled - return empty component
+  return null
+
+  /*
   const [email, setEmail] = useState("")
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
@@ -95,4 +102,5 @@ export function JoinMailingList() {
       )}
     </form>
   )
+  */
 }
