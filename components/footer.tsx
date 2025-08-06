@@ -205,7 +205,7 @@ export const Footer: React.FC<FooterProps> = ({
 // Default footer component with Spout Finance links
 const DefaultFooter = () => {
   const leftLinks = [
-    { href: "/app/markets", label: "Markets" },
+    // { href: "/app/markets", label: "Markets" }, // Not ready yet
     { href: "/app/portfolio", label: "Portfolio" },
     { href: "/app/trade", label: "Trading" },
     // { href: "/app/earn", label: "Earn" },

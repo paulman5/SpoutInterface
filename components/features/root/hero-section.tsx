@@ -27,7 +27,7 @@ export function HeroSection() {
         <div className="text-center mb-16 w-full">
           <Badge
             variant="secondary"
-            className="mb-6 px-4 py-2 text-sm font-medium bg-emerald-100 text-emerald-800 border-emerald-200 hover:bg-emerald-100 hover:text-emerald-800 hover:border-emerald-200"
+            className="mb-6 px-4 py-2 text-sm font-medium bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-100 hover:text-blue-800 hover:border-blue-200"
           >
             <Zap className="w-4 h-4 mr-2" />
             Live Trading Platform
@@ -46,7 +46,7 @@ export function HeroSection() {
           <Link href="/app">
             <Button
               size="lg"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              className="bg-blue-400 hover:bg-blue-500 text-white px-10 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
               Launch Platform
               <ArrowRight className="ml-3 h-5 w-5" />

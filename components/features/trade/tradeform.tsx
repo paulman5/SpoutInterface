@@ -147,18 +147,31 @@ export default function TradeForm({
 
           {/* Toggle Buttons */}
           <div className="flex bg-slate-100 rounded-lg p-1">
-            <Button
-              variant={tradeType === "buy" ? "success" : "ghost"}
-              onClick={() => setTradeType("buy")}
-              className={`flex-1 transition-all duration-200 ${
-                tradeType === "buy" 
-                  ? "shadow-lg transform scale-[0.98] ring-2 ring-emerald-200" 
-                  : "hover:scale-[1.02]"
-              }`}
-            >
-              <ArrowDownCircle className="w-4 h-4 mr-2" />
-              Buy
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="flex-1 relative">
+                    <Button
+                      variant={tradeType === "buy" ? "success" : "ghost"}
+                      onClick={() => setTradeType("buy")}
+                      isDisabled={true}
+                      className={`w-full transition-all duration-200 opacity-50 cursor-not-allowed pointer-events-none ${
+                        tradeType === "buy" 
+                          ? "shadow-lg transform scale-[0.98] ring-2 ring-emerald-200" 
+                          : "hover:scale-[1.02]"
+                      }`}
+                    >
+                      <ArrowDownCircle className="w-4 h-4 mr-2" />
+                      Buy
+                    </Button>
+                    <div className="absolute inset-0" />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" align="center">
+                  Trading temporarily unavailable
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -180,7 +193,7 @@ export default function TradeForm({
                   </div>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" align="center">
-                  Selling will soon be available
+                  Trading temporarily unavailable
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -332,23 +345,25 @@ export default function TradeForm({
                 </div>
               )}
 
-              <Button
-                className="w-full mt-4 font-semibold text-lg py-3"
-                variant="success"
-                onClick={handleBuy}
-                isDisabled={isBuyDisabled}
-              >
-                {isApprovePending || isOrderPending ? (
-                  <>
-                    <LoadingSpinner />
-                    {isApprovePending ? "Approving..." : "Processing..."}
-                  </>
-                ) : !hasKYCClaim && !kycLoading ? (
-                  "KYC Required"
-                ) : (
-                  `Buy S${selectedToken}`
-                )}
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="w-full">
+                      <Button
+                        className="w-full mt-4 font-semibold text-lg py-3 opacity-50 cursor-not-allowed"
+                        variant="success"
+                        onClick={handleBuy}
+                        isDisabled={true}
+                      >
+                        Trading Temporarily Unavailable
+                      </Button>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" align="center">
+                    Trading temporarily unavailable
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </>
           ) : (
             <>
@@ -434,20 +449,24 @@ export default function TradeForm({
                 </div>
               )}
 
-              <Button
-                className="w-full mt-4 font-semibold text-lg py-3 bg-blue-500 hover:bg-blue-600"
-                onClick={handleSell}
-                isDisabled={!sellToken || isApprovePending || isOrderPending}
-              >
-                {isApprovePending || isOrderPending ? (
-                  <>
-                    <LoadingSpinner />
-                    {isApprovePending ? "Approving..." : "Processing..."}
-                  </>
-                ) : (
-                  `Sell S${selectedToken}`
-                )}
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="w-full">
+                      <Button
+                        className="w-full mt-4 font-semibold text-lg py-3 bg-blue-500 hover:bg-blue-600 opacity-50 cursor-not-allowed"
+                        onClick={handleSell}
+                        isDisabled={true}
+                      >
+                        Trading Temporarily Unavailable
+                      </Button>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" align="center">
+                    Trading temporarily unavailable
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </>
           )}
         </CardContent>

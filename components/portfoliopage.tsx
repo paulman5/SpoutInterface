@@ -135,7 +135,6 @@ export default function PortfolioPage() {
                         aria-label="Refresh"
                         onClick={() => window.location.reload()}
                       >
-                        <RefreshCw className="h-4 w-4" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>Refresh</TooltipContent>

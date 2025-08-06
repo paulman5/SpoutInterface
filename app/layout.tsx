@@ -29,6 +29,32 @@ export const metadata: Metadata = {
     "RWA",
     "Corporate Bonds",
   ],
+  openGraph: {
+    title: "Spout Finance",
+    description: "Spout Finance is a RWA platform tokenizing efficient collateral assets and building the next generation of collateral infrastructure",
+    url: "https://spout.finance",
+    siteName: "Spout Finance",
+    images: [
+      {
+        url: "/Whale.png",
+        width: 1200,
+        height: 630,
+        alt: "Spout Finance - Whale Logo",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Spout Finance",
+    description: "Spout Finance is a RWA platform tokenizing efficient collateral assets and building the next generation of collateral infrastructure",
+    images: ["/Whale.png"],
+  },
+  icons: {
+    icon: "/Whale.png",
+    apple: "/Whale.png",
+  },
 }
 
 export default async function RootLayout({

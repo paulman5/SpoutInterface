@@ -16,6 +16,7 @@ import { useReserveContract } from "@/hooks/view/onChain/useReserveContract"
 import { useTotalSupply } from "@/hooks/view/onChain/useTotalSupply"
 import { useMarketData } from "@/hooks/api/useMarketData"
 import { useYieldData } from "@/hooks/api/useYieldData"
+import { useContractAddress } from "@/lib/addresses"
 import {
   Shield,
   BarChart3,
@@ -43,9 +44,9 @@ export default function ProofOfReservePage() {
   const { price: currentPrice, isLoading: priceLoading } = useMarketData("LQD")
   const { data: lqdYield, isLoading: lqdYieldLoading } = useYieldData("LQD")
 
-  const RESERVE_CONTRACT_ADDRESS = "0xf26c960Abf98875f87764502f64e8F5ef9134C20"
+  const reserveContractAddress = useContractAddress("proofOfReserve") as `0x${string}`
   const { requestReserves, isRequestPending, totalReserves, refetchReserves } =
-    useReserveContract(RESERVE_CONTRACT_ADDRESS)
+    useReserveContract(reserveContractAddress)
 
   // Use LQD yield directly
   const yieldRate = lqdYield?.yield || 0
