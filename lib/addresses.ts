@@ -23,6 +23,10 @@ export const contractaddresses = {
     84532: "0xB5F83286a6F8590B4d01eC67c885252Ec5d0bdDB", // Base Sepolia
     688688: "0x54b753555853ce22f66Ac8CB8e324EB607C4e4eE", // Pharos Testnet
   },
+  proofOfReserve: {
+    84532: "0x0000000000000000000000000000000000000000", // Base Sepolia - placeholder
+    688688: "0x72F88509C53b939a0613c679a0F4768c0444d247", // Pharos Testnet - Blocksense Feed Store for LQD PoR (ID: 101001)
+  },
   // Add more contracts as needed
 }
 

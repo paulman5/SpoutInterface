@@ -159,7 +159,7 @@ export default function OnchainIDChecker() {
       console.log('  - Not on KYC page:', !(pathname === "/app/profile" && searchParams?.get("tab") === "kyc"))
       console.log('  - !hasShownKYCToast:', !hasShownKYCToast)
     }
-  }, [hasOnchainID, hasEverHadOnchainID, hasKYCClaim, onchainIDLoading, router, pathname, searchParams, hasShownKYCToast, hasWaitedForSettlement])
+  }, [hasOnchainID, hasEverHadOnchainID, hasKYCClaim, onchainIDLoading, kycLoading, router, pathname, searchParams, hasShownKYCToast, hasWaitedForSettlement])
 
   // Always dismiss KYC toast if user has ever had onchain ID and data has settled (runs on every render as backup)
   if (hasEverHadOnchainID === true && !onchainIDLoading && !kycLoading && hasWaitedForSettlement) {

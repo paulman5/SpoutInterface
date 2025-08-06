@@ -44,6 +44,8 @@ export default function ProofOfReservePage() {
   const { price: currentPrice, isLoading: priceLoading } = useMarketData("LQD")
   const { data: lqdYield, isLoading: lqdYieldLoading } = useYieldData("LQD")
 
+  // Use Blocksense feed ID 101001 for LQD Proof of Reserve
+  const feedId = 101001
   const reserveContractAddress = useContractAddress("proofOfReserve") as `0x${string}`
   const { requestReserves, isRequestPending, totalReserves, refetchReserves } =
     useReserveContract(reserveContractAddress)
