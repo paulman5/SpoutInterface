@@ -1,4 +1,5 @@
 import React from "react"
+import { createPortal } from "react-dom"
 import { CheckCircle, Loader2, X } from "lucide-react"
 import { Button } from "./button"
 import Image from "next/image"
@@ -26,9 +27,9 @@ export default function TransactionModal({
 }: TransactionModalProps) {
   if (!isOpen) return null
 
-  return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl p-6 w-full max-w-md mx-4 shadow-xl">
+  const modalContent = (
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[9999]">
+      <div className="bg-white rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-semibold text-gray-900">
@@ -226,4 +227,11 @@ export default function TransactionModal({
       </div>
     </div>
   )
+
+  // Use portal to render at document body level
+  if (typeof window !== 'undefined') {
+    return createPortal(modalContent, document.body)
+  }
+
+  return modalContent
 } 

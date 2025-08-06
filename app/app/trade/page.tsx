@@ -11,7 +11,7 @@ import { useOrdersContract } from "@/hooks/writes/onChain/useOrders"
 import { waitForTransactionReceipt } from "wagmi/actions"
 import { useTokenBalance } from "@/hooks/view/onChain/useTokenBalance"
 import { useUSDCTokenBalance } from "@/hooks/view/onChain/useUSDCTokenBalance"
-import { useContractAddress } from "@/lib/addresses"
+import { useContractAddress, USDC_DECIMALS } from "@/lib/addresses"
 import { useReadContract } from "wagmi"
 import erc3643ABI from "@/abi/erc3643.json"
 
@@ -215,18 +215,19 @@ const TradePage = () => {
 
   const handleBuy = async () => {
     if (!userAddress || !buyUsdc || !latestPrice) return
-    const amount = BigInt(Math.floor(Number(buyUsdc) * 1e6))
+    // Convert USDC amount to proper decimals using USDC_DECIMALS
+    const usdcAmountNum = parseFloat(buyUsdc)
+    const amount = BigInt(Math.floor(usdcAmountNum * Math.pow(10, USDC_DECIMALS)))
     
     console.log("🔍 Buy Order Debug:")
     console.log("Input buyUsdc:", buyUsdc)
-    console.log("Parsed number:", Number(buyUsdc))
-    console.log("USDC decimals: 6")
-    console.log("Multiplier: 1e6")
-    console.log("Calculated amount:", Number(buyUsdc) * 1e6)
+    console.log("Parsed number:", usdcAmountNum)
+    console.log("USDC decimals:", USDC_DECIMALS)
+    console.log("Multiplier:", Math.pow(10, USDC_DECIMALS))
+    console.log("Calculated amount:", usdcAmountNum * Math.pow(10, USDC_DECIMALS))
     console.log("Final BigInt amount:", amount.toString())
     
-    const usdcAmount = parseFloat(buyUsdc)
-    const estimatedTokenAmount = latestPrice > 0 ? usdcAmount / latestPrice : 0
+    const estimatedTokenAmount = latestPrice > 0 ? usdcAmountNum / latestPrice : 0
     
     // Show transaction modal
     setTransactionModal({
@@ -247,6 +248,7 @@ const TradePage = () => {
       
       // Step 2: Execute buy transaction
       console.log("🔄 Starting buy transaction...")
+      console.log("📤 Sending USDC amount to contract:", amount.toString())
       buyAsset(BigInt(2000002), selectedToken, rwaTokenAddress, amount)
       setBuyUsdc("")
       
@@ -266,19 +268,19 @@ const TradePage = () => {
   const handleSell = async () => {
     if (!userAddress || !sellToken || !latestPrice) return
     
-    // Convert token amount to BigInt (assuming 6 decimals)
-    const tokenAmount = BigInt(Math.floor(parseFloat(sellToken) * Math.pow(10, actualTokenDecimals)))
+    // Multiply by 18 decimals for token amount
+    const sellTokenAmount = parseFloat(sellToken)
+    const tokenAmount = BigInt(Math.floor(sellTokenAmount * 1e18))
     
     console.log("🔍 Sell Order Debug:")
     console.log("Input sellToken:", sellToken)
-    console.log("Parsed number:", parseFloat(sellToken))
-    console.log("Token decimals:", actualTokenDecimals)
-    console.log("Multiplier:", Math.pow(10, actualTokenDecimals))
-    console.log("Calculated amount:", parseFloat(sellToken) * Math.pow(10, actualTokenDecimals))
+    console.log("Parsed number:", sellTokenAmount)
+    console.log("Token decimals: 18")
+    console.log("Multiplier: 1e18")
+    console.log("Calculated amount:", sellTokenAmount * 1e18)
     console.log("Final BigInt amount:", tokenAmount.toString())
     
-    const tokenAmountNum = parseFloat(sellToken)
-    const estimatedUsdcAmount = latestPrice > 0 ? tokenAmountNum * latestPrice : 0
+    const estimatedUsdcAmount = latestPrice > 0 ? sellTokenAmount * latestPrice : 0
     
     // Show transaction modal
     setTransactionModal({

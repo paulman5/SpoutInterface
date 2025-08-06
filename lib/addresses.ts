@@ -13,7 +13,7 @@ export const contractaddresses = {
   },
   orders: {
     84532: "0x1EE5DdF4c8Ac5C3359f360098AE85289D4874993", // Base Sepolia
-    688688: "0xBbF95788a0Ee3B5640b315c9f69a908724BDC038", // Pharos Testnet
+    688688: "0x81b33972f8bdf14fD7968aC99CAc59BcaB7f4E9A", // Pharos Testnet
   },
   usdc: {
     84532: "0x036CbD53842c5426634e7929541eC2318f3dCF7e", // Base Sepolia
@@ -25,6 +25,9 @@ export const contractaddresses = {
   },
   // Add more contracts as needed
 }
+
+// USDC token decimals
+export const USDC_DECIMALS = 6
 
 import { useChainId } from "wagmi"
 
