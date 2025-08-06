@@ -159,18 +159,20 @@ export default function TradeForm({
               <ArrowDownCircle className="w-4 h-4 mr-2" />
               Buy
             </Button>
-            <Button
-              variant={tradeType === "sell" ? "default" : "ghost"}
-              onClick={() => setTradeType("sell")}
-              className={`flex-1 transition-all duration-200 ${
-                tradeType === "sell" 
-                  ? "bg-blue-500 hover:bg-blue-600 text-white shadow-lg transform scale-[0.98] ring-2 ring-blue-200 shadow-blue-500/25" 
-                  : "text-slate-600 hover:scale-[1.02]"
-              }`}
-            >
-              <ArrowUpCircle className="w-4 h-4 mr-2" />
-              Sell
-            </Button>
+            {/* Temporarily disabled sell tab */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="flex-1 py-2 px-4 rounded-lg bg-gray-100 text-gray-400 cursor-not-allowed flex items-center justify-center">
+                    <ArrowUpCircle className="w-4 h-4 mr-2" />
+                    Sell
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Selling SLQD tokens is temporarily unavailable</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </CardHeader>
 
@@ -421,20 +423,19 @@ export default function TradeForm({
                 </div>
               )}
 
-              <Button
-                className="w-full mt-4 font-semibold text-lg py-3 bg-blue-500 hover:bg-blue-600"
-                onClick={handleSell}
-                isDisabled={!sellToken || isApprovePending || isOrderPending}
-              >
-                {isApprovePending || isOrderPending ? (
-                  <>
-                    <LoadingSpinner />
-                    {isApprovePending ? "Approving..." : "Processing..."}
-                  </>
-                ) : (
-                  `Sell S${selectedToken}`
-                )}
-              </Button>
+              {/* Temporarily disabled sell button for testnet */}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="w-full mt-4 font-semibold text-lg py-3 bg-gray-400 text-gray-600 cursor-not-allowed opacity-50 rounded-lg flex items-center justify-center">
+                      Sell S{selectedToken}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Selling SLQD tokens is temporarily unavailable</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </>
           )}
         </CardContent>
