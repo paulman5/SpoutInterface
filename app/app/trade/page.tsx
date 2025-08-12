@@ -268,13 +268,43 @@ const TradePage = () => {
   const handleSell = async () => {
     if (!userAddress || !sellToken || !latestPrice) return
     
-    // Multiply by 18 decimals for token amount
+    // Validate balance before proceeding
     const sellTokenAmount = parseFloat(sellToken)
+    if (sellTokenAmount > tokenBalance) {
+      console.log("❌ Sell amount exceeds balance:", {
+        sellAmount: sellTokenAmount,
+        availableBalance: tokenBalance
+      })
+      
+      // Show processing status first
+      setTransactionModal({
+        isOpen: true,
+        status: "waiting",
+        transactionType: "sell",
+        amount: `${sellToken} ${selectedToken}`,
+        receivedAmount: "",
+        error: "",
+      })
+      
+      // Wait 3 seconds then show the error
+      setTimeout(() => {
+        setTransactionModal(prev => ({
+          ...prev,
+          status: "failed",
+          error: "Transaction reverted: Order exceeds balance. You don't have enough SLQD tokens.",
+        }))
+      }, 3000)
+      
+      return
+    }
+    
+    // Multiply by 18 decimals for token amount
     const tokenAmount = BigInt(Math.floor(sellTokenAmount * 1e18))
     
     console.log("🔍 Sell Order Debug:")
     console.log("Input sellToken:", sellToken)
     console.log("Parsed number:", sellTokenAmount)
+    console.log("Available balance:", tokenBalance)
     console.log("Token decimals: 18")
     console.log("Multiplier: 1e18")
     console.log("Calculated amount:", sellTokenAmount * 1e18)
