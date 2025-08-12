@@ -29,9 +29,9 @@ function PortfolioPage() {
     previousClose,
     isLoading: priceLoading,
     error: priceError,
-  } = useMarketData("SLQD")
+  } = useMarketData("LQD")
 
-  const { returns, isLoading: returnsLoading } = useReturns("SLQD")
+  const { returns, isLoading: returnsLoading } = useReturns("LQD")
   const { username } = useCurrentUser()
   const {
     activities,

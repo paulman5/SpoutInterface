@@ -49,7 +49,7 @@ export default function PortfolioPage() {
     previousClose,
     isLoading: priceLoading,
     error: priceError,
-  } = useMarketData("SLQD") // Using SLQD as price reference
+  } = useMarketData("LQD") // Use LQD as price reference
 
   const { returns, isLoading: returnsLoading } = useReturns("SLQD")
 
