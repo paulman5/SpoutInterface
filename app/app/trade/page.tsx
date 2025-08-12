@@ -265,11 +265,48 @@ const TradePage = () => {
     }
   }
 
-  // Temporarily disabled sell function for testnet
   const handleSell = async () => {
-    // Selling SLQD tokens is temporarily unavailable
-    console.log("🚫 Sell function temporarily disabled for testnet")
-    return
+    if (!userAddress || !sellToken || !latestPrice) return
+    
+    // Multiply by 18 decimals for token amount
+    const sellTokenAmount = parseFloat(sellToken)
+    const tokenAmount = BigInt(Math.floor(sellTokenAmount * 1e18))
+    
+    console.log("🔍 Sell Order Debug:")
+    console.log("Input sellToken:", sellToken)
+    console.log("Parsed number:", sellTokenAmount)
+    console.log("Token decimals: 18")
+    console.log("Multiplier: 1e18")
+    console.log("Calculated amount:", sellTokenAmount * 1e18)
+    console.log("Final BigInt amount:", tokenAmount.toString())
+    
+    const estimatedUsdcAmount = latestPrice > 0 ? sellTokenAmount * latestPrice : 0
+    
+    // Show transaction modal
+    setTransactionModal({
+      isOpen: true,
+      status: "waiting",
+      transactionType: "sell",
+      amount: `${sellToken} ${selectedToken}`,
+      receivedAmount: netReceiveUsdc,
+      error: "",
+    })
+    
+    try {
+      // Execute sell transaction
+      console.log("🔄 Starting sell transaction...")
+      sellAsset(BigInt(2000002), selectedToken, rwaTokenAddress, tokenAmount)
+      setSellToken("")
+      
+      console.log("⏳ Sell transaction submitted, keeping modal open...")
+    } catch (error) {
+      console.error("❌ Error in sell transaction:", error)
+      setTransactionModal(prev => ({
+        ...prev,
+        status: "failed",
+        error: "Transaction failed. Please try again.",
+      }))
+    }
   }
 
   const closeTransactionModal = () => {

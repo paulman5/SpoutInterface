@@ -421,19 +421,20 @@ export default function TradeForm({
                 </div>
               )}
 
-              {/* Temporarily disabled sell button for testnet */}
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="w-full mt-4 font-semibold text-lg py-3 bg-gray-400 text-gray-600 cursor-not-allowed opacity-50 rounded-lg flex items-center justify-center">
-                      Sell S{selectedToken}
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Selling SLQD tokens is temporarily unavailable</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <Button
+                className="w-full mt-4 font-semibold text-lg py-3 bg-blue-500 hover:bg-blue-600"
+                onClick={handleSell}
+                isDisabled={!sellToken || isApprovePending || isOrderPending}
+              >
+                {isApprovePending || isOrderPending ? (
+                  <>
+                    <LoadingSpinner />
+                    {isApprovePending ? "Approving..." : "Processing..."}
+                  </>
+                ) : (
+                  `Sell S${selectedToken}`
+                )}
+              </Button>
             </>
           )}
         </CardContent>
