@@ -66,6 +66,14 @@ export async function GET(request: Request) {
     const currentBar = sortedBars[0] ?? null
     const previousBar = sortedBars[1] ?? null
 
+    // Helper to choose first valid positive number
+    const firstValid = (...vals: Array<number | null | undefined>) =>
+      vals.find((v) => typeof v === "number" && isFinite(v) && v > 0) ?? null
+
+    // Robust fallbacks
+    const resolvedPrice = firstValid(currentBar?.c, askPrice, bidPrice, previousBar?.c)
+    const resolvedPreviousClose = firstValid(previousBar?.c, currentBar?.c, bidPrice, askPrice)
+
     // Step 3: Fetch actual yield data
     let actualYield = 4.95 // Fallback value
     try {
@@ -85,13 +93,13 @@ export async function GET(request: Request) {
 
     const response = {
       symbol,
-      price: currentBar?.c ?? askPrice ?? null,
+      price: resolvedPrice,
       askPrice: askPrice,
       bidPrice: bidPrice,
-      previousClose: previousBar?.c ?? askPrice ?? null,
+      previousClose: resolvedPreviousClose,
       timestamp: currentBar?.t ?? latestQuote?.t ?? null,
       yield: actualYield, // Use actual yield from API
-      fallbackUsed: previousBar == null,
+      fallbackUsed: previousBar == null || !resolvedPrice,
       dates: {
         current: currentBar?.t ?? null,
         previous: previousBar?.t ?? null,
