@@ -171,7 +171,7 @@ export default function KYCFlow() {
               title: "Verification",
         description: "Complete verification with signature",
       icon: Shield,
-      status: hasKYCClaim ? "completed" : "pending",
+      status: hasKYCClaim || kycSignature ? "completed" : "pending",
     },
     {
       id: 4,

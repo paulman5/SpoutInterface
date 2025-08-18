@@ -6,6 +6,7 @@ import DefaultFooter from "@/components/footer"
 import { Linkedin } from "lucide-react"
 import { motion } from "framer-motion"
 import { useState } from "react"
+import { HowItWorksSection } from "@/components/features/root"
 
 const team = [
   {
@@ -45,19 +46,21 @@ export default function AboutPage() {
           pixelSize={40}
         />
       </div>
-      {/* Remove About Us badge/button and its text */}
-      <section className="relative z-10 max-w-4xl mx-auto px-6 py-20 text-center mt-28">
-        <h1 className="text-4xl md:text-6xl font-bold text-slate-900 mb-8 tracking-tight">
-          Meet the Spout Finance Team
-        </h1>
-        <p className="text-lg md:text-xl text-slate-600 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
-          Spout is dedicated to building the most secure, transparent, and
-          user-friendly platform for tokenized real-world assets. Our team
-          brings together deep expertise in finance, technology, and operations
-          to deliver a next-generation DeFi experience.
-        </p>
-      </section>
-      <section className="relative z-10 max-w-4xl mx-auto px-6 py-12 space-y-24">
+      
+      {/* Team Section */}
+      <section className="relative z-10 max-w-4xl mx-auto px-6 py-20 space-y-24 mt-28">
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-6xl font-bold text-slate-900 mb-8 tracking-tight">
+            Meet the Spout Finance Team
+          </h1>
+          <p className="text-lg md:text-xl text-slate-600 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
+            Spout is dedicated to building the most secure, transparent, and
+            user-friendly platform for tokenized real-world assets. Our team
+            brings together deep expertise in finance, technology, and operations
+            to deliver a next-generation DeFi experience.
+          </p>
+        </div>
+        
         {team.map((member, idx) => {
           const isHovered = hoveredMember === member.name
           
@@ -159,22 +162,10 @@ export default function AboutPage() {
           )
         })}
       </section>
-      {/* How Spout Works Section */}
-      <section className="relative z-10 max-w-4xl mx-auto px-6 py-24">
-        <div className="text-center mb-16">
-          <span className="mb-6 inline-block px-6 py-2 text-sm font-medium bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-full">
-            How Spout Works
-          </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
-            Simple, Secure, and Transparent
-          </h2>
-          <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto font-light leading-relaxed">
-            Crypto collateral in DeFi is inefficient. Overcollateralized loans
-            are a natural proces of any lending protocol due to the enormous
-            amount of short term volatility being present.
-          </p>
-        </div>
-      </section>
+
+      {/* How It Works Section */}
+      <HowItWorksSection />
+      
       <DefaultFooter />
     </div>
   )

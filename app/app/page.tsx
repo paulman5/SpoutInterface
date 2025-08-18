@@ -299,38 +299,12 @@ function DashboardPage() {
       </div>
 
       {/* Recent Activity */}
-      <Card className="border border-slate-200/60 shadow-sm bg-white">
-        <CardHeader className="pb-0 border-b border-slate-100/80">
-          <div className="flex items-center justify-between py-4">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-8 bg-gradient-to-b from-slate-900 to-slate-700 rounded-full"></div>
-                <div>
-                  <CardTitle className="text-lg font-medium text-slate-900 tracking-tight">
-                    Transaction history{" "}
-                  </CardTitle>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Badge
-                variant="outline"
-                className="text-xs text-slate-600 border-slate-300"
-              >
-                LIVE
-              </Badge>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="p-0">
-          <PortfolioActivity
-            activities={activities}
-            activitiesLoading={activitiesLoading}
-            hasMore={hasMore}
-            loadMore={loadMore}
-          />
-        </CardContent>
-      </Card>
+      <PortfolioActivity
+        activities={activities}
+        activitiesLoading={activitiesLoading}
+        hasMore={hasMore}
+        loadMore={loadMore}
+      />
     </div>
   )
 }
