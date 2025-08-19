@@ -1,7 +1,6 @@
 "use client"
 import Image from "next/image"
 
-import { PixelTrail } from "@/components/ui/pixel-trail"
 import DefaultFooter from "@/components/footer"
 import { Linkedin } from "lucide-react"
 import { motion } from "framer-motion"
@@ -13,7 +12,7 @@ const team = [
     name: "Marc Ryan",
     title: "Co-Founder & CEO",
     img: "/HeadshotMarc.png",
-    bio: "Marc leads technology and product at Spout Finance, with a passion for building secure, scalable financial systems.",
+    bio: "Former tech investment banker at HSBC, covering fintech and software.  Founder of FlipVault, a web3 bartering platform. Angel investor in several blockchain AI companies, including Theoriq, PIN AI, and GAIB AI.",
     linkedin: "https://www.linkedin.com/in/marc-ryan/",
   },
   {
@@ -27,7 +26,7 @@ const team = [
     name: "Paul Jan Reijn",
     title: "Co-Founder & General Counsel",
     img: "/HeadshotPJ.png",
-    bio: "PJ oversees operations and growth, ensuring seamless execution and a world-class user experience.",
+    bio: "Legal counsel with years of experience in software. Architect of the legal framework for various succesful software products, such as payments and factory automation.",
     linkedin: "https://www.linkedin.com/in/paul-jan-reijn-70b635227/",
   },
 ]
@@ -37,15 +36,6 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Full-page PixelTrail background */}
-      <div className="absolute inset-0 z-0">
-        <PixelTrail
-          fadeDuration={1200}
-          delay={300}
-          pixelClassName="rounded-2xl bg-emerald-600/15"
-          pixelSize={40}
-        />
-      </div>
       
       {/* Team Section */}
       <section className="relative z-10 max-w-4xl mx-auto px-6 py-20 space-y-24 mt-28">
