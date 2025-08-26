@@ -1,20 +1,15 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import {
-  Shield,
-  Percent,
-  BarChart3,
-  CheckCircle,
-} from "lucide-react"
-import { formatCurrency, formatNumber } from "@/lib/utils/formatters"
-import { LoadingSpinner } from "@/components/loadingSpinner"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Shield, Percent, BarChart3, CheckCircle } from "lucide-react";
+import { formatCurrency, formatNumber } from "@/lib/utils/formatters";
+import { LoadingSpinner } from "@/components/loadingSpinner";
 
 interface ReserveSummaryProps {
-  totalSupply: number
-  currentPrice: number | null
-  totalReserves: bigint | null
-  totalSupplyLoading: boolean
-  priceLoading: boolean
+  totalSupply: number;
+  currentPrice: number | null;
+  totalReserves: bigint | null;
+  totalSupplyLoading: boolean;
+  priceLoading: boolean;
 }
 
 export function ReserveSummary({
@@ -25,9 +20,10 @@ export function ReserveSummary({
   priceLoading,
 }: ReserveSummaryProps) {
   // Check if we have valid data for calculations
-  const hasValidPrice = currentPrice !== null && currentPrice > 0
-  const hasValidSupply = totalSupply > 0
-  const isDataLoading = totalSupplyLoading || priceLoading || !hasValidPrice || !hasValidSupply
+  const hasValidPrice = currentPrice !== null && currentPrice > 0;
+  const hasValidSupply = totalSupply > 0;
+  const isDataLoading =
+    totalSupplyLoading || priceLoading || !hasValidPrice || !hasValidSupply;
 
   // Calculate reserve value
   const getReserveValue = () => {
@@ -37,15 +33,15 @@ export function ReserveSummary({
           <LoadingSpinner className="h-5 w-5 animate-spin mr-2" />
           <span className="text-lg">Fetching...</span>
         </div>
-      )
+      );
     }
 
     if (totalReserves) {
-      return formatCurrency((Number(totalReserves) / 1e6) * currentPrice!)
+      return formatCurrency((Number(totalReserves) / 1e6) * currentPrice!);
     } else {
-      return formatCurrency(totalSupply * currentPrice!)
+      return formatCurrency(totalSupply * currentPrice!);
     }
-  }
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -57,9 +53,7 @@ export function ReserveSummary({
           <Shield className="h-4 w-4 text-emerald-600" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {getReserveValue()}
-          </div>
+          <div className="text-2xl font-bold">{getReserveValue()}</div>
           <div className="flex items-center text-xs text-emerald-600">
             <CheckCircle className="h-3 w-3 mr-1" />
             {isDataLoading ? (
@@ -116,5 +110,5 @@ export function ReserveSummary({
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

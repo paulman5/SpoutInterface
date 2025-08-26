@@ -1,5 +1,5 @@
-import { Badge } from "@/components/ui/badge"
-import { ArrowUpDown } from "lucide-react"
+import { Badge } from "@/components/ui/badge";
+import { ArrowUpDown } from "lucide-react";
 
 export default function TradeHeader() {
   return (
@@ -28,5 +28,5 @@ export default function TradeHeader() {
         </p>
       </div>
     </div>
-  )
+  );
 }

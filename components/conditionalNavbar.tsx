@@ -1,26 +1,26 @@
-"use client"
+"use client";
 
-import { usePathname } from "next/navigation"
-import Navbar from "@/components/navBar"
+import { usePathname } from "next/navigation";
+import Navbar from "@/components/navBar";
 
 export function ConditionalNavbar() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   // Hide navbar when in /app routes
   if (pathname?.startsWith("/app") || pathname?.startsWith("/auth")) {
-    return null
+    return null;
   }
 
-  return <Navbar />
+  return <Navbar />;
 }
 
 export function ConditionalFooter() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   // Hide footer when in /app routes
   if (pathname?.startsWith("/app") || pathname?.startsWith("/auth")) {
-    return null
+    return null;
   }
 
-  return null // Footer is handled in layout
+  return null; // Footer is handled in layout
 }

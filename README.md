@@ -5,6 +5,7 @@ A comprehensive decentralized finance (DeFi) trading platform built with Next.js
 ## 🚀 Features
 
 ### Core Trading Features
+
 - **ERC3643 Token Trading**: Trade compliant tokenized securities (LQD, MSFT, AAPL) following T-REX standard
 - **Regulatory Compliance**: Built-in compliance checks for regulated securities trading
 - **Real-Time Charts**: Interactive price charts with multiple timeframes (7D, 30D, 90D)
@@ -12,12 +13,14 @@ A comprehensive decentralized finance (DeFi) trading platform built with Next.js
 - **Balance Display**: View USDC and token balances for informed trading decisions
 
 ### Confidential Trading
+
 - **Privacy-First**: Encrypted trading amounts using Inco Network's FHE technology
 - **Compliant Privacy**: Maintain privacy while adhering to ERC3643 compliance requirements
 - **Secure Transactions**: All trade amounts are encrypted before being sent to smart contracts
 - **Order Management**: Track pending buy and sell orders with encrypted data
 
 ### KYC & Identity Management (ERC3643 Required)
+
 - **OnChain Identity**: ERC-734/735 compliant identity management required for ERC3643 tokens
 - **Regulatory KYC**: Enhanced KYC verification meeting securities regulations
 - **Claim Management**: Add and manage identity claims on-chain for compliance
@@ -25,6 +28,7 @@ A comprehensive decentralized finance (DeFi) trading platform built with Next.js
 - **Country Support**: Support for 50+ countries with regulatory compliance checks
 
 ### Proof of Reserve
+
 - **Real-Time Verification**: Live verification of reserve holdings backing tokenized securities
 - **Transparent Backing**: View T-Bills and Corporate Bonds backing the ERC3643 tokens
 - **Automated Audits**: Daily automated verification through Chainlink Functions
@@ -32,6 +36,7 @@ A comprehensive decentralized finance (DeFi) trading platform built with Next.js
 - **Public Verification**: Blockchain-based proof allowing public verification
 
 ### Market Data
+
 - **Live Prices**: Real-time price feeds from Alpha Vantage API
 - **Fallback Data**: Mock data generation when API limits are reached
 - **Historical Data**: 100-day historical price charts
@@ -40,6 +45,7 @@ A comprehensive decentralized finance (DeFi) trading platform built with Next.js
 ## 🛠 Tech Stack
 
 ### Frontend
+
 - **Next.js 14**: React framework with App Router
 - **TypeScript**: Type-safe development
 - **Tailwind CSS**: Utility-first CSS framework
@@ -47,6 +53,7 @@ A comprehensive decentralized finance (DeFi) trading platform built with Next.js
 - **Recharts**: Interactive charting library
 
 ### Blockchain Integration
+
 - **Wagmi**: React hooks for Ethereum
 - **Viem**: TypeScript interface for Ethereum
 - **ERC3643**: T-REX standard for compliant tokenized securities
@@ -54,6 +61,7 @@ A comprehensive decentralized finance (DeFi) trading platform built with Next.js
 - **Chainlink Functions**: Decentralized oracle network
 
 ### Backend & APIs
+
 - **Alpha Vantage**: Stock market data
 - **Custom KYC API**: Identity verification service for regulatory compliance
 - **Reserve API**: Proof of reserve data for tokenized securities
@@ -61,18 +69,21 @@ A comprehensive decentralized finance (DeFi) trading platform built with Next.js
 ## 📦 Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/SpoutChainlink/ui.git
    cd defi-trading-dashboard
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Environment Setup**
    Create a `.env.local` file:
+
    ```env
    ALPHA_VANTAGE_API_KEY=your_alpha_vantage_key
    APCA_API_KEY_ID=your_alpaca_key_id
@@ -81,6 +92,7 @@ A comprehensive decentralized finance (DeFi) trading platform built with Next.js
    ```
 
 4. **Run the development server**
+
    ```bash
    npm run dev
    ```
@@ -100,6 +112,7 @@ A comprehensive decentralized finance (DeFi) trading platform built with Next.js
 ## 🔧 Smart Contract Integration
 
 ### ERC3643 Compliant Trading Flow
+
 1. **KYC Verification**: Complete identity verification required for ERC3643 tokens
 2. **Eligibility Check**: Verify investor eligibility for regulated securities
 3. **Approve USDC**: Allow the confidential orders contract to spend USDC
@@ -110,6 +123,7 @@ A comprehensive decentralized finance (DeFi) trading platform built with Next.js
 8. **Order Fulfillment**: Automatic execution when price data is available and compliance is met
 
 ### ERC3643 KYC Flow (Required)
+
 1. **Create Identity**: Deploy personal OnChain ID contract (ERC-734/735)
 2. **Add Management Key**: Set up key management for the identity
 3. **Complete Regulatory KYC**: Submit verification documents meeting securities regulations
@@ -117,6 +131,7 @@ A comprehensive decentralized finance (DeFi) trading platform built with Next.js
 5. **Eligibility Verification**: Verify eligibility for specific ERC3643 tokens
 
 ### Proof of Reserve (Securities Backing)
+
 1. **Request Update**: Call `requestReserves` function
 2. **Oracle Fetch**: Chainlink Functions query reserve API for securities backing
 3. **Update State**: Total reserves of backing securities updated on-chain
@@ -126,45 +141,55 @@ A comprehensive decentralized finance (DeFi) trading platform built with Next.js
 ## 📱 Usage Examples
 
 ### Trading ERC3643 Tokens
+
 ```typescript
 // Buy ERC3643 compliant LQD with USDC
 const handleBuy = async () => {
   // 0. Verify KYC and eligibility (automatically checked by ERC3643)
-  
+
   // 1. Approve USDC
   await approve(CONFIDENTIAL_ORDERS_ADDRESS, amount);
-  
+
   // 2. Encrypt amount
   const encrypted = await encryptValue({
     value: amount,
     address: userAddress,
     contractAddress: CONFIDENTIAL_ORDERS_ADDRESS,
   });
-  
+
   // 3. Execute buy (includes automatic ERC3643 compliance checks)
-  buyAsset(selectedToken, selectedToken, RWA_TOKEN_ADDRESS, encrypted, BigInt(379), userAddress);
+  buyAsset(
+    selectedToken,
+    selectedToken,
+    RWA_TOKEN_ADDRESS,
+    encrypted,
+    BigInt(379),
+    userAddress,
+  );
 };
 ```
 
 ### ERC3643 Compliance Verification
+
 ```typescript
 // Complete regulatory KYC process for ERC3643 compliance
 const handleKYC = async () => {
   // 1. Create identity (required for ERC3643)
   const identityAddress = await createIdentity();
-  
+
   // 2. Add management key
   await addKey(userKey, [1], 1); // Management purpose
-  
+
   // 3. Submit regulatory KYC data
   const signature = await getKYCSignature(kycData);
-  
+
   // 4. Add compliance claim (required for ERC3643 token transfers)
-  await addClaim(1, 0, issuer, signature, kycData, '');
+  await addClaim(1, 0, issuer, signature, kycData, "");
 };
 ```
 
 ### Check Securities Reserves
+
 ```typescript
 // Request reserve update for tokenized securities
 const updateReserves = async () => {
@@ -178,21 +203,25 @@ const currentReserves = await getReserves();
 ## 🌐 API Endpoints
 
 ### Market Data
+
 - `GET /api/stocks/[ticker]` - Historical price data for ERC3643 tokenized securities
 - `GET /api/marketdata?symbol=LQD` - Latest quote for tokenized security
 
 ### Regulatory KYC Service
+
 - `POST /api/kyc-signature` - Get KYC signature for ERC3643 compliance verification
 
 ## 🧪 Testing
 
 Run the test suite:
+
 ```bash
 npm test
 
 ```
 
 Run linting:
+
 ```bash
 npm run lint
 

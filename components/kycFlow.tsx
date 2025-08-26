@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react";
 import {
   useAccount,
   useWriteContract,
   useWaitForTransactionReceipt,
   useChainId,
-} from "wagmi"
+} from "wagmi";
 
 import {
   Card,
@@ -14,17 +14,17 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import {
   CheckCircle,
   AlertCircle,
@@ -32,51 +32,51 @@ import {
   Wallet,
   UserCheck,
   Shield,
-} from "lucide-react"
-import gatewayABI from "@/abi/gateway.json"
+} from "lucide-react";
+import gatewayABI from "@/abi/gateway.json";
 
-import { useContractAddress } from "@/lib/addresses"
-import { countryCodes } from "@/lib/utils"
-import { useOnchainID } from "@/hooks/view/onChain/useOnchainID"
-import { useAddClaim } from "@/hooks/writes/onChain/useAddClaim"
-import { useIdentityVerification } from "@/hooks/view/onChain/useIdentityVerification"
+import { useContractAddress } from "@/lib/addresses";
+import { countryCodes } from "@/lib/utils";
+import { useOnchainID } from "@/hooks/view/onChain/useOnchainID";
+import { useAddClaim } from "@/hooks/writes/onChain/useAddClaim";
+import { useIdentityVerification } from "@/hooks/view/onChain/useIdentityVerification";
 interface KYCSignatureResponse {
   signature: {
-    r: string
-    s: string
-    v: number
-  }
-  issuerAddress: string
-  dataHash: string
-  topic: number
+    r: string;
+    s: string;
+    v: number;
+  };
+  issuerAddress: string;
+  dataHash: string;
+  topic: number;
 }
 
 export default function KYCFlow() {
-  const { address, isConnected } = useAccount()
-  const [currentStep, setCurrentStep] = useState(1)
-  const [selectedCountry, setSelectedCountry] = useState<number>(91)
+  const { address, isConnected } = useAccount();
+  const [currentStep, setCurrentStep] = useState(1);
+  const [selectedCountry, setSelectedCountry] = useState<number>(91);
   const [onchainIDAddressCurrent, setOnchainIDAddressCurrent] =
-    useState<string>("")
+    useState<string>("");
   const [kycSignature, setKycSignature] = useState<KYCSignatureResponse | null>(
-    null
-  )
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string>("")
-  const [claimAdded, setClaimAdded] = useState(false)
-  const gatewayAddress = useContractAddress("gateway")
-  const idFactoryAddress = useContractAddress("idfactory")
-  const issuerAddress = useContractAddress("issuer")
+    null,
+  );
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string>("");
+  const [claimAdded, setClaimAdded] = useState(false);
+  const gatewayAddress = useContractAddress("gateway");
+  const idFactoryAddress = useContractAddress("idfactory");
+  const issuerAddress = useContractAddress("issuer");
 
   // Contract interactions
   const {
     writeContract,
     data: deployHash,
     isPending: isDeploying,
-  } = useWriteContract()
+  } = useWriteContract();
   const { isLoading: isConfirming, isSuccess: isDeployed } =
     useWaitForTransactionReceipt({
       hash: deployHash,
-    })
+    });
 
   // Add claim to identity using custom hook
   const {
@@ -85,7 +85,7 @@ export default function KYCFlow() {
     isConfirmingClaim,
     isClaimAdded,
     error: addClaimError,
-  } = useAddClaim()
+  } = useAddClaim();
 
   // Use useOnchainID for all identity info
   const {
@@ -98,58 +98,58 @@ export default function KYCFlow() {
     idFactoryAddress,
     issuer: issuerAddress,
     topic: 1,
-  })
+  });
 
   // Check identity verification status
   const {
     isVerified: isIdentityVerified,
     isLoading: isCheckingVerification,
     refetch: refetchVerification,
-  } = useIdentityVerification(address)
+  } = useIdentityVerification(address);
 
   // Sync local state with hook value
   useEffect(() => {
     if (typeof onchainIDAddress === "string") {
-      setOnchainIDAddressCurrent(onchainIDAddress)
+      setOnchainIDAddressCurrent(onchainIDAddress);
     }
-  }, [onchainIDAddress])
+  }, [onchainIDAddress]);
 
   // Refetch identity data when deployment is successful
   useEffect(() => {
     if (isDeployed) {
-      console.log("✅ Identity deployed successfully, refetching data...")
+      console.log("✅ Identity deployed successfully, refetching data...");
       // Add a small delay to ensure the blockchain state has updated
       const timer = setTimeout(async () => {
-        await refetchOnchainID()
-      }, 2000) // 2 second delay
+        await refetchOnchainID();
+      }, 2000); // 2 second delay
 
-      return () => clearTimeout(timer)
+      return () => clearTimeout(timer);
     }
-  }, [isDeployed, refetchOnchainID])
+  }, [isDeployed, refetchOnchainID]);
 
-  console.log("identityAddress", onchainIDAddress)
+  console.log("identityAddress", onchainIDAddress);
 
   // Console log wallet address when it changes
   useEffect(() => {
     if (address) {
-      console.log("Wallet address:", address)
+      console.log("Wallet address:", address);
     }
-  }, [address])
+  }, [address]);
 
   // Check if identity exists (avoid unknown type in JSX)
   const hasExistingIdentity = Boolean(
     onchainIDAddress &&
       typeof onchainIDAddress === "string" &&
-      onchainIDAddress !== "0x0000000000000000000000000000000000000000"
-  )
+      onchainIDAddress !== "0x0000000000000000000000000000000000000000",
+  );
 
-  console.log("hasclaimaddedtohim", hasKYCClaim)
+  console.log("hasclaimaddedtohim", hasKYCClaim);
 
   const steps = [
     {
       id: 1,
       title: "Connect Wallet",
-              description: "Connect your wallet to start the verification process",
+      description: "Connect your wallet to start the verification process",
       icon: Wallet,
       status: isConnected ? "completed" : "current",
     },
@@ -168,78 +168,78 @@ export default function KYCFlow() {
     },
     {
       id: 3,
-              title: "Verification",
-        description: "Complete verification with signature",
+      title: "Verification",
+      description: "Complete verification with signature",
       icon: Shield,
       status: hasKYCClaim || kycSignature ? "completed" : "pending",
     },
     {
       id: 4,
       title: "Add Claim to Identity",
-              description: "Add verification claim to your onchain identity",
+      description: "Add verification claim to your onchain identity",
       icon: Shield,
       status: isClaimAdded ? "completed" : "pending",
     },
-  ]
+  ];
 
   // Filter out Add Claim step only if both OnchainID and KYC claim exist
   const visibleSteps = (() => {
     if (hasExistingIdentity && hasKYCClaim) {
-      return steps.filter((step) => step.id !== 4) // Skip add claim if already exists
+      return steps.filter((step) => step.id !== 4); // Skip add claim if already exists
     } else {
-      return steps
+      return steps;
     }
-  })()
+  })();
 
   // Modify progress calculation
   const progress = (() => {
     if (hasExistingIdentity && hasKYCClaim) {
-      return 100
+      return 100;
     } else if (hasKYCClaim && !isClaimAdded) {
-      return 75
+      return 75;
     } else if (hasExistingIdentity || isDeployed) {
-      return 50
+      return 50;
     } else if (isConnected) {
-      return 25
+      return 25;
     } else {
-      return 0
+      return 0;
     }
-  })()
+  })();
 
   // Handle identity deployment
   const handleDeployIdentity = async () => {
-    if (!address) return
+    if (!address) return;
 
     try {
-      setIsLoading(true)
-      setError("")
+      setIsLoading(true);
+      setError("");
 
       writeContract({
         address: gatewayAddress as `0x${string}`,
         abi: gatewayABI.abi,
         functionName: "deployIdentityForWallet",
         args: [address],
-      })
-      console.log("Deploy transaction hash:", deployHash)
+      });
+      console.log("Deploy transaction hash:", deployHash);
     } catch (err) {
-      setError("Failed to deploy identity")
-      console.error(err)
+      setError("Failed to deploy identity");
+      console.error(err);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
-          // Handle KYC signature request
-        const handleKYCSignature = async () => {
-    if (!address || !onchainIDAddress) return
+  // Handle KYC signature request
+  const handleKYCSignature = async () => {
+    if (!address || !onchainIDAddress) return;
 
     try {
-      setIsLoading(true)
-      setError("")
+      setIsLoading(true);
+      setError("");
 
       // Add timeout to prevent forever loading
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 30000) // 30 second timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
       const response = await fetch("/api/kyc-signature", {
         method: "POST",
@@ -254,122 +254,124 @@ export default function KYCFlow() {
           countryCode: selectedCountry,
         }),
         signal: controller.signal,
-      })
+      });
 
-      clearTimeout(timeoutId)
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
-        let errorMessage = "Failed to get KYC signature"
+        let errorMessage = "Failed to get KYC signature";
         try {
-          const contentType = response.headers.get("content-type")
+          const contentType = response.headers.get("content-type");
           if (contentType && contentType.includes("application/json")) {
-            const errorData = await response.json()
-            errorMessage = errorData.error || errorMessage
+            const errorData = await response.json();
+            errorMessage = errorData.error || errorMessage;
           } else {
-            const errorText = await response.text()
-            console.error("Non-JSON error response:", errorText)
-            errorMessage = `Server error (${response.status}): ${response.statusText}`
+            const errorText = await response.text();
+            console.error("Non-JSON error response:", errorText);
+            errorMessage = `Server error (${response.status}): ${response.statusText}`;
           }
         } catch (parseError) {
-          console.error("Error parsing error response:", parseError)
-          errorMessage = `Server error (${response.status}): ${response.statusText}`
+          console.error("Error parsing error response:", parseError);
+          errorMessage = `Server error (${response.status}): ${response.statusText}`;
         }
-        throw new Error(errorMessage)
+        throw new Error(errorMessage);
       }
 
-      let data: KYCSignatureResponse
+      let data: KYCSignatureResponse;
       try {
-        data = await response.json()
+        data = await response.json();
       } catch (parseError) {
-        console.error("Error parsing success response:", parseError)
-        throw new Error("Invalid response format from server")
+        console.error("Error parsing success response:", parseError);
+        throw new Error("Invalid response format from server");
       }
-              console.log("KYC signature response:", data)
-      setKycSignature(data)
-      setCurrentStep(3)
+      console.log("KYC signature response:", data);
+      setKycSignature(data);
+      setCurrentStep(3);
     } catch (err) {
-      if (err instanceof Error && err.name === 'AbortError') {
-        setError("Request timed out. Please try again.")
+      if (err instanceof Error && err.name === "AbortError") {
+        setError("Request timed out. Please try again.");
       } else {
-        setError(err instanceof Error ? err.message : "Failed to get KYC signature")
+        setError(
+          err instanceof Error ? err.message : "Failed to get KYC signature",
+        );
       }
-      console.error("KYC signature error:", err)
+      console.error("KYC signature error:", err);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   // Handler for add claim button
   const handleAddClaim = async () => {
-    if (!kycSignature || !onchainIDAddressCurrent || !address) return
+    if (!kycSignature || !onchainIDAddressCurrent || !address) return;
     addClaim({
       onchainIDAddress: onchainIDAddressCurrent,
       issuerAddress: issuerAddress as `0x${string}`,
       signature: kycSignature.signature,
       topic: 1,
-              claimData: "KYC passed",
+      claimData: "KYC passed",
       account: address,
-    })
-  }
+    });
+  };
 
-  console.log("kycsignature address", kycSignature?.issuerAddress)
-  console.log("issuerAddress", issuerAddress)
+  console.log("kycsignature address", kycSignature?.issuerAddress);
+  console.log("issuerAddress", issuerAddress);
 
   // Add comprehensive debugging logs
-  console.log("🔍 KYC Debug Information:")
-  console.log("Current chain ID:", useChainId())
-  console.log("Expected issuer address:", issuerAddress)
-  console.log("KYC signature issuer address:", kycSignature?.issuerAddress)
-  console.log("OnchainID address:", onchainIDAddress)
-  console.log("Has KYC claim:", hasKYCClaim)
-  console.log("Is claim added:", isClaimAdded)
-  console.log("Current step:", currentStep)
-  console.log("Has existing identity:", hasExistingIdentity)
-  console.log("Is identity verified:", isIdentityVerified)
-  console.log("Is checking verification:", isCheckingVerification)
+  console.log("🔍 KYC Debug Information:");
+  console.log("Current chain ID:", useChainId());
+  console.log("Expected issuer address:", issuerAddress);
+  console.log("KYC signature issuer address:", kycSignature?.issuerAddress);
+  console.log("OnchainID address:", onchainIDAddress);
+  console.log("Has KYC claim:", hasKYCClaim);
+  console.log("Is claim added:", isClaimAdded);
+  console.log("Current step:", currentStep);
+  console.log("Has existing identity:", hasExistingIdentity);
+  console.log("Is identity verified:", isIdentityVerified);
+  console.log("Is checking verification:", isCheckingVerification);
 
   // Update current step based on state
   useEffect(() => {
     if (!isConnected) {
-      setCurrentStep(1)
+      setCurrentStep(1);
     } else if (isConnected && !hasExistingIdentity && !isDeployed) {
-      setCurrentStep(2)
+      setCurrentStep(2);
     } else if ((hasExistingIdentity || isDeployed) && !hasKYCClaim) {
-      setCurrentStep(3)
+      setCurrentStep(3);
     } else if (hasKYCClaim && !isClaimAdded) {
-      setCurrentStep(4)
+      setCurrentStep(4);
     } else if (hasKYCClaim && isClaimAdded) {
-      setCurrentStep(4) // Stay at the last step when complete
+      setCurrentStep(4); // Stay at the last step when complete
     }
-  }, [isConnected, isDeployed, hasKYCClaim, isClaimAdded, hasExistingIdentity])
+  }, [isConnected, isDeployed, hasKYCClaim, isClaimAdded, hasExistingIdentity]);
 
   // Update onchain ID address when identity is deployed or already exists
   useEffect(() => {
     if (hasExistingIdentity && typeof onchainIDAddress === "string") {
-      console.log("Identity address from contract:", onchainIDAddress)
+      console.log("Identity address from contract:", onchainIDAddress);
     } else if (
       isDeployed &&
       onchainIDAddress &&
       typeof onchainIDAddress === "string"
     ) {
-      console.log("Identity address from contract:", onchainIDAddress)
+      console.log("Identity address from contract:", onchainIDAddress);
     }
-  }, [isDeployed, onchainIDAddress, hasExistingIdentity])
+  }, [isDeployed, onchainIDAddress, hasExistingIdentity]);
 
   // Update local state from hook when hook's value changes
   useEffect(() => {
     if (typeof onchainIDAddress === "string") {
-      setOnchainIDAddressCurrent(onchainIDAddress)
+      setOnchainIDAddressCurrent(onchainIDAddress);
     }
-  }, [onchainIDAddress])
+  }, [onchainIDAddress]);
 
   // Track when claim is successfully added
   useEffect(() => {
     if (isClaimAdded) {
-      setClaimAdded(true)
-      console.log("KYC claim added successfully to identity")
+      setClaimAdded(true);
+      console.log("KYC claim added successfully to identity");
     }
-  }, [isClaimAdded])
+  }, [isClaimAdded]);
 
   const getStepIcon = (step: (typeof steps)[0]) => {
     if (
@@ -377,17 +379,17 @@ export default function KYCFlow() {
       (step.id === 3 && hasExistingIdentity)
     ) {
       // OnchainID or KYC completed: show green check
-      return <CheckCircle className="h-6 w-6 text-emerald-600" />
+      return <CheckCircle className="h-6 w-6 text-emerald-600" />;
     }
-    const Icon = step.icon
+    const Icon = step.icon;
     if (step.status === "completed") {
-      return <CheckCircle className="h-6 w-6 text-emerald-600" />
+      return <CheckCircle className="h-6 w-6 text-emerald-600" />;
     } else if (step.status === "current") {
-      return <Icon className="h-6 w-6 text-blue-600" />
+      return <Icon className="h-6 w-6 text-blue-600" />;
     } else {
-      return <Icon className="h-6 w-6 text-gray-400" />
+      return <Icon className="h-6 w-6 text-gray-400" />;
     }
-  }
+  };
 
   const getStepStatus = (step: (typeof steps)[0]) => {
     if (step.status === "completed") {
@@ -395,32 +397,31 @@ export default function KYCFlow() {
         <Badge variant="default" className="bg-emerald-100 text-emerald-800">
           Completed
         </Badge>
-      )
+      );
     } else if (step.status === "current") {
       return (
         <Badge variant="secondary" className="bg-blue-100 text-blue-800">
           In Progress
         </Badge>
-      )
+      );
     } else {
       return (
         <Badge variant="outline" className="text-gray-500">
           Pending
         </Badge>
-      )
+      );
     }
-  }
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-3xl font-bold text-gray-900">Verification</h1>
-                  <p className="text-gray-600 max-w-2xl mx-auto">
-            Complete your verification to access advanced
-            trading features. This process creates your onchain identity and
-            verifies your credentials.
-          </p>
+        <p className="text-gray-600 max-w-2xl mx-auto">
+          Complete your verification to access advanced trading features. This
+          process creates your onchain identity and verifies your credentials.
+        </p>
       </div>
 
       {/* Progress Bar */}
@@ -583,7 +584,8 @@ export default function KYCFlow() {
                                 Identity Registered
                               </p>
                               <p className="text-xs text-emerald-600">
-                                Your identity has been successfully registered and verified.
+                                Your identity has been successfully registered
+                                and verified.
                               </p>
                             </div>
                           </div>
@@ -620,7 +622,8 @@ export default function KYCFlow() {
                             Verification Signature Obtained
                           </p>
                           <p className="text-sm text-emerald-600">
-                            Your verification signature has been obtained successfully.
+                            Your verification signature has been obtained
+                            successfully.
                           </p>
                         </div>
                       </div>
@@ -632,8 +635,9 @@ export default function KYCFlow() {
                           Complete Verification
                         </h4>
                         <p className="text-sm text-blue-600">
-                          Get your verification signature to verify your identity on-chain.
-                          This is required for trading ERC3643 compliant tokens.
+                          Get your verification signature to verify your
+                          identity on-chain. This is required for trading
+                          ERC3643 compliant tokens.
                         </p>
                       </div>
 
@@ -674,8 +678,8 @@ export default function KYCFlow() {
                           Verification Completed
                         </p>
                         <p className="text-sm text-emerald-600">
-                          Your verification claim is already present on your onchain
-                          identity.
+                          Your verification claim is already present on your
+                          onchain identity.
                         </p>
                       </div>
                     </div>
@@ -686,8 +690,8 @@ export default function KYCFlow() {
                           Add Verification Claim to Identity
                         </h4>
                         <p className="text-sm text-purple-600">
-                          Add verification claim to your onchain identity to complete the
-                          verification process.
+                          Add verification claim to your onchain identity to
+                          complete the verification process.
                         </p>
                       </div>
 
@@ -795,5 +799,5 @@ export default function KYCFlow() {
         </Card>
       )}
     </div>
-  )
+  );
 }

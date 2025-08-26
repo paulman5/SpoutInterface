@@ -1,15 +1,21 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { BarChart3, CheckCircle } from "lucide-react"
-import { formatCurrency, formatNumber } from "@/lib/utils/formatters"
-import { LoadingSpinner } from "@/components/loadingSpinner"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { BarChart3, CheckCircle } from "lucide-react";
+import { formatCurrency, formatNumber } from "@/lib/utils/formatters";
+import { LoadingSpinner } from "@/components/loadingSpinner";
 
 interface CorporateBondsProps {
-  totalSupply: number
-  currentPrice: number | null
-  yieldRate: number
-  priceLoading: boolean
-  lqdYieldLoading: boolean
+  totalSupply: number;
+  currentPrice: number | null;
+  yieldRate: number;
+  priceLoading: boolean;
+  lqdYieldLoading: boolean;
 }
 
 export function CorporateBonds({
@@ -27,7 +33,7 @@ export function CorporateBonds({
         yieldRate: yieldRate,
       },
     ],
-  }
+  };
 
   return (
     <Card>
@@ -111,5 +117,5 @@ export function CorporateBonds({
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

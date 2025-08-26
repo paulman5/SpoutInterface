@@ -1,26 +1,37 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Activity } from "lucide-react"
-import React from "react"
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Activity } from "lucide-react";
+import React from "react";
 
 type ActivityType = {
-  id: string
-  action: string
-  transactionType: string
-  amount: number | string
-  value: number | string
-  time: string
-}
+  id: string;
+  action: string;
+  transactionType: string;
+  amount: number | string;
+  value: number | string;
+  time: string;
+};
 
 type PortfolioActivityProps = {
-  activities: ActivityType[]
-  activitiesLoading: boolean
-  hasMore: boolean
-  loadMore: () => void
-}
+  activities: ActivityType[];
+  activitiesLoading: boolean;
+  hasMore: boolean;
+  loadMore: () => void;
+};
 
-const PortfolioActivity: React.FC<PortfolioActivityProps> = ({ activities, activitiesLoading, hasMore, loadMore }) => {
+const PortfolioActivity: React.FC<PortfolioActivityProps> = ({
+  activities,
+  activitiesLoading,
+  hasMore,
+  loadMore,
+}) => {
   return (
     <Card className="border border-slate-200/60 shadow-sm bg-white">
       <CardHeader className="pb-0 border-b border-slate-100/80">
@@ -182,7 +193,7 @@ const PortfolioActivity: React.FC<PortfolioActivityProps> = ({ activities, activ
         )}
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default PortfolioActivity; 
+export default PortfolioActivity;

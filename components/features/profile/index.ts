@@ -1,2 +1,2 @@
-export * from "./profileheader"
-export * from "./profiletabs" 
+export * from "./profileheader";
+export * from "./profiletabs";

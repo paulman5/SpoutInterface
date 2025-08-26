@@ -4,9 +4,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { CheckCircle, Shield } from "lucide-react"
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { CheckCircle, Shield } from "lucide-react";
 
 export function ReserveOverview() {
   return (
@@ -72,5 +72,5 @@ export function ReserveOverview() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

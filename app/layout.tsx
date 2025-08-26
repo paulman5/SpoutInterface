@@ -1,21 +1,21 @@
-import "./globals.css"
-import "@rainbow-me/rainbowkit/styles.css"
-import "react-toastify/dist/ReactToastify.css"
-import type { Metadata } from "next"
-import { Public_Sans, IBM_Plex_Mono } from "next/font/google"
-import { Providers } from "@/components/providers"
-import { cn } from "@/lib/utils"
-import { ConditionalNavbar } from "@/components/conditionalNavbar"
+import "./globals.css";
+import "@rainbow-me/rainbowkit/styles.css";
+import "react-toastify/dist/ReactToastify.css";
+import type { Metadata } from "next";
+import { Public_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Providers } from "@/components/providers";
+import { cn } from "@/lib/utils";
+import { ConditionalNavbar } from "@/components/conditionalNavbar";
 
 const publicSans = Public_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
-})
+});
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-mono",
-})
+});
 export const metadata: Metadata = {
   title: "Spout Finance",
   description:
@@ -31,7 +31,8 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: "Spout Finance",
-    description: "Spout Finance is a RWA platform tokenizing efficient collateral assets and building the next generation of collateral infrastructure",
+    description:
+      "Spout Finance is a RWA platform tokenizing efficient collateral assets and building the next generation of collateral infrastructure",
     url: "https://spout.finance",
     siteName: "Spout Finance",
     images: [
@@ -48,19 +49,20 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Spout Finance",
-    description: "Spout Finance is a RWA platform tokenizing efficient collateral assets and building the next generation of collateral infrastructure",
+    description:
+      "Spout Finance is a RWA platform tokenizing efficient collateral assets and building the next generation of collateral infrastructure",
     images: ["/Whale.png"],
   },
   icons: {
     icon: "/Whale.png",
     apple: "/Whale.png",
   },
-}
+};
 
 export default async function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
@@ -68,7 +70,7 @@ export default async function RootLayout({
         className={cn(
           "min-h-screen flex flex-col bg-gray-50 font-sans antialiased",
           publicSans.variable,
-          ibmPlexMono.variable
+          ibmPlexMono.variable,
         )}
       >
         <Providers>
@@ -77,5 +79,5 @@ export default async function RootLayout({
         </Providers>
       </body>
     </html>
-  )
+  );
 }

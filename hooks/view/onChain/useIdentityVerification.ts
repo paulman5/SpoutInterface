@@ -1,35 +1,35 @@
-import { useReadContract, useChainId } from "wagmi"
-import { useContractAddress } from "@/lib/addresses"
+import { useReadContract, useChainId } from "wagmi";
+import { useContractAddress } from "@/lib/addresses";
 
 // Basic Identity Registry ABI with isVerified function
 const identityRegistryABI = [
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "_userAddress",
-        "type": "address"
-      }
+        internalType: "address",
+        name: "_userAddress",
+        type: "address",
+      },
     ],
-    "name": "isVerified",
-    "outputs": [
+    name: "isVerified",
+    outputs: [
       {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
-  }
-] as const
+    stateMutability: "view",
+    type: "function",
+  },
+] as const;
 
 export function useIdentityVerification(userAddress: string | undefined) {
-  const chainId = useChainId()
-  
+  const chainId = useChainId();
+
   // Get the RWA token address to access its identity registry
-  const rwaTokenAddress = useContractAddress("rwatoken")
-  
+  const rwaTokenAddress = useContractAddress("rwatoken");
+
   // First get the identity registry address from the RWA token
   const {
     data: identityRegistryAddress,
@@ -39,21 +39,21 @@ export function useIdentityVerification(userAddress: string | undefined) {
     address: rwaTokenAddress as `0x${string}`,
     abi: [
       {
-        "inputs": [],
-        "name": "identityRegistry",
-        "outputs": [
+        inputs: [],
+        name: "identityRegistry",
+        outputs: [
           {
-            "internalType": "contract IIdentityRegistry",
-            "name": "",
-            "type": "address"
-          }
+            internalType: "contract IIdentityRegistry",
+            name: "",
+            type: "address",
+          },
         ],
-        "stateMutability": "view",
-        "type": "function"
-      }
+        stateMutability: "view",
+        type: "function",
+      },
     ],
     functionName: "identityRegistry",
-  })
+  });
 
   // Then check if the user is verified in the identity registry
   const {
@@ -66,10 +66,10 @@ export function useIdentityVerification(userAddress: string | undefined) {
     abi: identityRegistryABI,
     functionName: "isVerified",
     args: userAddress ? [userAddress as `0x${string}`] : undefined,
-    query: { 
-      enabled: !!identityRegistryAddress && !!userAddress 
+    query: {
+      enabled: !!identityRegistryAddress && !!userAddress,
     },
-  })
+  });
 
   return {
     isVerified: isVerified || false,
@@ -77,5 +77,5 @@ export function useIdentityVerification(userAddress: string | undefined) {
     error: registryError || verificationError,
     refetch: refetchVerification,
     identityRegistryAddress,
-  }
-} 
+  };
+}

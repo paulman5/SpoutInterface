@@ -7,7 +7,7 @@ import {
   TransparentReservesSection,
   CallToActionSection,
   AnimatedFooterSection,
-} from "@/components/features/root"
+} from "@/components/features/root";
 
 export default function HomePage() {
   return (
@@ -39,5 +39,5 @@ export default function HomePage() {
       {/* Animated Footer */}
       <AnimatedFooterSection />
     </div>
-  )
+  );
 }

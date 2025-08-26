@@ -16,4 +16,4 @@ export const pharos = {
     default: { name: "PharosScan", url: "https://testnet.pharosscan.xyz" },
   },
   testnet: true,
-} as const
+} as const;

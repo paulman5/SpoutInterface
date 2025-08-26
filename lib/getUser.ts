@@ -1,7 +1,7 @@
 interface User {
-  id: string
-  username: string | null
-  email: string | null
+  id: string;
+  username: string | null;
+  email: string | null;
 }
 
 export async function getUser(): Promise<User> {
@@ -11,5 +11,5 @@ export async function getUser(): Promise<User> {
     id: "default",
     username: null,
     email: null,
-  }
+  };
 }

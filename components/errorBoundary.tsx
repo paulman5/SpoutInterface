@@ -1,24 +1,24 @@
-"use client"
+"use client";
 
-import React from "react"
-import { Button } from "@/components/ui/button"
+import React from "react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { AlertCircle, RefreshCw } from "lucide-react"
+} from "@/components/ui/card";
+import { AlertCircle, RefreshCw } from "lucide-react";
 
 interface ErrorBoundaryState {
-  hasError: boolean
-  error?: Error
+  hasError: boolean;
+  error?: Error;
 }
 
 interface ErrorBoundaryProps {
-  children: React.ReactNode
-  fallback?: React.ComponentType<{ error?: Error; reset: () => void }>
+  children: React.ReactNode;
+  fallback?: React.ComponentType<{ error?: Error; reset: () => void }>;
 }
 
 class ErrorBoundary extends React.Component<
@@ -26,21 +26,21 @@ class ErrorBoundary extends React.Component<
   ErrorBoundaryState
 > {
   constructor(props: ErrorBoundaryProps) {
-    super(props)
-    this.state = { hasError: false }
+    super(props);
+    this.state = { hasError: false };
   }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error }
+    return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error("Error caught by boundary:", error, errorInfo)
+    console.error("Error caught by boundary:", error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
-      const CustomFallback = this.props.fallback
+      const CustomFallback = this.props.fallback;
 
       if (CustomFallback) {
         return (
@@ -48,7 +48,7 @@ class ErrorBoundary extends React.Component<
             error={this.state.error}
             reset={() => this.setState({ hasError: false, error: undefined })}
           />
-        )
+        );
       }
 
       return (
@@ -56,10 +56,10 @@ class ErrorBoundary extends React.Component<
           error={this.state.error}
           reset={() => this.setState({ hasError: false, error: undefined })}
         />
-      )
+      );
     }
 
-    return this.props.children
+    return this.props.children;
   }
 }
 
@@ -67,8 +67,8 @@ const DefaultErrorFallback = ({
   error,
   reset,
 }: {
-  error?: Error
-  reset: () => void
+  error?: Error;
+  reset: () => void;
 }) => {
   return (
     <div className="min-h-[400px] flex items-center justify-center p-4">
@@ -108,7 +108,7 @@ const DefaultErrorFallback = ({
         </CardContent>
       </Card>
     </div>
-  )
-}
+  );
+};
 
-export { ErrorBoundary, DefaultErrorFallback }
+export { ErrorBoundary, DefaultErrorFallback };

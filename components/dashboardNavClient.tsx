@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   SidebarHeader,
@@ -7,8 +7,8 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
-} from "@/components/ui/sidebar"
-import { Badge } from "@/components/ui/badge"
+} from "@/components/ui/sidebar";
+import { Badge } from "@/components/ui/badge";
 import {
   Trophy,
   Store,
@@ -16,27 +16,27 @@ import {
   BarChart3,
   Users,
   TrendingUp,
-} from "lucide-react"
-import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
-import { useSidebar } from "@/components/ui/sidebar"
-import Image from "next/image"
-import CustomConnectWallet from "@/components/custom-connect-wallet"
-import React from "react"
-import { useAccount } from "wagmi"
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useSidebar } from "@/components/ui/sidebar";
+import Image from "next/image";
+import CustomConnectWallet from "@/components/custom-connect-wallet";
+import React from "react";
+import { useAccount } from "wagmi";
 
 export function DashboardSidebarNavClient() {
-  const { open } = useSidebar()
-  const router = useRouter()
-  const pathname = usePathname()
-  const { isConnected } = useAccount()
+  const { open } = useSidebar();
+  const router = useRouter();
+  const pathname = usePathname();
+  const { isConnected } = useAccount();
 
   const isActive = (path: string) => {
     if (path === "/app") {
-      return pathname === "/app"
+      return pathname === "/app";
     }
-    return pathname.startsWith(path)
-  }
+    return pathname.startsWith(path);
+  };
 
   return (
     <>
@@ -146,18 +146,18 @@ export function DashboardSidebarNavClient() {
         </div>
       </SidebarFooter>
     </>
-  )
+  );
 }
 
 export function DashboardNavbarHeaderClient() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   const isActive = (path: string) => {
     if (path === "/app") {
-      return pathname === "/app"
+      return pathname === "/app";
     }
-    return pathname.startsWith(path)
-  }
+    return pathname.startsWith(path);
+  };
 
   return (
     <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b bg-white px-4">
@@ -172,5 +172,5 @@ export function DashboardNavbarHeaderClient() {
         Dashboard
       </Link>
     </header>
-  )
+  );
 }

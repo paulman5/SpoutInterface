@@ -1,34 +1,37 @@
-"use client"
+"use client";
 
-import { signOut } from "@/lib/supabase/auth"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { signOut } from "@/lib/supabase/auth";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface SignOutButtonProps {
-  className?: string
-  children?: React.ReactNode
+  className?: string;
+  children?: React.ReactNode;
 }
 
-export default function SignOutButton({ className = "", children }: SignOutButtonProps) {
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+export default function SignOutButton({
+  className = "",
+  children,
+}: SignOutButtonProps) {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleSignOut = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const result = await signOut()
+      const result = await signOut();
       if (result.success) {
         // Redirect to login page after successful sign out
-        router.push("/auth/login")
+        router.push("/auth/login");
       } else {
-        console.error("Sign out failed:", result.error)
+        console.error("Sign out failed:", result.error);
       }
     } catch (error) {
-      console.error("Sign out error:", error)
+      console.error("Sign out error:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <button
@@ -38,5 +41,5 @@ export default function SignOutButton({ className = "", children }: SignOutButto
     >
       {isLoading ? "Signing out..." : children || "Sign Out"}
     </button>
-  )
-} 
+  );
+}

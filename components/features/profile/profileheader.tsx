@@ -1,5 +1,5 @@
-import { Badge } from "@/components/ui/badge"
-import { Settings as SettingsIcon } from "lucide-react"
+import { Badge } from "@/components/ui/badge";
+import { Settings as SettingsIcon } from "lucide-react";
 
 export default function ProfileHeader() {
   return (
@@ -22,5 +22,5 @@ export default function ProfileHeader() {
         </p>
       </div>
     </div>
-  )
+  );
 }
