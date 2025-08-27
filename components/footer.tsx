@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { ArrowUp } from "lucide-react"
 import Image from "next/image"
+
 interface LinkItem {
   href: string
   label: string
@@ -17,7 +18,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({
   leftLinks,
-  rightLinks,
+  rightLinks,                                                          
   copyrightText,
 }) => {
   const waveRefs = useRef<(HTMLDivElement | null)[]>([])

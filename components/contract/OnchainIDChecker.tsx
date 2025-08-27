@@ -82,6 +82,14 @@ export default function OnchainIDChecker() {
   // Show 'Claim USDC' Sonner if user has no USDC, but only on the trade page
   React.useEffect(() => {
     console.log('[USDC Sonner Debug] usdcBalance:', usdcBalance, 'usdcLoading:', usdcLoading, 'pathname:', pathname)
+    
+    // Dismiss USDC toast if user has USDC balance
+    if (!usdcLoading && Number(usdcBalance) > 0) {
+      console.log('[USDC Sonner Debug] ✅ User has USDC balance, dismissing toast')
+      toast.dismiss("usdc-toast")
+      return
+    }
+    
     if (
       !usdcLoading &&
       Number(usdcBalance) <= 0 &&
