@@ -46,7 +46,7 @@ export function HeroSection() {
           <Link href="/app">
             <Button
               size="lg"
-              className="bg-emerald-500 hover:bg-emerald-600 data-[hovered]:bg-emerald-600 text-white px-10 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.01]"
+              className="bg-blue-400 hover:bg-blue-300 data-[hovered]:bg-blue-300 text-white px-10 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.01]"
             >
               Launch Platform
               <ArrowRight className="ml-3 h-5 w-5" />
