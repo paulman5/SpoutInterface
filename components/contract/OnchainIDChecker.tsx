@@ -84,7 +84,7 @@ export default function OnchainIDChecker() {
     console.log('[USDC Sonner Debug] usdcBalance:', usdcBalance, 'usdcLoading:', usdcLoading, 'pathname:', pathname)
     
     // Dismiss USDC toast if user has USDC balance
-    if (!usdcLoading && Number(usdcBalance) > 0) {
+    if (!usdcLoading && Number(usdcBalance) > 50) {
       console.log('[USDC Sonner Debug] ✅ User has USDC balance, dismissing toast')
       toast.dismiss("usdc-toast")
       return
