@@ -1,18 +1,18 @@
-"use client"
-import React, { useEffect, useRef, useState } from "react"
-import Link from "next/link"
-import { ArrowUp } from "lucide-react"
-import Image from "next/image"
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { ArrowUp } from "lucide-react";
+import Image from "next/image";
 interface LinkItem {
-  href: string
-  label: string
+  href: string;
+  label: string;
 }
 
 interface FooterProps {
-  leftLinks: LinkItem[]
-  rightLinks: LinkItem[]
-  copyrightText: string
-  barCount?: number
+  leftLinks: LinkItem[];
+  rightLinks: LinkItem[];
+  copyrightText: string;
+  barCount?: number;
 }
 
 export const Footer: React.FC<FooterProps> = ({
@@ -20,68 +20,68 @@ export const Footer: React.FC<FooterProps> = ({
   rightLinks,
   copyrightText,
 }) => {
-  const waveRefs = useRef<(HTMLDivElement | null)[]>([])
-  const footerRef = useRef<HTMLDivElement | null>(null)
-  const [isVisible, setIsVisible] = useState(false)
-  const animationFrameRef = useRef<number | null>(null)
+  const waveRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const footerRef = useRef<HTMLDivElement | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const animationFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        const [entry] = entries
-        setIsVisible(entry.isIntersecting)
+        const [entry] = entries;
+        setIsVisible(entry.isIntersecting);
       },
-      { threshold: 0.2 }
-    )
+      { threshold: 0.2 },
+    );
 
-    const currentFooterRef = footerRef.current
+    const currentFooterRef = footerRef.current;
     if (currentFooterRef) {
-      observer.observe(currentFooterRef)
+      observer.observe(currentFooterRef);
     }
 
     return () => {
       if (currentFooterRef) {
-        observer.unobserve(currentFooterRef)
+        observer.unobserve(currentFooterRef);
       }
-    }
-  }, [])
+    };
+  }, []);
 
   useEffect(() => {
-    let t = 0
+    let t = 0;
 
     const animateWave = () => {
-      const waveElements = waveRefs.current
-      let offset = 0
+      const waveElements = waveRefs.current;
+      let offset = 0;
 
       waveElements.forEach((element, index) => {
         if (element) {
-          offset += Math.max(0, 20 * Math.sin((t + index) * 0.3))
-          element.style.transform = `translateY(${index + offset}px)`
+          offset += Math.max(0, 20 * Math.sin((t + index) * 0.3));
+          element.style.transform = `translateY(${index + offset}px)`;
         }
-      })
+      });
 
-      t += 0.1
-      animationFrameRef.current = requestAnimationFrame(animateWave)
-    }
+      t += 0.1;
+      animationFrameRef.current = requestAnimationFrame(animateWave);
+    };
 
     if (isVisible) {
-      animateWave()
+      animateWave();
     } else if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current)
-      animationFrameRef.current = null
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
     }
 
     return () => {
       if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current)
-        animationFrameRef.current = null
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
       }
-    }
-  }, [isVisible])
+    };
+  }, [isVisible]);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <footer
@@ -162,8 +162,26 @@ export const Footer: React.FC<FooterProps> = ({
             </div>
             {/* Socials Section */}
             <div className="flex gap-4 mt-8" style={{ marginLeft: 0 }}>
+              {/* Telegram */}
               <a
-                href="https://x.com/0xspout" // TODO: Replace with actual handle
+                href="https://t.me/+f1rc4o4A3Yw0MmMx"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Telegram"
+                className="text-slate-300 hover:text-emerald-400 transition-colors duration-300"
+              >
+                <svg
+                  width="22"
+                  height="22"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+                </svg>
+              </a>
+              {/* Twitter */}
+              <a
+                href="https://x.com/0xspout"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Twitter"
@@ -178,6 +196,7 @@ export const Footer: React.FC<FooterProps> = ({
                   <path d="M22.46 5.924c-.793.352-1.646.59-2.542.698a4.48 4.48 0 0 0 1.965-2.475 8.94 8.94 0 0 1-2.828 1.082 4.48 4.48 0 0 0-7.635 4.086A12.72 12.72 0 0 1 3.112 4.89a4.48 4.48 0 0 0 1.388 5.976 4.44 4.44 0 0 1-2.03-.561v.057a4.48 4.48 0 0 0 3.594 4.393 4.48 4.48 0 0 1-2.025.077 4.48 4.48 0 0 0 4.184 3.112A8.98 8.98 0 0 1 2 19.54a12.67 12.67 0 0 0 6.88 2.017c8.26 0 12.78-6.84 12.78-12.78 0-.195-.004-.39-.013-.583A9.14 9.14 0 0 0 24 4.59a8.93 8.93 0 0 1-2.54.697z" />
                 </svg>
               </a>
+              {/* LinkedIn */}
               <a
                 href="https://www.linkedin.com/company/spoutfinance/posts/?feedView=all" // TODO: Replace with actual company page
                 target="_blank"
@@ -199,8 +218,8 @@ export const Footer: React.FC<FooterProps> = ({
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
 // Default footer component with Spout Finance links
 const DefaultFooter = () => {
@@ -209,7 +228,7 @@ const DefaultFooter = () => {
     { href: "/app/portfolio", label: "Portfolio" },
     { href: "/app/trade", label: "Trading" },
     // { href: "/app/earn", label: "Earn" },
-  ]
+  ];
 
   const rightLinks = [
     { href: "/company", label: "Company" },
@@ -224,7 +243,7 @@ const DefaultFooter = () => {
     // { href: "/careers", label: "Careers" },
     // { href: "/blog", label: "Blog" },
     // { href: "/security", label: "Security" },
-  ]
+  ];
 
   return (
     <Footer
@@ -233,7 +252,7 @@ const DefaultFooter = () => {
       copyrightText={`© ${new Date().getFullYear()} Spout Finance. All rights reserved.`}
       barCount={25}
     />
-  )
-}
+  );
+};
 
-export default DefaultFooter
+export default DefaultFooter;

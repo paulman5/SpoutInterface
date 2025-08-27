@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card";
 
 export function ProofOfReserveCards() {
   return (
@@ -81,5 +81,5 @@ export function ProofOfReserveCards() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

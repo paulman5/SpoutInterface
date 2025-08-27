@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import ProfileHeader from "@/components/features/profile/profileheader"
-import ProfileTabs from "@/components/features/profile/profiletabs"
-import { Suspense } from "react"
+import ProfileHeader from "@/components/features/profile/profileheader";
+import ProfileTabs from "@/components/features/profile/profiletabs";
+import { Suspense } from "react";
 
 export default function ProfilePage() {
   return (
@@ -12,5 +12,5 @@ export default function ProfilePage() {
         <ProfileTabs />
       </Suspense>
     </div>
-  )
+  );
 }

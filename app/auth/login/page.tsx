@@ -1,5 +1,5 @@
-import SignInForm from "@/components/signInForm"
+import SignInForm from "@/components/signInForm";
 
 export default function LoginPage() {
-  return <SignInForm />
+  return <SignInForm />;
 }

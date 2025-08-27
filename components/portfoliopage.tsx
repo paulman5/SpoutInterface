@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Card,
@@ -6,10 +6,10 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import {
   TrendingUp,
   TrendingDown,
@@ -17,84 +17,87 @@ import {
   Plus,
   Zap,
   Clock,
-} from "lucide-react"
-import { LoadingSpinner } from "@/components/loadingSpinner"
-import Link from "next/link"
-import { useTokenBalance } from "@/hooks/view/onChain/useTokenBalance"
-import { useMarketData } from "@/hooks/api/useMarketData"
-import { useAccount } from "wagmi"
-import { useCurrentUser } from "@/hooks/auth/useCurrentUser"
+} from "lucide-react";
+import { LoadingSpinner } from "@/components/loadingSpinner";
+import Link from "next/link";
+import { useTokenBalance } from "@/hooks/view/onChain/useTokenBalance";
+import { useMarketData } from "@/hooks/api/useMarketData";
+import { useAccount } from "wagmi";
+import { useCurrentUser } from "@/hooks/auth/useCurrentUser";
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
   TooltipProvider,
-} from "@/components/ui/tooltip"
-import { useRecentActivity } from "@/hooks/view/onChain/useRecentActivity"
-import { useReturns } from "@/hooks/api/useReturns"
-import PortfolioPerformance from "@/components/features/portfolio/portfolioperformance"
-import PortfolioActivity from "@/components/features/portfolio/portfolioactivity"
+} from "@/components/ui/tooltip";
+import { useRecentActivity } from "@/hooks/view/onChain/useRecentActivity";
+import { useReturns } from "@/hooks/api/useReturns";
+import PortfolioPerformance from "@/components/features/portfolio/portfolioperformance";
+import PortfolioActivity from "@/components/features/portfolio/portfolioactivity";
 
 export default function PortfolioPage() {
-  const { address: userAddress } = useAccount()
+  const { address: userAddress } = useAccount();
   const {
     balance: tokenBalance,
     symbol: tokenSymbol,
     isLoading: balanceLoading,
     isError: balanceError,
-  } = useTokenBalance(userAddress)
+  } = useTokenBalance(userAddress);
 
   const {
     price: currentPrice,
     previousClose,
     isLoading: priceLoading,
     error: priceError,
-  } = useMarketData("LQD") // Use LQD as price reference
+  } = useMarketData("LQD"); // Use LQD as price reference
 
-  const { returns, isLoading: returnsLoading } = useReturns("SLQD")
+  const { returns, isLoading: returnsLoading } = useReturns("SLQD");
 
-  const { username, loading } = useCurrentUser()
+  const { username, loading } = useCurrentUser();
 
   const {
     activities,
     isLoading: activitiesLoading,
     hasMore,
     loadMore,
-  } = useRecentActivity(userAddress)
+  } = useRecentActivity(userAddress);
 
   // Format number to 3 decimals, matching holdings value
   const formatNumber = (num: number) => {
-    return num.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })
-  }
+    return num.toLocaleString(undefined, {
+      minimumFractionDigits: 3,
+      maximumFractionDigits: 3,
+    });
+  };
 
   // Format percentage to 2 decimal places for cleaner display
   const formatPercent = (num: number) => {
-    return num.toFixed(2)
-  }
+    return num.toFixed(2);
+  };
 
   // Portfolio data using actual token balance and market price
   const portfolioValue =
-    tokenBalance && currentPrice ? tokenBalance * currentPrice : 0
+    tokenBalance && currentPrice ? tokenBalance * currentPrice : 0;
 
   // Calculate daily change based on previous close
   const previousDayValue =
-    tokenBalance && previousClose ? tokenBalance * previousClose : 0
+    tokenBalance && previousClose ? tokenBalance * previousClose : 0;
 
-  const dayChange = portfolioValue - previousDayValue
+  const dayChange = portfolioValue - previousDayValue;
   const dayChangePercent =
     previousDayValue > 0
       ? ((portfolioValue - previousDayValue) / previousDayValue) * 100
-      : 0
+      : 0;
 
   // Calculate total return based on current market price vs previous close
-  const totalReturn = dayChange // Use the same daily change value
-  const totalReturnPercent = dayChangePercent // Use the same percentage
+  const totalReturn = dayChange; // Use the same daily change value
+  const totalReturnPercent = dayChangePercent; // Use the same percentage
 
   console.log("Portfolio return information", {
     tokenBalance,
     currentPrice,
     previousClose,
-  })
+  });
 
   const holdings = [
     {
@@ -108,10 +111,10 @@ export default function PortfolioPage() {
       totalReturn: totalReturnPercent, // number, not formatted string
       allocation: 100,
     },
-  ]
+  ];
 
   // Show loading spinner overlay but keep the blue dashboard background
-  const isLoading = balanceLoading || priceLoading || returnsLoading
+  const isLoading = balanceLoading || priceLoading || returnsLoading;
 
   return (
     <div className="space-y-8">
@@ -134,8 +137,7 @@ export default function PortfolioPage() {
                         className="text-white hover:text-white/80"
                         aria-label="Refresh"
                         onClick={() => window.location.reload()}
-                      >
-                      </Button>
+                      ></Button>
                     </TooltipTrigger>
                     <TooltipContent>Refresh</TooltipContent>
                   </Tooltip>
@@ -368,7 +370,11 @@ export default function PortfolioPage() {
 
             {/* Performance Tab */}
             <TabsContent value="performance" className="space-y-6">
-              <PortfolioPerformance holdings={holdings} returns={returns} formatPercent={formatPercent} />
+              <PortfolioPerformance
+                holdings={holdings}
+                returns={returns}
+                formatPercent={formatPercent}
+              />
             </TabsContent>
 
             {/* Activity Tab */}
@@ -384,5 +390,5 @@ export default function PortfolioPage() {
         </>
       )}
     </div>
-  )
+  );
 }

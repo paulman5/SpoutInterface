@@ -1,91 +1,91 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
-import { Input } from "@/components/ui/input"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import { ArrowUpDown } from "lucide-react"
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { ArrowUpDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import Image from "next/image"
+} from "@/components/ui/dropdown-menu";
+import Image from "next/image";
 
 export default function Swapinterface() {
-  const [swapMode, setSwapMode] = useState<"buy" | "sell">("buy")
-  const [sellAmount, setSellAmount] = useState("")
-  const [buyAmount, setBuyAmount] = useState("")
-  const [sellToken, setSellToken] = useState("RWA")
-  const [buyToken, setBuyToken] = useState("USDC")
+  const [swapMode, setSwapMode] = useState<"buy" | "sell">("buy");
+  const [sellAmount, setSellAmount] = useState("");
+  const [buyAmount, setBuyAmount] = useState("");
+  const [sellToken, setSellToken] = useState("RWA");
+  const [buyToken, setBuyToken] = useState("USDC");
 
   // Custom hook to fetch ask price for LQD
-  const [askPrice, setAskPrice] = useState<number | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [askPrice, setAskPrice] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     fetch("/api/marketdata?symbol=SLQD")
       .then(async (res) => {
         if (!res.ok) {
-          throw new Error(`Server error: ${res.status}`)
+          throw new Error(`Server error: ${res.status}`);
         }
 
-        const contentType = res.headers.get("content-type")
+        const contentType = res.headers.get("content-type");
         if (!contentType || !contentType.includes("application/json")) {
-          throw new Error("Invalid response format")
+          throw new Error("Invalid response format");
         }
 
-        return res.json()
+        return res.json();
       })
       .then((data) => {
-        const ap = data?.quotes?.SLQD?.ap
+        const ap = data?.quotes?.SLQD?.ap;
         if (typeof ap === "number") {
-          setAskPrice(ap)
+          setAskPrice(ap);
         } else {
-          setError("Ask price not found")
+          setError("Ask price not found");
         }
-        setLoading(false)
+        setLoading(false);
       })
       .catch((err) => {
-        console.error("Error fetching market data:", err)
-        setError("Failed to fetch market data")
-        setLoading(false)
-      })
-  }, [])
+        console.error("Error fetching market data:", err);
+        setError("Failed to fetch market data");
+        setLoading(false);
+      });
+  }, []);
 
   const handleSwapTokens = () => {
-    const tempToken = sellToken
-    const tempAmount = sellAmount
-    setSellToken(buyToken)
-    setBuyToken(tempToken)
-    setSellAmount(buyAmount)
-    setBuyAmount(tempAmount)
-  }
+    const tempToken = sellToken;
+    const tempAmount = sellAmount;
+    setSellToken(buyToken);
+    setBuyToken(tempToken);
+    setSellAmount(buyAmount);
+    setBuyAmount(tempAmount);
+  };
 
   const handleTabChange = (value: string) => {
-    setSwapMode(value as "buy" | "sell")
+    setSwapMode(value as "buy" | "sell");
     if (value === "buy") {
-      setSellToken("USDC")
-      setBuyToken("RWA")
+      setSellToken("USDC");
+      setBuyToken("RWA");
     } else {
-      setSellToken("RWA")
-      setBuyToken("USDC")
+      setSellToken("RWA");
+      setBuyToken("USDC");
     }
-    setSellAmount("")
-    setBuyAmount("")
-  }
+    setSellAmount("");
+    setBuyAmount("");
+  };
   return (
     <>
       {/* Swap Interface */}
@@ -368,5 +368,5 @@ export default function Swapinterface() {
         </CardContent>
       </Card>
     </>
-  )
+  );
 }

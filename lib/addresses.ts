@@ -28,16 +28,16 @@ export const contractaddresses = {
     688688: "0x72F88509C53b939a0613c679a0F4768c0444d247", // Pharos Testnet - Blocksense Feed Store for LQD PoR (ID: 101001)
   },
   // Add more contracts as needed
-}
+};
 
 // USDC token decimals
-export const USDC_DECIMALS = 6
+export const USDC_DECIMALS = 6;
 
-import { useChainId } from "wagmi"
+import { useChainId } from "wagmi";
 
 export function useContractAddress(contract: keyof typeof contractaddresses) {
-  const chainId = useChainId()
-  console.log("current chainID:", chainId)
-  const mapping = contractaddresses[contract] as Record<number, string>
-  return mapping[chainId]
+  const chainId = useChainId();
+  console.log("current chainID:", chainId);
+  const mapping = contractaddresses[contract] as Record<number, string>;
+  return mapping[chainId];
 }

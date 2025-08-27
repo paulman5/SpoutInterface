@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import React from "react"
+import React from "react";
 import {
   Area,
   AreaChart,
@@ -8,24 +8,30 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from "recharts"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { LoadingSpinner } from "@/components/loadingSpinner"
+} from "recharts";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { LoadingSpinner } from "@/components/loadingSpinner";
 
 interface StockData {
-  time: string
-  open: number
-  high: number
-  low: number
-  close: number
-  volume: number
+  time: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
 }
 
 interface StockChartProps {
-  data: StockData[]
-  ticker: string
-  height?: number
+  data: StockData[];
+  ticker: string;
+  height?: number;
 }
 
 export default function StockChart({
@@ -33,26 +39,26 @@ export default function StockChart({
   ticker,
   height = 400,
 }: StockChartProps) {
-  const [timeRange, setTimeRange] = React.useState("90d")
-  const [chartType, setChartType] = React.useState("price")
+  const [timeRange, setTimeRange] = React.useState("90d");
+  const [chartType, setChartType] = React.useState("price");
 
-  console.log("StockChart received data:", data?.length, "points for", ticker)
+  console.log("StockChart received data:", data?.length, "points for", ticker);
 
   // Filter data based on time range - moved before early return
   const filteredData = React.useMemo(() => {
-    if (!data || !data.length) return []
+    if (!data || !data.length) return [];
 
-    let daysToShow = 90
-    if (timeRange === "30d") daysToShow = 30
-    else if (timeRange === "7d") daysToShow = 7
+    let daysToShow = 90;
+    if (timeRange === "30d") daysToShow = 30;
+    else if (timeRange === "7d") daysToShow = 7;
 
     return data.slice(-daysToShow).map((item) => ({
       ...item,
       date: item.time,
       price: item.close,
       volumeFormatted: (item.volume / 1000000).toFixed(1) + "M",
-    }))
-  }, [data, timeRange])
+    }));
+  }, [data, timeRange]);
 
   if (!data || data.length === 0) {
     return (
@@ -65,11 +71,11 @@ export default function StockChart({
           <p className="text-gray-600">Loading {ticker} chart...</p>
         </div>
       </div>
-    )
+    );
   }
 
-  const formatPrice = (value: number) => `$${value.toFixed(2)}`
-  const formatVolume = (value: number) => `${(value / 1000000).toFixed(1)}M`
+  const formatPrice = (value: number) => `$${value.toFixed(2)}`;
+  const formatVolume = (value: number) => `${(value / 1000000).toFixed(1)}M`;
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -77,7 +83,7 @@ export default function StockChart({
         month: "long",
         day: "numeric",
         year: "numeric",
-      })
+      });
       return (
         <div className="bg-white p-3 border rounded shadow-lg">
           <p className="font-medium">{date}</p>
@@ -90,10 +96,10 @@ export default function StockChart({
             </p>
           ))}
         </div>
-      )
+      );
     }
-    return null
-  }
+    return null;
+  };
 
   return (
     <Card className="w-full">
@@ -164,11 +170,11 @@ export default function StockChart({
             <XAxis
               dataKey="date"
               tickFormatter={(value) => {
-                const date = new Date(value)
+                const date = new Date(value);
                 return date.toLocaleDateString("en-US", {
                   month: "short",
                   day: "numeric",
-                })
+                });
               }}
               stroke="#6b7280"
               fontSize={12}
@@ -193,5 +199,5 @@ export default function StockChart({
         </ResponsiveContainer>
       </CardContent>
     </Card>
-  )
+  );
 }

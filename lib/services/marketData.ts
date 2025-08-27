@@ -1,5 +1,5 @@
-import { StockData } from "@/lib/types/markets"
-import { formatMarketCap, formatVolume } from "@/lib/utils/formatters"
+import { StockData } from "@/lib/types/markets";
+import { formatMarketCap, formatVolume } from "@/lib/utils/formatters";
 
 // Popular stocks with company names - prices will be fetched from API
 const popularStocks = [
@@ -75,15 +75,15 @@ const popularStocks = [
     volume: "0",
     marketCap: "0",
   },
-]
+];
 
 export const fetchStockData = async (ticker: string): Promise<StockData> => {
   try {
-    const response = await fetch(`/api/stocks/${ticker}`)
+    const response = await fetch(`/api/stocks/${ticker}`);
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const data = await response.json()
+    const data = await response.json();
 
     // Return a properly formatted StockData object with fallbacks
     return {
@@ -95,9 +95,9 @@ export const fetchStockData = async (ticker: string): Promise<StockData> => {
       volume: formatVolume(data.volume),
       marketCap: formatMarketCap(data.marketCap),
       dataSource: data.dataSource || "mock",
-    }
+    };
   } catch (error) {
-    console.error(`Error fetching ${ticker}:`, error)
+    console.error(`Error fetching ${ticker}:`, error);
     // Return a StockData object with null/empty values on error
     return {
       ticker,
@@ -108,21 +108,23 @@ export const fetchStockData = async (ticker: string): Promise<StockData> => {
       volume: "0",
       marketCap: "$0",
       dataSource: "mock",
-    }
+    };
   }
-}
+};
 
 export const fetchAllStocks = async (): Promise<StockData[]> => {
   try {
-    const promises = popularStocks.map((stock) => fetchStockData(stock.ticker))
-    const results = await Promise.all(promises)
+    const promises = popularStocks.map((stock) => fetchStockData(stock.ticker));
+    const results = await Promise.all(promises);
 
-    const validStocks = results.filter((stock) => stock !== null) as StockData[]
-    return validStocks
+    const validStocks = results.filter(
+      (stock) => stock !== null,
+    ) as StockData[];
+    return validStocks;
   } catch (error) {
-    console.error("Error fetching stocks:", error)
-    return []
+    console.error("Error fetching stocks:", error);
+    return [];
   }
-}
+};
 
-export { popularStocks }
+export { popularStocks };

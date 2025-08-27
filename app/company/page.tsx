@@ -1,11 +1,11 @@
-"use client"
-import Image from "next/image"
+"use client";
+import Image from "next/image";
 
-import DefaultFooter from "@/components/footer"
-import { Linkedin } from "lucide-react"
-import { motion } from "framer-motion"
-import { useState } from "react"
-import { HowItWorksSection } from "@/components/features/root"
+import DefaultFooter from "@/components/footer";
+import { Linkedin } from "lucide-react";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { HowItWorksSection } from "@/components/features/root";
 
 const team = [
   {
@@ -29,14 +29,13 @@ const team = [
     bio: "Legal counsel with years of experience in software. Architect of the legal framework for various succesful software products, such as payments and factory automation.",
     linkedin: "https://www.linkedin.com/in/paul-jan-reijn-70b635227/",
   },
-]
+];
 
 export default function AboutPage() {
-  const [hoveredMember, setHoveredMember] = useState<string | null>(null)
+  const [hoveredMember, setHoveredMember] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      
       {/* Team Section */}
       <section className="relative z-10 max-w-4xl mx-auto px-6 py-20 space-y-24 mt-28">
         <div className="text-center mb-16">
@@ -46,14 +45,14 @@ export default function AboutPage() {
           <p className="text-lg md:text-xl text-slate-600 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
             Spout is dedicated to building the most secure, transparent, and
             user-friendly platform for tokenized real-world assets. Our team
-            brings together deep expertise in finance, technology, and operations
-            to deliver a next-generation DeFi experience.
+            brings together deep expertise in finance, technology, and
+            operations to deliver a next-generation DeFi experience.
           </p>
         </div>
-        
+
         {team.map((member, idx) => {
-          const isHovered = hoveredMember === member.name
-          
+          const isHovered = hoveredMember === member.name;
+
           return (
             <div
               key={member.name}
@@ -149,14 +148,14 @@ export default function AboutPage() {
                 </p>
               </div>
             </div>
-          )
+          );
         })}
       </section>
 
       {/* How It Works Section */}
       <HowItWorksSection />
-      
+
       <DefaultFooter />
     </div>
-  )
+  );
 }

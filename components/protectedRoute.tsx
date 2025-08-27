@@ -1,27 +1,27 @@
-"use client"
+"use client";
 
-import { useAuth } from "@/hooks/auth/useAuth"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
-import { LoadingSpinner } from "./loadingSpinner"
+import { useAuth } from "@/hooks/auth/useAuth";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { LoadingSpinner } from "./loadingSpinner";
 
 interface ProtectedRouteProps {
-  children: React.ReactNode
-  fallback?: React.ReactNode
+  children: React.ReactNode;
+  fallback?: React.ReactNode;
 }
 
 export default function ProtectedRoute({
   children,
   fallback,
 }: ProtectedRouteProps) {
-  const { user, loading } = useAuth()
-  const router = useRouter()
+  const { user, loading } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push("/auth/login")
+      router.push("/auth/login");
     }
-  }, [user, loading, router])
+  }, [user, loading, router]);
 
   if (loading) {
     return (
@@ -30,12 +30,12 @@ export default function ProtectedRoute({
           <LoadingSpinner />
         </div>
       )
-    )
+    );
   }
 
   if (!user) {
-    return null
+    return null;
   }
 
-  return <>{children}</>
+  return <>{children}</>;
 }

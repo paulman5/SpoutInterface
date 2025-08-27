@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { MarketHeader, MarketStats, MarketSearch, StockGrid } from "./"
-import { useMarketStocks } from "@/hooks/api/useMarketStocks"
+import { MarketHeader, MarketStats, MarketSearch, StockGrid } from "./";
+import { useMarketStocks } from "@/hooks/api/useMarketStocks";
 
 export function MarketsPage() {
   const {
@@ -12,7 +12,7 @@ export function MarketsPage() {
     searchTerm,
     setSearchTerm,
     refresh,
-  } = useMarketStocks()
+  } = useMarketStocks();
 
   return (
     <div className="space-y-8">
@@ -26,5 +26,5 @@ export function MarketsPage() {
       />
       <StockGrid stocks={stocks} loading={loading} />
     </div>
-  )
+  );
 }

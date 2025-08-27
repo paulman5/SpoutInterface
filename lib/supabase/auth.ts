@@ -1,15 +1,15 @@
-import { supabase } from "@/lib/supabase/supabase"
+import { supabase } from "@/lib/supabase/supabase";
 
 interface SignUpArgs {
-  email: string
-  password: string
-  firstName: string
-  lastName: string
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
 }
 
 interface SignInArgs {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 async function signUpWithProfile({
@@ -22,16 +22,16 @@ async function signUpWithProfile({
   const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
-  })
+  });
 
   if (signUpError) {
-    console.error("Signup error:", signUpError.message)
-    return { error: signUpError.message }
+    console.error("Signup error:", signUpError.message);
+    return { error: signUpError.message };
   }
 
-  const user = signUpData.user
+  const user = signUpData.user;
   if (!user) {
-    throw new Error("User not found")
+    throw new Error("User not found");
   }
 
   // Step 2: Insert into profiles table
@@ -40,14 +40,14 @@ async function signUpWithProfile({
     first_name: firstName,
     last_name: lastName,
     email: user.email,
-  })
+  });
 
   if (insertError) {
-    console.error("Insert profile error:", insertError.message)
-    return { error: insertError.message }
+    console.error("Insert profile error:", insertError.message);
+    return { error: insertError.message };
   }
 
-  return { success: true }
+  return { success: true };
 }
 
 async function signInWithProfile({ email, password }: SignInArgs) {
@@ -56,52 +56,58 @@ async function signInWithProfile({ email, password }: SignInArgs) {
     await supabase.auth.signInWithPassword({
       email,
       password,
-    })
+    });
 
   if (loginError) {
-    console.error("Login error:", loginError.message)
-    return { error: loginError.message }
+    console.error("Login error:", loginError.message);
+    return { error: loginError.message };
   }
 
-  const user = loginData.user
+  const user = loginData.user;
 
   // Step 2: Fetch profile
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("*")
     .eq("id", user.id)
-    .single()
+    .single();
 
   if (profileError) {
-    console.error("Fetch profile error:", profileError.message)
-    return { error: profileError.message }
+    console.error("Fetch profile error:", profileError.message);
+    return { error: profileError.message };
   }
 
-  return { user, profile }
+  return { user, profile };
 }
 
 async function signOut() {
-  const { error } = await supabase.auth.signOut()
+  const { error } = await supabase.auth.signOut();
   if (error) {
-    console.error("Sign out error:", error.message)
-    return { error: error.message }
+    console.error("Sign out error:", error.message);
+    return { error: error.message };
   }
-  return { success: true }
+  return { success: true };
 }
 
 // Keep the old function name for backward compatibility
 async function loginAndFetchProfile(args: SignInArgs) {
-  return signInWithProfile(args)
+  return signInWithProfile(args);
 }
 
 async function sendPasswordResetEmail(email: string) {
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/auth/reset-password`,
-  })
+  });
   if (error) {
-    return { error: error.message }
+    return { error: error.message };
   }
-  return { success: true }
+  return { success: true };
 }
 
-export { signUpWithProfile, signInWithProfile, signOut, loginAndFetchProfile, sendPasswordResetEmail }
+export {
+  signUpWithProfile,
+  signInWithProfile,
+  signOut,
+  loginAndFetchProfile,
+  sendPasswordResetEmail,
+};

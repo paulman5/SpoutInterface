@@ -4,34 +4,34 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Zap, Plus } from "lucide-react"
-import Link from "next/link"
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Zap, Plus } from "lucide-react";
+import Link from "next/link";
 import {
   Tooltip,
   TooltipProvider,
   TooltipTrigger,
   TooltipContent,
-} from "@/components/ui/tooltip"
-import Image from "next/image"
+} from "@/components/ui/tooltip";
+import Image from "next/image";
 
 type Holding = {
-  symbol: string
-  name: string
-  shares: number
-  avgPrice: number
-  currentPrice: number
-  value: number
-  dayChange: number
-  totalReturn: number
-  allocation: number
-}
+  symbol: string;
+  name: string;
+  shares: number;
+  avgPrice: number;
+  currentPrice: number;
+  value: number;
+  dayChange: number;
+  totalReturn: number;
+  allocation: number;
+};
 
 type PortfolioHoldingsProps = {
-  holdings: Holding[]
-  formatNumber: (num: number) => string
-}
+  holdings: Holding[];
+  formatNumber: (num: number) => string;
+};
 
 export default function PortfolioHoldings({
   holdings,
@@ -118,5 +118,5 @@ export default function PortfolioHoldings({
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

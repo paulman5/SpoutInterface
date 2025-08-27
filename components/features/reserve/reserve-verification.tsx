@@ -4,8 +4,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { CheckCircle, Shield } from "lucide-react"
+} from "@/components/ui/card";
+import { CheckCircle, Shield } from "lucide-react";
 
 export function ReserveVerification() {
   return (
@@ -40,5 +40,5 @@ export function ReserveVerification() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

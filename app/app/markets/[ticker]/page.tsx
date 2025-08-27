@@ -1,18 +1,18 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useParams, useRouter } from "next/navigation"
-import Link from "next/link"
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   ArrowLeft,
   TrendingUp,
@@ -20,61 +20,61 @@ import {
   BarChart3,
   Clock,
   DollarSign,
-} from "lucide-react"
-import StockChart from "@/components/stockChart"
+} from "lucide-react";
+import StockChart from "@/components/stockChart";
 
 interface StockData {
-  time: string
-  open: number
-  high: number
-  low: number
-  close: number
-  volume: number
+  time: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
 }
 
 interface StockInfo {
-  ticker: string
-  data: StockData[]
-  currentPrice: number
-  priceChange: number
-  priceChangePercent: number
-  volume: number
-  marketCap: number
-  dataSource?: string
-  lastUpdated?: string
+  ticker: string;
+  data: StockData[];
+  currentPrice: number;
+  priceChange: number;
+  priceChangePercent: number;
+  volume: number;
+  marketCap: number;
+  dataSource?: string;
+  lastUpdated?: string;
 }
 
 export default function TickerPage() {
-  const params = useParams()
-  const router = useRouter()
-  const ticker = params.ticker as string
-  const [stockInfo, setStockInfo] = useState<StockInfo | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const params = useParams();
+  const router = useRouter();
+  const ticker = params.ticker as string;
+  const [stockInfo, setStockInfo] = useState<StockInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchStockData = async () => {
       try {
-        setLoading(true)
-        const response = await fetch(`/api/stocks/${ticker}`)
+        setLoading(true);
+        const response = await fetch(`/api/stocks/${ticker}`);
 
         if (!response.ok) {
-          throw new Error("Failed to fetch stock data")
+          throw new Error("Failed to fetch stock data");
         }
 
-        const data = await response.json()
-        setStockInfo(data)
+        const data = await response.json();
+        setStockInfo(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred")
+        setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
     if (ticker) {
-      fetchStockData()
+      fetchStockData();
     }
-  }, [ticker])
+  }, [ticker]);
 
   if (loading) {
     return (
@@ -86,7 +86,7 @@ export default function TickerPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (error || !stockInfo) {
@@ -108,16 +108,16 @@ export default function TickerPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
-  const isPositive = stockInfo.priceChange >= 0
+  const isPositive = stockInfo.priceChange >= 0;
   const formatMarketCap = (value: number) => {
-    if (value >= 1e12) return `$${(value / 1e12).toFixed(2)}T`
-    if (value >= 1e9) return `$${(value / 1e9).toFixed(2)}B`
-    if (value >= 1e6) return `$${(value / 1e6).toFixed(2)}M`
-    return `$${value.toLocaleString()}`
-  }
+    if (value >= 1e12) return `$${(value / 1e12).toFixed(2)}T`;
+    if (value >= 1e9) return `$${(value / 1e9).toFixed(2)}B`;
+    if (value >= 1e6) return `$${(value / 1e6).toFixed(2)}M`;
+    return `$${value.toLocaleString()}`;
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -372,5 +372,5 @@ export default function TickerPage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

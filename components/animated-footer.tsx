@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useRef, useState } from "react";
 
 interface LinkItem {
@@ -10,28 +10,27 @@ interface FooterProps {
   leftLinks: LinkItem[];
   rightLinks: LinkItem[];
   copyrightText: string;
-  barCount?: number; 
+  barCount?: number;
 }
 
 export const Footer: React.FC<FooterProps> = ({
   leftLinks,
   rightLinks,
   copyrightText,
-  barCount = 23, 
+  barCount = 23,
 }) => {
   const waveRefs = useRef<(HTMLDivElement | null)[]>([]);
   const footerRef = useRef<HTMLDivElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const animationFrameRef = useRef<number | null>(null);
 
-  
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
         setIsVisible(entry.isIntersecting);
       },
-      { threshold: 0.2 } 
+      { threshold: 0.2 },
     );
 
     const currentFooterRef = footerRef.current;
@@ -47,9 +46,8 @@ export const Footer: React.FC<FooterProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
   useEffect(() => {
-    let t = 0; 
+    let t = 0;
 
     const animateWave = () => {
       const waveElements = waveRefs.current;
@@ -57,7 +55,7 @@ export const Footer: React.FC<FooterProps> = ({
 
       waveElements.forEach((element, index) => {
         if (element) {
-          offset += Math.max(0, 20 * Math.sin((t + index) * 0.3)); 
+          offset += Math.max(0, 20 * Math.sin((t + index) * 0.3));
           element.style.transform = `translateY(${index + offset}px)`;
         }
       });
@@ -135,7 +133,9 @@ export const Footer: React.FC<FooterProps> = ({
           {Array.from({ length: barCount }).map((_, index) => (
             <div
               key={index}
-              ref={(el) => { waveRefs.current[index] = el; }}
+              ref={(el) => {
+                waveRefs.current[index] = el;
+              }}
               className="wave-segment"
               style={{
                 height: `${index + 1}px`,

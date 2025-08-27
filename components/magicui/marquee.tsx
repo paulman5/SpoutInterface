@@ -1,8 +1,8 @@
-import * as React from "react"
+import * as React from "react";
 
 interface MarqueeProps extends React.HTMLAttributes<HTMLDivElement> {
-  pauseOnHover?: boolean
-  reverse?: boolean
+  pauseOnHover?: boolean;
+  reverse?: boolean;
 }
 
 export const Marquee: React.FC<MarqueeProps> = ({
@@ -12,15 +12,15 @@ export const Marquee: React.FC<MarqueeProps> = ({
   className = "",
   ...props
 }) => {
-  const marqueeRef = React.useRef<HTMLDivElement>(null)
-  const [isPaused, setIsPaused] = React.useState(false)
+  const marqueeRef = React.useRef<HTMLDivElement>(null);
+  const [isPaused, setIsPaused] = React.useState(false);
 
   const handleMouseEnter = () => {
-    if (pauseOnHover) setIsPaused(true)
-  }
+    if (pauseOnHover) setIsPaused(true);
+  };
   const handleMouseLeave = () => {
-    if (pauseOnHover) setIsPaused(false)
-  }
+    if (pauseOnHover) setIsPaused(false);
+  };
 
   return (
     <div
@@ -42,12 +42,20 @@ export const Marquee: React.FC<MarqueeProps> = ({
       </div>
       <style jsx>{`
         @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
         }
         @keyframes marquee-reverse {
-          0% { transform: translateX(-50%); }
-          100% { transform: translateX(0); }
+          0% {
+            transform: translateX(-50%);
+          }
+          100% {
+            transform: translateX(0);
+          }
         }
         .animate-marquee {
           animation: marquee linear infinite;
@@ -60,5 +68,5 @@ export const Marquee: React.FC<MarqueeProps> = ({
         }
       `}</style>
     </div>
-  )
-} 
+  );
+};

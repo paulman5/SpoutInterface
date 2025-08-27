@@ -1,62 +1,65 @@
-"use client"
+"use client";
 
-import PortfolioHeader from "@/components/features/portfolio/portfolioheader"
-import PortfolioSummaryCards from "@/components/features/portfolio/portfoliosummarycards"
-import PortfolioHoldings from "@/components/features/portfolio/portfolioholdings"
-import PortfolioPerformance from "@/components/features/portfolio/portfolioperformance"
-import PortfolioActivity from "@/components/features/portfolio/portfolioactivity"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { useTokenBalance } from "@/hooks/view/onChain/useTokenBalance"
-import { useMarketData } from "@/hooks/api/useMarketData"
-import { useAccount } from "wagmi"
-import { useCurrentUser } from "@/hooks/auth/useCurrentUser"
-import { useRecentActivity } from "@/hooks/view/onChain/useRecentActivity"
-import { useReturns } from "@/hooks/api/useReturns"
-import { LoadingSpinner } from "@/components/loadingSpinner"
+import PortfolioHeader from "@/components/features/portfolio/portfolioheader";
+import PortfolioSummaryCards from "@/components/features/portfolio/portfoliosummarycards";
+import PortfolioHoldings from "@/components/features/portfolio/portfolioholdings";
+import PortfolioPerformance from "@/components/features/portfolio/portfolioperformance";
+import PortfolioActivity from "@/components/features/portfolio/portfolioactivity";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { useTokenBalance } from "@/hooks/view/onChain/useTokenBalance";
+import { useMarketData } from "@/hooks/api/useMarketData";
+import { useAccount } from "wagmi";
+import { useCurrentUser } from "@/hooks/auth/useCurrentUser";
+import { useRecentActivity } from "@/hooks/view/onChain/useRecentActivity";
+import { useReturns } from "@/hooks/api/useReturns";
+import { LoadingSpinner } from "@/components/loadingSpinner";
 
 function PortfolioPage() {
-  const { address: userAddress } = useAccount()
+  const { address: userAddress } = useAccount();
   const {
     balance: tokenBalance,
     symbol: tokenSymbol,
     isLoading: balanceLoading,
     isError: balanceError,
     refetch: refetchTokenBalance,
-  } = useTokenBalance(userAddress)
+  } = useTokenBalance(userAddress);
 
   const {
     price: currentPrice,
     previousClose,
     isLoading: priceLoading,
     error: priceError,
-  } = useMarketData("LQD")
+  } = useMarketData("LQD");
 
-  const { returns, isLoading: returnsLoading } = useReturns("LQD")
-  const { username } = useCurrentUser()
+  const { returns, isLoading: returnsLoading } = useReturns("LQD");
+  const { username } = useCurrentUser();
   const {
     activities,
     isLoading: activitiesLoading,
     hasMore,
     loadMore,
-  } = useRecentActivity(userAddress)
+  } = useRecentActivity(userAddress);
 
   // Format number to 3 decimals, matching holdings value
   const formatNumber = (num: number) => {
-    return num.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })
-  }
-  const formatPercent = (num: number) => num.toFixed(2)
+    return num.toLocaleString(undefined, {
+      minimumFractionDigits: 3,
+      maximumFractionDigits: 3,
+    });
+  };
+  const formatPercent = (num: number) => num.toFixed(2);
 
   const portfolioValue =
-    tokenBalance && currentPrice ? tokenBalance * currentPrice : 0
+    tokenBalance && currentPrice ? tokenBalance * currentPrice : 0;
   const previousDayValue =
-    tokenBalance && previousClose ? tokenBalance * previousClose : 0
-  const dayChange = portfolioValue - previousDayValue
+    tokenBalance && previousClose ? tokenBalance * previousClose : 0;
+  const dayChange = portfolioValue - previousDayValue;
   const dayChangePercent =
     previousDayValue > 0
       ? ((portfolioValue - previousDayValue) / previousDayValue) * 100
-      : 0
-  const totalReturn = dayChange
-  const totalReturnPercent = dayChangePercent
+      : 0;
+  const totalReturn = dayChange;
+  const totalReturnPercent = dayChangePercent;
 
   const holdings = [
     {
@@ -70,15 +73,15 @@ function PortfolioPage() {
       totalReturn: totalReturnPercent, // number, not formatted string
       allocation: 100,
     },
-  ]
+  ];
 
-  const isLoading = balanceLoading || priceLoading || returnsLoading
+  const isLoading = balanceLoading || priceLoading || returnsLoading;
 
   // Function to refresh portfolio data
   const handleRefresh = () => {
-    console.log("🔄 Refreshing portfolio balances...")
-    window.location.reload()
-  }
+    console.log("🔄 Refreshing portfolio balances...");
+    window.location.reload();
+  };
 
   return (
     <div className="space-y-8">
@@ -152,7 +155,7 @@ function PortfolioPage() {
         </>
       )}
     </div>
-  )
+  );
 }
 
-export default PortfolioPage
+export default PortfolioPage;

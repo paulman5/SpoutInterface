@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { Badge } from "@/components/ui/badge"
-import { Zap } from "lucide-react"
+import { Badge } from "@/components/ui/badge";
+import { Zap } from "lucide-react";
 
 interface MarketHeaderProps {
-  lastUpdated: Date | null
+  lastUpdated: Date | null;
 }
 
 export function MarketHeader({ lastUpdated }: MarketHeaderProps) {
@@ -33,5 +33,5 @@ export function MarketHeader({ lastUpdated }: MarketHeaderProps) {
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -24,5 +24,5 @@ export function InvestmentGradeSecuritySection() {
         </li>
       </ul>
     </div>
-  )
+  );
 }

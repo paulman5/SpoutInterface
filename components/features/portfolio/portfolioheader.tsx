@@ -1,15 +1,15 @@
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Plus, RefreshCw, TrendingUp, TrendingDown } from "lucide-react"
-import Link from "next/link"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Plus, RefreshCw, TrendingUp, TrendingDown } from "lucide-react";
+import Link from "next/link";
 
 type PortfolioHeaderProps = {
-  username?: string
-  portfolioValue: number
-  dayChange: number
-  dayChangePercent: number
-  onRefresh: () => void
-}
+  username?: string;
+  portfolioValue: number;
+  dayChange: number;
+  dayChangePercent: number;
+  onRefresh: () => void;
+};
 
 export default function PortfolioHeader({
   username,
@@ -20,9 +20,12 @@ export default function PortfolioHeader({
 }: PortfolioHeaderProps) {
   // Format number to 3 decimals, matching holdings value
   const formatNumber = (num: number) => {
-    return num.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })
-  }
-  const formatPercent = (num: number) => Number(num.toFixed(2))
+    return num.toLocaleString(undefined, {
+      minimumFractionDigits: 3,
+      maximumFractionDigits: 3,
+    });
+  };
+  const formatPercent = (num: number) => Number(num.toFixed(2));
   return (
     <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 rounded-3xl p-8 text-white relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(255,255,255,0.1),transparent_50%)]"></div>
@@ -77,5 +80,5 @@ export default function PortfolioHeader({
         </div>
       </div>
     </div>
-  )
+  );
 }

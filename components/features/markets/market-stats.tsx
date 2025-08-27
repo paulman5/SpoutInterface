@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import { Card, CardContent } from "@/components/ui/card"
-import { TrendingUp, RefreshCw, BarChart3, Activity } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card";
+import { TrendingUp, RefreshCw, BarChart3, Activity } from "lucide-react";
 
 const marketStats = [
   { label: "Total Stocks", value: "500+", icon: BarChart3 },
   { label: "Market Cap", value: "$45.2T", icon: TrendingUp },
   { label: "Active Traders", value: "1,247", icon: Activity },
   { label: "Avg Volume", value: "$2.4B", icon: RefreshCw },
-]
+];
 
 export function MarketStats() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {marketStats.map((stat, index) => {
-        const IconComponent = stat.icon
+        const IconComponent = stat.icon;
         return (
           <Card
             key={index}
@@ -36,8 +36,8 @@ export function MarketStats() {
               </div>
             </CardContent>
           </Card>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

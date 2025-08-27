@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { Features } from "@/components/features"
-import { PixelTrail } from "@/components/ui/pixel-trail"
-import { useScreenSize } from "@/hooks/use-screen-size"
+import { Features } from "@/components/features";
+import { PixelTrail } from "@/components/ui/pixel-trail";
+import { useScreenSize } from "@/hooks/use-screen-size";
 
 export function FeaturesSection() {
-  const screenSize = useScreenSize()
+  const screenSize = useScreenSize();
   return (
     <section className="relative py-24 bg-white overflow-hidden">
       <PixelTrail
@@ -16,5 +16,5 @@ export function FeaturesSection() {
       />
       <Features />
     </section>
-  )
+  );
 }

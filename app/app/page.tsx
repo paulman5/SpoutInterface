@@ -1,14 +1,14 @@
-"use client"
-import Link from "next/link"
+"use client";
+import Link from "next/link";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   BarChart3,
   TrendingUp,
@@ -19,55 +19,58 @@ import {
   DollarSign,
   PieChart,
   Zap,
-} from "lucide-react"
-import { useTokenBalance } from "@/hooks/view/onChain/useTokenBalance"
-import { useMarketData } from "@/hooks/api/useMarketData"
-import { useAccount } from "wagmi"
-import { useRecentActivity } from "@/hooks/view/onChain/useRecentActivity"
-import { Suspense } from "react"
-import PortfolioActivity from "@/components/features/portfolio/portfolioactivity"
+} from "lucide-react";
+import { useTokenBalance } from "@/hooks/view/onChain/useTokenBalance";
+import { useMarketData } from "@/hooks/api/useMarketData";
+import { useAccount } from "wagmi";
+import { useRecentActivity } from "@/hooks/view/onChain/useRecentActivity";
+import { Suspense } from "react";
+import PortfolioActivity from "@/components/features/portfolio/portfolioactivity";
 
 function DashboardPage() {
-  const { address: userAddress } = useAccount()
+  const { address: userAddress } = useAccount();
   const {
     balance: tokenBalance,
     symbol: tokenSymbol,
     isLoading: balanceLoading,
     isError: balanceError,
-  } = useTokenBalance(userAddress)
+  } = useTokenBalance(userAddress);
   const {
     price: currentPrice,
     previousClose,
     isLoading: priceLoading,
     error: priceError,
-  } = useMarketData("LQD")
+  } = useMarketData("LQD");
   const {
     activities,
     isLoading: activitiesLoading,
     hasMore,
     loadMore,
-  } = useRecentActivity(userAddress)
+  } = useRecentActivity(userAddress);
 
   // Format number to 3 decimals, matching portfolio holdings
   const formatNumber = (num: number) => {
-    return num.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })
-  }
+    return num.toLocaleString(undefined, {
+      minimumFractionDigits: 3,
+      maximumFractionDigits: 3,
+    });
+  };
   // Format percentage to 2 decimal places
   const formatPercent = (num: number) => {
-    return Number(num.toFixed(2))
-  }
+    return Number(num.toFixed(2));
+  };
 
   // Portfolio data using actual token balance and market price
   const portfolioValue =
-    tokenBalance && currentPrice ? tokenBalance * currentPrice : 0
+    tokenBalance && currentPrice ? tokenBalance * currentPrice : 0;
   // Calculate daily change based on previous close
   const previousDayValue =
-    tokenBalance && previousClose ? tokenBalance * previousClose : 0
-  const dayChange = portfolioValue - previousDayValue
+    tokenBalance && previousClose ? tokenBalance * previousClose : 0;
+  const dayChange = portfolioValue - previousDayValue;
   const dayChangePercent =
     previousDayValue > 0
       ? ((portfolioValue - previousDayValue) / previousDayValue) * 100
-      : 0
+      : 0;
 
   // Holdings logic (single position if tokenBalance > 0)
   const holdings =
@@ -79,7 +82,7 @@ function DashboardPage() {
             value: portfolioValue,
           },
         ]
-      : []
+      : [];
 
   const features = [
     {
@@ -126,7 +129,7 @@ function DashboardPage() {
       stats: "Secure",
       soon: false,
     },
-  ]
+  ];
 
   const quickStats = [
     {
@@ -150,7 +153,7 @@ function DashboardPage() {
       positive: dayChange >= 0,
       icon: TrendingUp,
     },
-  ]
+  ];
 
   return (
     <div className="space-y-8">
@@ -192,7 +195,7 @@ function DashboardPage() {
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {quickStats.map((stat, index) => {
-          const IconComponent = stat.icon
+          const IconComponent = stat.icon;
           return (
             <Card
               key={index}
@@ -233,14 +236,14 @@ function DashboardPage() {
                 </div>
               </CardContent>
             </Card>
-          )
+          );
         })}
       </div>
 
       {/* Main Features Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {features.map((feature) => {
-          const IconComponent = feature.icon
+          const IconComponent = feature.icon;
           const cardContent = (
             <Card
               className={`hover:shadow-xl transition-all duration-300 group border-0 shadow-md ${feature.soon ? "opacity-60 pointer-events-none" : "cursor-pointer"}`}
@@ -282,7 +285,7 @@ function DashboardPage() {
                 </div>
               </CardContent>
             </Card>
-          )
+          );
           return feature.soon ? (
             <div key={feature.title}>{cardContent}</div>
           ) : (
@@ -294,7 +297,7 @@ function DashboardPage() {
             >
               {cardContent}
             </Link>
-          )
+          );
         })}
       </div>
 
@@ -306,7 +309,7 @@ function DashboardPage() {
         loadMore={loadMore}
       />
     </div>
-  )
+  );
 }
 
 export default function AppPageWrapper() {
@@ -314,5 +317,5 @@ export default function AppPageWrapper() {
     <Suspense fallback={<div>Loading...</div>}>
       <DashboardPage />
     </Suspense>
-  )
+  );
 }

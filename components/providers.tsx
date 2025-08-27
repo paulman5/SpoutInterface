@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { ReactNode, useEffect } from "react"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { WagmiProvider, http } from "wagmi"
-import { RainbowKitProvider, getDefaultConfig } from "@rainbow-me/rainbowkit"
-import { baseSepolia } from "wagmi/chains"
-import { AuthProvider } from "@/context/AuthContext"
-import { pharos } from "@/lib/chainconfigs/pharos"
-import { toast } from "sonner"
-import { useAccount } from "wagmi"
-import { useConnectModal } from "@rainbow-me/rainbowkit"
+import { ReactNode, useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { WagmiProvider, http } from "wagmi";
+import { RainbowKitProvider, getDefaultConfig } from "@rainbow-me/rainbowkit";
+import { baseSepolia } from "wagmi/chains";
+import { AuthProvider } from "@/context/AuthContext";
+import { pharos } from "@/lib/chainconfigs/pharos";
+import { toast } from "sonner";
+import { useAccount } from "wagmi";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 // Custom config with more reliable RPC endpoints
 const config = getDefaultConfig({
@@ -23,11 +23,11 @@ const config = getDefaultConfig({
     [pharos.id]: http("https://testnet.dplabs-internal.com"),
   },
   ssr: true,
-})
+});
 
 function WalletConnectionPrompt() {
-  const { isConnected } = useAccount()
-  const { openConnectModal } = useConnectModal()
+  const { isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
 
   useEffect(() => {
     if (!isConnected) {
@@ -38,11 +38,11 @@ function WalletConnectionPrompt() {
           onClick: openConnectModal ?? (() => {}),
         },
         duration: Infinity,
-      })
+      });
     }
-  }, [isConnected, openConnectModal])
+  }, [isConnected, openConnectModal]);
 
-  return null
+  return null;
 }
 
 const Providers = ({ children }: { children: ReactNode }) => (
@@ -56,6 +56,6 @@ const Providers = ({ children }: { children: ReactNode }) => (
       </RainbowKitProvider>
     </QueryClientProvider>
   </WagmiProvider>
-)
+);
 
-export { Providers }
+export { Providers };
