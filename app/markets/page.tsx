@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { useEffect, useState, useCallback, Suspense } from "react"
-import Link from "next/link"
+import { useEffect, useState, useCallback, Suspense } from "react";
+import Link from "next/link";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { TrendingUp, TrendingDown, RefreshCw } from "lucide-react"
-import { Button } from "@/components/ui/button"
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { TrendingUp, TrendingDown, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 // Popular stocks with company names - prices will be fetched from API
 const popularStocks = [
@@ -87,44 +87,44 @@ const popularStocks = [
     volume: "0",
     marketCap: "0",
   },
-]
+];
 
 interface StockData {
-  ticker: string
-  name: string
-  price: number
-  change: number
-  changePercent: number
-  volume: string
-  marketCap: string
-  dataSource?: string
+  ticker: string;
+  name: string;
+  price: number;
+  change: number;
+  changePercent: number;
+  volume: string;
+  marketCap: string;
+  dataSource?: string;
 }
 
 function MarketsPage() {
-  const [stocks, setStocks] = useState<StockData[]>(popularStocks)
-  const [loading, setLoading] = useState(true)
-  const [refreshing, setRefreshing] = useState(false)
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+  const [stocks, setStocks] = useState<StockData[]>(popularStocks);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const formatMarketCap = (value: number) => {
-    if (value >= 1e12) return `$${(value / 1e12).toFixed(2)}T`
-    if (value >= 1e9) return `$${(value / 1e9).toFixed(2)}B`
-    if (value >= 1e6) return `$${(value / 1e6).toFixed(2)}M`
-    return `$${value.toLocaleString()}`
-  }
+    if (value >= 1e12) return `$${(value / 1e12).toFixed(2)}T`;
+    if (value >= 1e9) return `$${(value / 1e9).toFixed(2)}B`;
+    if (value >= 1e6) return `$${(value / 1e6).toFixed(2)}M`;
+    return `$${value.toLocaleString()}`;
+  };
 
   const formatVolume = (volume: number) => {
-    if (volume >= 1e9) return `${(volume / 1e9).toFixed(1)}B`
-    if (volume >= 1e6) return `${(volume / 1e6).toFixed(1)}M`
-    if (volume >= 1e3) return `${(volume / 1e3).toFixed(1)}K`
-    return volume.toString()
-  }
+    if (volume >= 1e9) return `${(volume / 1e9).toFixed(1)}B`;
+    if (volume >= 1e6) return `${(volume / 1e6).toFixed(1)}M`;
+    if (volume >= 1e3) return `${(volume / 1e3).toFixed(1)}K`;
+    return volume.toString();
+  };
 
   const fetchStockData = async (ticker: string) => {
     try {
-      const response = await fetch(`/api/stocks/${ticker}`)
+      const response = await fetch(`/api/stocks/${ticker}`);
       if (response.ok) {
-        const data = await response.json()
+        const data = await response.json();
         return {
           ticker: data.ticker,
           name: popularStocks.find((s) => s.ticker === ticker)?.name || ticker,
@@ -134,39 +134,39 @@ function MarketsPage() {
           volume: formatVolume(data.volume),
           marketCap: formatMarketCap(data.marketCap),
           dataSource: data.dataSource,
-        }
+        };
       }
     } catch (error) {
-      console.error(`Error fetching ${ticker}:`, error)
+      console.error(`Error fetching ${ticker}:`, error);
     }
-    return null
-  }
+    return null;
+  };
 
   const fetchAllStocks = useCallback(async () => {
-    setRefreshing(true)
+    setRefreshing(true);
     try {
       const promises = popularStocks.map((stock) =>
-        fetchStockData(stock.ticker)
-      )
-      const results = await Promise.all(promises)
+        fetchStockData(stock.ticker),
+      );
+      const results = await Promise.all(promises);
 
       const validStocks = results.filter(
-        (stock) => stock !== null
-      ) as StockData[]
-      setStocks(validStocks)
-      setLastUpdated(new Date())
+        (stock) => stock !== null,
+      ) as StockData[];
+      setStocks(validStocks);
+      setLastUpdated(new Date());
     } catch (error) {
-      console.error("Error fetching stocks:", error)
+      console.error("Error fetching stocks:", error);
     } finally {
-      setLoading(false)
-      setRefreshing(false)
+      setLoading(false);
+      setRefreshing(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   useEffect(() => {
-    fetchAllStocks()
-  }, [fetchAllStocks])
+    fetchAllStocks();
+  }, [fetchAllStocks]);
 
   return (
     <div className="px-6 py-10 md:p-8 lg:p-12 xl:p-16 max-w-7xl mx-auto w-full">
@@ -326,7 +326,7 @@ function MarketsPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default function MarketsPageWrapper() {
@@ -334,5 +334,5 @@ export default function MarketsPageWrapper() {
     <Suspense fallback={<div>Loading...</div>}>
       <MarketsPage />
     </Suspense>
-  )
+  );
 }

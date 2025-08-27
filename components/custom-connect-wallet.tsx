@@ -14,20 +14,14 @@ import { useNetworkSwitch } from "@/hooks/use-network-switch";
 
 const CustomConnectButton = () => {
   const { checkAndSwitchNetwork } = useNetworkSwitch();
-  const { disconnectAsync  } = useDisconnect();
+  const { disconnectAsync } = useDisconnect();
   const copyAddress = (address: string) => {
     navigator.clipboard.writeText(address);
   };
 
-  return (  
+  return (
     <ConnectButton.Custom>
-      {({
-        account,
-        chain,
-        openAccountModal,
-        openConnectModal,
-        mounted,
-      }) => {
+      {({ account, chain, openAccountModal, openConnectModal, mounted }) => {
         const ready = mounted;
         const connected = ready && account && chain;
 
@@ -38,7 +32,7 @@ const CustomConnectButton = () => {
 
         const handleAccountDetails = async () => {
           await checkAndSwitchNetwork();
-           openAccountModal();
+          openAccountModal();
         };
 
         return (
@@ -55,7 +49,7 @@ const CustomConnectButton = () => {
             {(() => {
               if (!connected) {
                 return (
-                  <button 
+                  <button
                     onClick={openConnectModal}
                     className="text-white text-sm focus:outline-none hover:text-white bg-black cursor-pointer rounded-xl px-3 py-2 transition-colors border border-gray-600/50 hover:border-emerald-700 hover:!bg-emerald-700"
                   >
@@ -83,23 +77,23 @@ const CustomConnectButton = () => {
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56 bg-white">
-                    <DropdownMenuItem 
-                      onClick={() => copyAddress(account.address)} 
+                    <DropdownMenuItem
+                      onClick={() => copyAddress(account.address)}
                       className="cursor-pointer"
                     >
                       <Copy className="mr-2 h-4 w-4" />
                       Copy Address
                     </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={handleAccountDetails} 
+                    <DropdownMenuItem
+                      onClick={handleAccountDetails}
                       className="cursor-pointer"
                     >
                       <User className="mr-2 h-4 w-4" />
                       Account Details
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem 
-                      onClick={handleLogout} 
+                    <DropdownMenuItem
+                      onClick={handleLogout}
                       className="cursor-pointer text-red-600"
                     >
                       <LogOut className="mr-2 h-4 w-4" />

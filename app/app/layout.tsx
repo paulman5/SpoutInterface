@@ -1,18 +1,18 @@
-import { Sidebar, SidebarInset } from "@/components/ui/sidebar"
+import { Sidebar, SidebarInset } from "@/components/ui/sidebar";
 
-import { SidebarProvider } from "@/components/ui/sidebar"
-import OnchainIDChecker from "@/components/contract/OnchainIDChecker"
+import { SidebarProvider } from "@/components/ui/sidebar";
+import OnchainIDChecker from "@/components/contract/OnchainIDChecker";
 import {
   DashboardSidebarNavClient,
   DashboardNavbarHeaderClient,
-} from "@/components/dashboardNavClient"
-import { Toaster } from "@/components/ui/sonner"
-import { Suspense } from "react"
+} from "@/components/dashboardNavClient";
+import { Toaster } from "@/components/ui/sonner";
+import { Suspense } from "react";
 
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <SidebarProvider defaultOpen={true}>
@@ -31,5 +31,5 @@ export default function DashboardLayout({
         </SidebarInset>
       </div>
     </SidebarProvider>
-  )
+  );
 }

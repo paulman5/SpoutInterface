@@ -1,32 +1,42 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import React from "react"
-import Image from "next/image"
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import React from "react";
+import Image from "next/image";
 
 type Holding = {
-  symbol: string
-  name: string
-  shares: number
-  avgPrice: number
-  currentPrice: number
-  value: number
-  dayChange: number
-  totalReturn: number
-  allocation: number
-}
+  symbol: string;
+  name: string;
+  shares: number;
+  avgPrice: number;
+  currentPrice: number;
+  value: number;
+  dayChange: number;
+  totalReturn: number;
+  allocation: number;
+};
 
 type Returns = {
-  thirtyDayReturn: number
-  ninetyDayReturn: number
-  yearReturn: number
-}
+  thirtyDayReturn: number;
+  ninetyDayReturn: number;
+  yearReturn: number;
+};
 
 type PortfolioPerformanceProps = {
-  holdings: Holding[]
-  returns: Returns
-  formatPercent: (num: number) => string
-}
+  holdings: Holding[];
+  returns: Returns;
+  formatPercent: (num: number) => string;
+};
 
-const PortfolioPerformance: React.FC<PortfolioPerformanceProps> = ({ holdings, returns, formatPercent }) => {
+const PortfolioPerformance: React.FC<PortfolioPerformanceProps> = ({
+  holdings,
+  returns,
+  formatPercent,
+}) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <Card className="border-0 shadow-md">
@@ -58,10 +68,10 @@ const PortfolioPerformance: React.FC<PortfolioPerformanceProps> = ({ holdings, r
                         index === 0
                           ? "bg-blue-500"
                           : index === 1
-                          ? "bg-emerald-500"
-                          : index === 2
-                          ? "bg-purple-500"
-                          : "bg-orange-500"
+                            ? "bg-emerald-500"
+                            : index === 2
+                              ? "bg-purple-500"
+                              : "bg-orange-500"
                       }`}
                     ></div>
                   )}
@@ -85,21 +95,27 @@ const PortfolioPerformance: React.FC<PortfolioPerformanceProps> = ({ holdings, r
           <div className="space-y-4">
             <div className="flex justify-between p-3 bg-slate-50 rounded-xl">
               <span className="text-sm text-gray-600">30-Day Return</span>
-              <span className={`text-sm font-medium ${returns.thirtyDayReturn >= 0 ? "text-green-600" : "text-red-600"}`}>
+              <span
+                className={`text-sm font-medium ${returns.thirtyDayReturn >= 0 ? "text-green-600" : "text-red-600"}`}
+              >
                 {returns.thirtyDayReturn >= 0 ? "+" : ""}
                 {formatPercent(returns.thirtyDayReturn)}%
               </span>
             </div>
             <div className="flex justify-between p-3 bg-slate-50 rounded-xl">
               <span className="text-sm text-gray-600">90-Day Return</span>
-              <span className={`text-sm font-medium ${returns.ninetyDayReturn >= 0 ? "text-green-600" : "text-red-600"}`}>
+              <span
+                className={`text-sm font-medium ${returns.ninetyDayReturn >= 0 ? "text-green-600" : "text-red-600"}`}
+              >
                 {returns.ninetyDayReturn >= 0 ? "+" : ""}
                 {formatPercent(returns.ninetyDayReturn)}%
               </span>
             </div>
             <div className="flex justify-between p-3 bg-slate-50 rounded-xl">
               <span className="text-sm text-gray-600">1-Year Return</span>
-              <span className={`text-sm font-medium ${returns.yearReturn >= 0 ? "text-green-600" : "text-red-600"}`}>
+              <span
+                className={`text-sm font-medium ${returns.yearReturn >= 0 ? "text-green-600" : "text-red-600"}`}
+              >
                 {returns.yearReturn >= 0 ? "+" : ""}
                 {formatPercent(returns.yearReturn)}%
               </span>
@@ -108,7 +124,7 @@ const PortfolioPerformance: React.FC<PortfolioPerformanceProps> = ({ holdings, r
         </CardContent>
       </Card>
     </div>
-  )
-}
+  );
+};
 
-export default PortfolioPerformance; 
+export default PortfolioPerformance;

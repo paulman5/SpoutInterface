@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button"
-import { RefreshCcw } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { RefreshCcw } from "lucide-react";
 
 interface ReserveHeaderProps {
-  onRequestReserves: () => void
-  isRequestPending: boolean
+  onRequestReserves: () => void;
+  isRequestPending: boolean;
 }
 
 export function ReserveHeader({
@@ -33,5 +33,5 @@ export function ReserveHeader({
         </Button>
       </div> */}
     </div>
-  )
+  );
 }

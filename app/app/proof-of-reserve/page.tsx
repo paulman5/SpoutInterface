@@ -1,38 +1,38 @@
-"use client"
+"use client";
 
-import React from "react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useReserveContract } from "@/hooks/view/onChain/useReserveContract"
-import { useTotalSupply } from "@/hooks/view/onChain/useTotalSupply"
-import { useMarketData } from "@/hooks/api/useMarketData"
-import { useYieldData } from "@/hooks/api/useYieldData"
-import { useContractAddress } from "@/lib/addresses"
+import React from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useReserveContract } from "@/hooks/view/onChain/useReserveContract";
+import { useTotalSupply } from "@/hooks/view/onChain/useTotalSupply";
+import { useMarketData } from "@/hooks/api/useMarketData";
+import { useYieldData } from "@/hooks/api/useYieldData";
+import { useContractAddress } from "@/lib/addresses";
 import {
   ReserveHeader,
   ReserveSummary,
   ReserveOverview,
   ReserveVerification,
   CorporateBonds,
-} from "@/components/features/reserve"
+} from "@/components/features/reserve";
 
 function ProofOfReservePage() {
-  const { totalSupply, isLoading: totalSupplyLoading } = useTotalSupply()
-  const { price: currentPrice, isLoading: priceLoading } = useMarketData("LQD")
-  const { data: lqdYield, isLoading: lqdYieldLoading } = useYieldData("LQD")
+  const { totalSupply, isLoading: totalSupplyLoading } = useTotalSupply();
+  const { price: currentPrice, isLoading: priceLoading } = useMarketData("LQD");
+  const { data: lqdYield, isLoading: lqdYieldLoading } = useYieldData("LQD");
 
-  const RESERVE_CONTRACT_ADDRESS = "0x9D11687f26C27e21771908aE248f13411477B589"
+  const RESERVE_CONTRACT_ADDRESS = "0x9D11687f26C27e21771908aE248f13411477B589";
   const { requestReserves, isRequestPending, totalReserves } =
-    useReserveContract(RESERVE_CONTRACT_ADDRESS)
+    useReserveContract(RESERVE_CONTRACT_ADDRESS);
 
   // Cast totalReserves to bigint | null for type safety
-  const typedTotalReserves = totalReserves as bigint | null
+  const typedTotalReserves = totalReserves as bigint | null;
 
   // Use LQD yield directly
-  const yieldRate = lqdYield?.yield || 0
+  const yieldRate = lqdYield?.yield || 0;
 
   const handleRequestReserves = () => {
-    requestReserves(379)
-  }
+    requestReserves(379);
+  };
 
   return (
     <div className="space-y-6">
@@ -78,7 +78,7 @@ function ProofOfReservePage() {
       {/* Verification Info */}
       <ReserveVerification />
     </div>
-  )
+  );
 }
 
-export default ProofOfReservePage
+export default ProofOfReservePage;

@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { supabase } from "@/lib/supabase/supabase"
-import { User } from "@supabase/supabase-js"
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase/supabase";
+import { User } from "@supabase/supabase-js";
 
 interface Profile {
-  id: string
-  first_name: string
-  last_name: string
-  email: string
-  created_at: string
-  updated_at: string
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  created_at: string;
+  updated_at: string;
 }
 
 interface AuthState {
-  user: User | null
-  profile: Profile | null
-  loading: boolean
+  user: User | null;
+  profile: Profile | null;
+  loading: boolean;
 }
 
 export function useAuth() {
@@ -24,36 +24,36 @@ export function useAuth() {
     user: null,
     profile: null,
     loading: true,
-  })
+  });
 
   useEffect(() => {
     // Get initial session
     const getInitialSession = async () => {
       const {
         data: { session },
-      } = await supabase.auth.getSession()
+      } = await supabase.auth.getSession();
       if (session?.user) {
-        await fetchProfile(session.user)
+        await fetchProfile(session.user);
       } else {
-        setAuthState({ user: null, profile: null, loading: false })
+        setAuthState({ user: null, profile: null, loading: false });
       }
-    }
+    };
 
-    getInitialSession()
+    getInitialSession();
 
     // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
-        await fetchProfile(session.user)
+        await fetchProfile(session.user);
       } else {
-        setAuthState({ user: null, profile: null, loading: false })
+        setAuthState({ user: null, profile: null, loading: false });
       }
-    })
+    });
 
-    return () => subscription.unsubscribe()
-  }, [])
+    return () => subscription.unsubscribe();
+  }, []);
 
   const fetchProfile = async (user: User) => {
     try {
@@ -61,20 +61,20 @@ export function useAuth() {
         .from("profiles")
         .select("*")
         .eq("id", user.id)
-        .single()
+        .single();
 
       if (error) {
         // Profile might not exist yet, which is normal for new users
-        console.log("Profile not found, user may be new:", error.message)
-        setAuthState({ user, profile: null, loading: false })
+        console.log("Profile not found, user may be new:", error.message);
+        setAuthState({ user, profile: null, loading: false });
       } else {
-        setAuthState({ user, profile, loading: false })
+        setAuthState({ user, profile, loading: false });
       }
     } catch (error) {
-      console.log("Error fetching profile:", error)
-      setAuthState({ user, profile: null, loading: false })
+      console.log("Error fetching profile:", error);
+      setAuthState({ user, profile: null, loading: false });
     }
-  }
+  };
 
-  return authState
+  return authState;
 }

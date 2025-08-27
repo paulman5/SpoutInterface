@@ -1,29 +1,29 @@
-"use client"
+"use client";
 
-import Link from "next/link"
+import Link from "next/link";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { TrendingUp, TrendingDown } from "lucide-react"
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { TrendingUp, TrendingDown } from "lucide-react";
 
 interface StockData {
-  ticker: string
-  name: string
-  price: number | null
-  change: number | null
-  changePercent: number | null
-  volume: string
-  marketCap: string
-  dataSource?: string
+  ticker: string;
+  name: string;
+  price: number | null;
+  change: number | null;
+  changePercent: number | null;
+  volume: string;
+  marketCap: string;
+  dataSource?: string;
 }
 
 interface StockCardProps {
-  stock: StockData
+  stock: StockData;
 }
 
 export function StockCard({ stock }: StockCardProps) {
@@ -103,5 +103,5 @@ export function StockCard({ stock }: StockCardProps) {
         </CardContent>
       </Card>
     </Link>
-  )
+  );
 }

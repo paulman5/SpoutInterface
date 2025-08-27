@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { ArrowRight, Zap } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { PixelTrail } from "@/components/ui/pixel-trail"
-import { useScreenSize } from "@/hooks/use-screen-size"
-import { JoinMailingList } from "./join-mailing-list"
-import { PartnerTicker } from "./partner-ticker"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Zap } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { PixelTrail } from "@/components/ui/pixel-trail";
+import { useScreenSize } from "@/hooks/use-screen-size";
+import { JoinMailingList } from "./join-mailing-list";
+import { PartnerTicker } from "./partner-ticker";
 
 export function HeroSection() {
-  const screenSize = useScreenSize()
+  const screenSize = useScreenSize();
 
   return (
     <section className="w-full flex flex-col items-center justify-center relative min-h-screen overflow-hidden">
@@ -46,7 +46,7 @@ export function HeroSection() {
           <Link href="/app">
             <Button
               size="lg"
-              className="bg-blue-400 hover:bg-blue-500 text-white px-10 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              className="bg-emerald-500 hover:bg-emerald-600 data-[hovered]:bg-emerald-600 text-white px-10 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.01]"
             >
               Launch Platform
               <ArrowRight className="ml-3 h-5 w-5" />
@@ -65,5 +65,5 @@ export function HeroSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

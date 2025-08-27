@@ -1,25 +1,25 @@
-import { useAccount, useReadContract, useWriteContract } from "wagmi"
-import ordersABI from "@/abi/ordersBlocksense.json"
+import { useAccount, useReadContract, useWriteContract } from "wagmi";
+import ordersABI from "@/abi/ordersBlocksense.json";
 
 export function useOrdersContract(ordersAddress: `0x${string}`) {
-  const { address } = useAccount()
+  const { address } = useAccount();
 
   // Write functions
   const {
     writeContract: buyAsset,
     isPending: isBuyAssetPending,
     error: buyAssetError,
-  } = useWriteContract()
+  } = useWriteContract();
   const {
     writeContract: sellAsset,
     isPending: isSellAssetPending,
     error: sellAssetError,
-  } = useWriteContract()
+  } = useWriteContract();
   const {
     writeContract: withdrawUSDC,
     isPending: isWithdrawUSDCPending,
     error: withdrawUSDCError,
-  } = useWriteContract()
+  } = useWriteContract();
 
   // Read functions (example: pendingBuyOrders, pendingSellOrders)
   const readPendingBuyOrder = (requestId: string) =>
@@ -28,7 +28,7 @@ export function useOrdersContract(ordersAddress: `0x${string}`) {
       abi: ordersABI as any,
       functionName: "pendingBuyOrders",
       args: [requestId],
-    })
+    });
 
   const readPendingSellOrder = (requestId: string) =>
     useReadContract({
@@ -36,7 +36,7 @@ export function useOrdersContract(ordersAddress: `0x${string}`) {
       abi: ordersABI as any,
       functionName: "pendingSellOrders",
       args: [requestId],
-    })
+    });
 
   // Function calls
   const executeBuyAsset = (
@@ -45,15 +45,15 @@ export function useOrdersContract(ordersAddress: `0x${string}`) {
     token: `0x${string}`,
     usdcAmount: bigint,
     subscriptionId: bigint,
-    orderAddr: `0x${string}`
+    orderAddr: `0x${string}`,
   ) => {
     buyAsset({
       address: ordersAddress,
       abi: ordersABI as any,
       functionName: "buyAsset",
       args: [asset, ticker, token, usdcAmount, subscriptionId, orderAddr],
-    })
-  }
+    });
+  };
 
   const executeSellAsset = (
     asset: string,
@@ -61,15 +61,15 @@ export function useOrdersContract(ordersAddress: `0x${string}`) {
     token: `0x${string}`,
     tokenAmount: bigint,
     subscriptionId: bigint,
-    orderAddr: `0x${string}`
+    orderAddr: `0x${string}`,
   ) => {
     sellAsset({
       address: ordersAddress,
       abi: ordersABI as any,
       functionName: "sellAsset",
       args: [asset, ticker, token, tokenAmount, subscriptionId, orderAddr],
-    })
-  }
+    });
+  };
 
   const executeWithdrawUSDC = (amount: bigint) => {
     withdrawUSDC({
@@ -77,8 +77,8 @@ export function useOrdersContract(ordersAddress: `0x${string}`) {
       abi: ordersABI as any,
       functionName: "withdrawUSDC",
       args: [amount],
-    })
-  }
+    });
+  };
 
   return {
     address,
@@ -97,5 +97,5 @@ export function useOrdersContract(ordersAddress: `0x${string}`) {
     // Read functions
     readPendingBuyOrder,
     readPendingSellOrder,
-  }
+  };
 }

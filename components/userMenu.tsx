@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   DropdownMenu,
@@ -6,8 +6,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown"
-import { Icons } from "./icons/icons"
+} from "@/components/ui/dropdown";
+import { Icons } from "./icons/icons";
 
 export function UserMenu({ username }: { username: string }) {
   return (
@@ -34,5 +34,5 @@ export function UserMenu({ username }: { username: string }) {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

@@ -4,47 +4,52 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { ArrowDownCircle, ArrowUpCircle, TrendingUp, Shield } from "lucide-react"
-import React from "react"
-import { useOnchainID } from "@/hooks/view/onChain/useOnchainID"
-import { useContractAddress } from "@/lib/addresses"
-import { useAccount } from "wagmi"
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  ArrowDownCircle,
+  ArrowUpCircle,
+  TrendingUp,
+  Shield,
+} from "lucide-react";
+import React from "react";
+import { useOnchainID } from "@/hooks/view/onChain/useOnchainID";
+import { useContractAddress } from "@/lib/addresses";
+import { useAccount } from "wagmi";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { LoadingSpinner } from "@/components/loadingSpinner"
+} from "@/components/ui/tooltip";
+import { LoadingSpinner } from "@/components/loadingSpinner";
 
 type TradeFormProps = {
-  tradeType: "buy" | "sell"
-  setTradeType: (type: "buy" | "sell") => void
-  selectedToken: string
-  buyUsdc: string
-  setBuyUsdc: (v: string) => void
-  sellToken: string
-  setSellToken: (v: string) => void
-  latestPrice: number | null
-  priceLoading: boolean
-  usdcBalance: number
-  tokenBalance: number
-  usdcLoading: boolean
-  usdcError: boolean
-  balanceLoading: boolean
-  isApprovePending: boolean
-  isOrderPending: boolean
-  handleBuy: () => void
-  handleSell: () => void
-  buyFeeUsdc: string
-  netReceiveTokens: string
-  sellFeeUsdc: string
-  netReceiveUsdc: string
-  priceChangePercent: number
-  priceChange: number
-}
+  tradeType: "buy" | "sell";
+  setTradeType: (type: "buy" | "sell") => void;
+  selectedToken: string;
+  buyUsdc: string;
+  setBuyUsdc: (v: string) => void;
+  sellToken: string;
+  setSellToken: (v: string) => void;
+  latestPrice: number | null;
+  priceLoading: boolean;
+  usdcBalance: number;
+  tokenBalance: number;
+  usdcLoading: boolean;
+  usdcError: boolean;
+  balanceLoading: boolean;
+  isApprovePending: boolean;
+  isOrderPending: boolean;
+  handleBuy: () => void;
+  handleSell: () => void;
+  buyFeeUsdc: string;
+  netReceiveTokens: string;
+  sellFeeUsdc: string;
+  netReceiveUsdc: string;
+  priceChangePercent: number;
+  priceChange: number;
+};
 
 export default function TradeForm({
   tradeType,
@@ -72,19 +77,24 @@ export default function TradeForm({
   priceChangePercent,
   priceChange,
 }: TradeFormProps) {
-  const { address: userAddress } = useAccount()
-  const idFactoryAddress = useContractAddress("idfactory")
-  const issuerAddress = useContractAddress("issuer")
+  const { address: userAddress } = useAccount();
+  const idFactoryAddress = useContractAddress("idfactory");
+  const issuerAddress = useContractAddress("issuer");
 
   const { hasKYCClaim, kycLoading } = useOnchainID({
     userAddress,
     idFactoryAddress,
     issuer: issuerAddress || "",
     topic: 1,
-  })
+  });
 
   // Determine if buy button should be disabled
-  const isBuyDisabled = !buyUsdc || isApprovePending || isOrderPending || !hasKYCClaim || kycLoading
+  const isBuyDisabled =
+    !buyUsdc ||
+    isApprovePending ||
+    isOrderPending ||
+    !hasKYCClaim ||
+    kycLoading;
 
   return (
     <div className="w-full max-w-xl mx-auto">
@@ -151,8 +161,8 @@ export default function TradeForm({
               variant={tradeType === "buy" ? "success" : "ghost"}
               onClick={() => setTradeType("buy")}
               className={`flex-1 transition-all duration-200 ${
-                tradeType === "buy" 
-                  ? "shadow-lg transform scale-[0.98] ring-2 ring-emerald-200" 
+                tradeType === "buy"
+                  ? "shadow-lg transform scale-[0.98] ring-2 ring-emerald-200"
                   : "hover:scale-[1.02]"
               }`}
             >
@@ -163,8 +173,8 @@ export default function TradeForm({
               variant={tradeType === "sell" ? "default" : "ghost"}
               onClick={() => setTradeType("sell")}
               className={`flex-1 transition-all duration-200 ${
-                tradeType === "sell" 
-                  ? "bg-blue-500 hover:bg-blue-600 text-white shadow-lg transform scale-[0.98] ring-2 ring-blue-200 shadow-blue-500/25" 
+                tradeType === "sell"
+                  ? "bg-blue-500 hover:bg-blue-600 text-white shadow-lg transform scale-[0.98] ring-2 ring-blue-200 shadow-blue-500/25"
                   : "text-slate-600 hover:scale-[1.02]"
               }`}
             >
@@ -187,7 +197,9 @@ export default function TradeForm({
                       <span className="text-slate-400">Loading...</span>
                     </div>
                   ) : (
-                    <p className="font-bold text-lg">${latestPrice.toFixed(2)}</p>
+                    <p className="font-bold text-lg">
+                      ${latestPrice.toFixed(2)}
+                    </p>
                   )}
                 </div>
                 {!priceLoading && latestPrice && latestPrice > 0 && (
@@ -313,7 +325,7 @@ export default function TradeForm({
                     </span>
                   </div>
                   <p className="text-xs text-amber-700">
-                    You need to complete verification before you can buy tokens. 
+                    You need to complete verification before you can buy tokens.
                     Please complete the verification process in your profile.
                   </p>
                 </div>
@@ -440,5 +452,5 @@ export default function TradeForm({
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

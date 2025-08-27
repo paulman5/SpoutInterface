@@ -1,18 +1,18 @@
-import React from "react"
-import { createPortal } from "react-dom"
-import { CheckCircle, Loader2, X } from "lucide-react"
-import { Button } from "./button"
-import Image from "next/image"
+import React from "react";
+import { createPortal } from "react-dom";
+import { CheckCircle, Loader2, X } from "lucide-react";
+import { Button } from "./button";
+import Image from "next/image";
 
 interface TransactionModalProps {
-  isOpen: boolean
-  onClose: () => void
-  status: "waiting" | "completed" | "failed"
-  transactionType: "buy" | "sell"
-  tokenSymbol: string
-  amount: string
-  receivedAmount: string
-  error?: string
+  isOpen: boolean;
+  onClose: () => void;
+  status: "waiting" | "completed" | "failed";
+  transactionType: "buy" | "sell";
+  tokenSymbol: string;
+  amount: string;
+  receivedAmount: string;
+  error?: string;
 }
 
 export default function TransactionModal({
@@ -25,7 +25,7 @@ export default function TransactionModal({
   receivedAmount,
   error,
 }: TransactionModalProps) {
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   const modalContent = (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[9999]">
@@ -58,7 +58,7 @@ export default function TransactionModal({
                   Please wait while your transaction is being processed...
                 </p>
               </div>
-              
+
               {/* Transaction Details */}
               <div className="bg-gray-50 rounded-lg p-4 mb-6">
                 <div className="flex items-center justify-between text-sm">
@@ -81,7 +81,9 @@ export default function TransactionModal({
                       />
                     )}
                     <span className="text-gray-700">
-                      {transactionType === "buy" ? amount : `${amount} S${tokenSymbol}`}
+                      {transactionType === "buy"
+                        ? amount
+                        : `${amount} S${tokenSymbol}`}
                     </span>
                   </div>
                   <span className="text-gray-400">→</span>
@@ -104,7 +106,9 @@ export default function TransactionModal({
                       />
                     )}
                     <span className="text-gray-700">
-                      {transactionType === "buy" ? `${receivedAmount} S${tokenSymbol}` : `${receivedAmount} USDC`}
+                      {transactionType === "buy"
+                        ? `${receivedAmount} S${tokenSymbol}`
+                        : `${receivedAmount} USDC`}
                     </span>
                   </div>
                 </div>
@@ -125,7 +129,7 @@ export default function TransactionModal({
                   Your transaction has been successfully processed
                 </p>
               </div>
-              
+
               {/* Transaction Details */}
               <div className="bg-gray-50 rounded-lg p-4 mb-6">
                 <div className="flex items-center justify-between text-sm">
@@ -148,7 +152,9 @@ export default function TransactionModal({
                       />
                     )}
                     <span className="text-gray-700">
-                      {transactionType === "buy" ? amount : `${amount} S${tokenSymbol}`}
+                      {transactionType === "buy"
+                        ? amount
+                        : `${amount} S${tokenSymbol}`}
                     </span>
                   </div>
                   <span className="text-gray-400">→</span>
@@ -171,7 +177,9 @@ export default function TransactionModal({
                       />
                     )}
                     <span className="text-gray-700">
-                      {transactionType === "buy" ? `${receivedAmount} S${tokenSymbol}` : `${receivedAmount} USDC`}
+                      {transactionType === "buy"
+                        ? `${receivedAmount} S${tokenSymbol}`
+                        : `${receivedAmount} USDC`}
                     </span>
                   </div>
                 </div>
@@ -208,11 +216,7 @@ export default function TransactionModal({
           )}
           {status === "failed" && (
             <>
-              <Button
-                onClick={onClose}
-                variant="outline"
-                className="flex-1"
-              >
+              <Button onClick={onClose} variant="outline" className="flex-1">
                 Close
               </Button>
               <Button
@@ -226,12 +230,12 @@ export default function TransactionModal({
         </div>
       </div>
     </div>
-  )
+  );
 
   // Use portal to render at document body level
-  if (typeof window !== 'undefined') {
-    return createPortal(modalContent, document.body)
+  if (typeof window !== "undefined") {
+    return createPortal(modalContent, document.body);
   }
 
-  return modalContent
-} 
+  return modalContent;
+}

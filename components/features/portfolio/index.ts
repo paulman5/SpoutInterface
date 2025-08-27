@@ -1,3 +1,3 @@
-export * from "./portfolioheader"
-export * from "./portfolioholdings"
-export * from "./portfoliosummarycards" 
+export * from "./portfolioheader";
+export * from "./portfolioholdings";
+export * from "./portfoliosummarycards";

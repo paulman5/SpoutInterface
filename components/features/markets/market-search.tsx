@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Search, Filter, RefreshCw } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Search, Filter, RefreshCw } from "lucide-react";
 
 interface MarketSearchProps {
-  searchTerm: string
-  onSearchChange: (value: string) => void
-  onRefresh: () => void
-  refreshing: boolean
+  searchTerm: string;
+  onSearchChange: (value: string) => void;
+  onRefresh: () => void;
+  refreshing: boolean;
 }
 
 export function MarketSearch({
@@ -51,5 +51,5 @@ export function MarketSearch({
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

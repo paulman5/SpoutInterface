@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
 type TradeTokenSelectorProps = {
-  tokens: { label: string; value: string }[]
-  selectedToken: string
-  setSelectedToken: (token: string) => void
-}
+  tokens: { label: string; value: string }[];
+  selectedToken: string;
+  setSelectedToken: (token: string) => void;
+};
 
 export default function TradeTokenSelector({
   tokens,
@@ -24,5 +24,5 @@ export default function TradeTokenSelector({
         </Button>
       ))}
     </div>
-  )
+  );
 }

@@ -1,9 +1,8 @@
+"use client";
 
-"use client"
-
-import React, { useRef, useEffect, useState } from "react"
-import Link from "next/link"
-import Image from "next/image"
+import React, { useRef, useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
 
 const initialPartners = [
   {
@@ -41,29 +40,29 @@ const initialPartners = [
     alt: "Pharos",
     link: "https://pharosnetwork.xyz/",
   },
-]
+];
 
 export function PartnerTicker() {
-  const [offset, setOffset] = useState(0)
-  const tickerRef = useRef<HTMLDivElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-  const speed = 0.6
+  const [offset, setOffset] = useState(0);
+  const tickerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const speed = 0.6;
 
   useEffect(() => {
-    let frame: number
+    let frame: number;
     const animate = () => {
       if (contentRef.current) {
-        const scrollWidth = contentRef.current.scrollWidth / 3
+        const scrollWidth = contentRef.current.scrollWidth / 3;
         setOffset((prev) => {
-          const next = prev - speed
-          return Math.abs(next) >= scrollWidth ? 0 : next
-        })
+          const next = prev - speed;
+          return Math.abs(next) >= scrollWidth ? 0 : next;
+        });
       }
-      frame = requestAnimationFrame(animate)
-    }
-    frame = requestAnimationFrame(animate)
-    return () => cancelAnimationFrame(frame)
-  }, [])
+      frame = requestAnimationFrame(animate);
+    };
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   return (
     <div
@@ -108,10 +107,10 @@ export function PartnerTicker() {
                   style={{ userSelect: "none" }}
                 />
               </Link>
-            )
+            ),
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }

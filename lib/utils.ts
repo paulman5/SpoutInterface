@@ -64,4 +64,4 @@ export const countryCodes = [
   { code: 505, name: "Nicaragua" },
   { code: 53, name: "Cuba" },
   { code: 1, name: "Canada" },
-]
+];

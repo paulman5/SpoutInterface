@@ -1,19 +1,27 @@
-import { useAccount, useReadContract, useWriteContract } from 'wagmi';
-import confidentialOrdersABI from '@/abi/confidentailorders.json';
+import { useAccount, useReadContract, useWriteContract } from "wagmi";
+import confidentialOrdersABI from "@/abi/confidentailorders.json";
 
 export function useConfidentialOrdersContract(ordersAddress: `0x${string}`) {
   const { address } = useAccount();
 
   // Write functions
-  const { writeContract: buyAsset, isPending: isBuyAssetPending, error: buyAssetError } = useWriteContract();
-  const { writeContract: sellAsset, isPending: isSellAssetPending, error: sellAssetError } = useWriteContract();
+  const {
+    writeContract: buyAsset,
+    isPending: isBuyAssetPending,
+    error: buyAssetError,
+  } = useWriteContract();
+  const {
+    writeContract: sellAsset,
+    isPending: isSellAssetPending,
+    error: sellAssetError,
+  } = useWriteContract();
 
   // Read functions
   const readPendingBuyOrder = (requestId: string) =>
     useReadContract({
       address: ordersAddress,
       abi: confidentialOrdersABI as any,
-      functionName: 'pendingBuyOrders',
+      functionName: "pendingBuyOrders",
       args: [requestId],
     });
 
@@ -21,7 +29,7 @@ export function useConfidentialOrdersContract(ordersAddress: `0x${string}`) {
     useReadContract({
       address: ordersAddress,
       abi: confidentialOrdersABI as any,
-      functionName: 'pendingSellOrders',
+      functionName: "pendingSellOrders",
       args: [requestId],
     });
 
@@ -35,12 +43,12 @@ export function useConfidentialOrdersContract(ordersAddress: `0x${string}`) {
     token: `0x${string}`,
     usdcAmountBytes: `0x${string}`,
     subscriptionId: bigint,
-    orderAddr: `0x${string}`
+    orderAddr: `0x${string}`,
   ) => {
     buyAsset({
       address: ordersAddress,
       abi: confidentialOrdersABI as any,
-      functionName: 'buyAsset',
+      functionName: "buyAsset",
       args: [asset, ticker, token, usdcAmountBytes, subscriptionId, orderAddr],
     });
   };
@@ -54,16 +62,15 @@ export function useConfidentialOrdersContract(ordersAddress: `0x${string}`) {
     token: `0x${string}`,
     tokenAmountBytes: `0x${string}`,
     subscriptionId: bigint,
-    orderAddr: `0x${string}`
+    orderAddr: `0x${string}`,
   ) => {
     sellAsset({
       address: ordersAddress,
       abi: confidentialOrdersABI as any,
-      functionName: 'sellAsset',
+      functionName: "sellAsset",
       args: [asset, ticker, token, tokenAmountBytes, subscriptionId, orderAddr],
     });
   };
-
 
   return {
     address,
@@ -78,4 +85,4 @@ export function useConfidentialOrdersContract(ordersAddress: `0x${string}`) {
     readPendingBuyOrder,
     readPendingSellOrder,
   };
-} 
+}

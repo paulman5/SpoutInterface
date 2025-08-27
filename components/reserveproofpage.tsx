@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import React from "react"
-import { Suspense } from "react"
+import React from "react";
+import { Suspense } from "react";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useReserveContract } from "@/hooks/view/onChain/useReserveContract"
-import { useTotalSupply } from "@/hooks/view/onChain/useTotalSupply"
-import { useMarketData } from "@/hooks/api/useMarketData"
-import { useYieldData } from "@/hooks/api/useYieldData"
-import { useContractAddress } from "@/lib/addresses"
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useReserveContract } from "@/hooks/view/onChain/useReserveContract";
+import { useTotalSupply } from "@/hooks/view/onChain/useTotalSupply";
+import { useMarketData } from "@/hooks/api/useMarketData";
+import { useYieldData } from "@/hooks/api/useYieldData";
+import { useContractAddress } from "@/lib/addresses";
 import {
   Shield,
   BarChart3,
@@ -24,7 +24,7 @@ import {
   Percent,
   CheckCircle,
   RefreshCcw,
-} from "lucide-react"
+} from "lucide-react";
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat("en-US", {
@@ -32,26 +32,28 @@ const formatCurrency = (amount: number) => {
     currency: "USD",
     minimumFractionDigits: 3,
     maximumFractionDigits: 3,
-  }).format(amount)
-}
+  }).format(amount);
+};
 
 const formatNumber = (num: number) => {
-  return new Intl.NumberFormat("en-US").format(num)
-}
+  return new Intl.NumberFormat("en-US").format(num);
+};
 
 export default function ProofOfReservePage() {
-  const { totalSupply, isLoading: totalSupplyLoading } = useTotalSupply()
-  const { price: currentPrice, isLoading: priceLoading } = useMarketData("LQD")
-  const { data: lqdYield, isLoading: lqdYieldLoading } = useYieldData("LQD")
+  const { totalSupply, isLoading: totalSupplyLoading } = useTotalSupply();
+  const { price: currentPrice, isLoading: priceLoading } = useMarketData("LQD");
+  const { data: lqdYield, isLoading: lqdYieldLoading } = useYieldData("LQD");
 
   // Use Blocksense feed ID 101001 for LQD Proof of Reserve
-  const feedId = 101001
-  const reserveContractAddress = useContractAddress("proofOfReserve") as `0x${string}`
+  const feedId = 101001;
+  const reserveContractAddress = useContractAddress(
+    "proofOfReserve",
+  ) as `0x${string}`;
   const { requestReserves, isRequestPending, totalReserves, refetchReserves } =
-    useReserveContract(reserveContractAddress)
+    useReserveContract(reserveContractAddress);
 
   // Use LQD yield directly
-  const yieldRate = lqdYield?.yield || 0
+  const yieldRate = lqdYield?.yield || 0;
 
   // Corporate Bonds data using real yield
   const corporateBondsData = {
@@ -65,11 +67,11 @@ export default function ProofOfReservePage() {
         yieldRate: yieldRate,
       },
     ],
-  }
+  };
 
   const handleRequestReserves = () => {
-    requestReserves(Number(379))
-  }
+    requestReserves(Number(379));
+  };
 
   return (
     <div className="space-y-6">
@@ -111,43 +113,53 @@ export default function ProofOfReservePage() {
           <CardContent>
             <div className="text-2xl font-bold">
               {(() => {
-                const hasValidPrice = currentPrice !== null && currentPrice > 0
-                const hasValidSupply = totalSupply > 0
-                const isDataLoading = totalSupplyLoading || priceLoading || !hasValidPrice || !hasValidSupply
-                
+                const hasValidPrice = currentPrice !== null && currentPrice > 0;
+                const hasValidSupply = totalSupply > 0;
+                const isDataLoading =
+                  totalSupplyLoading ||
+                  priceLoading ||
+                  !hasValidPrice ||
+                  !hasValidSupply;
+
                 if (isDataLoading) {
                   return (
                     <div className="flex items-center text-gray-500">
                       <RefreshCw className="h-5 w-5 animate-spin mr-2" />
                       <span className="text-lg">Fetching...</span>
                     </div>
-                  )
+                  );
                 }
-                
+
                 if (totalReserves) {
-                  return formatCurrency((Number(totalReserves) / 1e6) * currentPrice!)
+                  return formatCurrency(
+                    (Number(totalReserves) / 1e6) * currentPrice!,
+                  );
                 } else {
-                  return formatCurrency(totalSupply * currentPrice!)
+                  return formatCurrency(totalSupply * currentPrice!);
                 }
               })()}
             </div>
             <div className="flex items-center text-xs text-emerald-600">
               <CheckCircle className="h-3 w-3 mr-1" />
               {(() => {
-                const hasValidPrice = currentPrice !== null && currentPrice > 0
-                const hasValidSupply = totalSupply > 0
-                const isDataLoading = totalSupplyLoading || priceLoading || !hasValidPrice || !hasValidSupply
-                
+                const hasValidPrice = currentPrice !== null && currentPrice > 0;
+                const hasValidSupply = totalSupply > 0;
+                const isDataLoading =
+                  totalSupplyLoading ||
+                  priceLoading ||
+                  !hasValidPrice ||
+                  !hasValidSupply;
+
                 if (isDataLoading) {
-                  return <span className="text-gray-400">Loading...</span>
+                  return <span className="text-gray-400">Loading...</span>;
                 }
-                
+
                 return (
                   <>
                     {formatNumber(totalSupply)} LQD @ $
                     {currentPrice?.toFixed(2) || "0.00"}
                   </>
-                )
+                );
               })()}
             </div>
           </CardContent>
@@ -174,20 +186,24 @@ export default function ProofOfReservePage() {
           <CardContent>
             <div className="text-2xl font-bold">
               {(() => {
-                const hasValidPrice = currentPrice !== null && currentPrice > 0
-                const hasValidSupply = totalSupply > 0
-                const isDataLoading = totalSupplyLoading || priceLoading || !hasValidPrice || !hasValidSupply
-                
+                const hasValidPrice = currentPrice !== null && currentPrice > 0;
+                const hasValidSupply = totalSupply > 0;
+                const isDataLoading =
+                  totalSupplyLoading ||
+                  priceLoading ||
+                  !hasValidPrice ||
+                  !hasValidSupply;
+
                 if (isDataLoading) {
                   return (
                     <div className="flex items-center text-gray-500">
                       <RefreshCw className="h-5 w-5 animate-spin mr-2" />
                       <span className="text-lg">Fetching...</span>
                     </div>
-                  )
+                  );
                 }
-                
-                return formatCurrency(totalSupply * currentPrice!)
+
+                return formatCurrency(totalSupply * currentPrice!);
               })()}
             </div>
             <div className="flex items-center text-xs text-purple-600">
@@ -196,15 +212,20 @@ export default function ProofOfReservePage() {
               </Badge>
               <span className="ml-2">
                 {(() => {
-                  const hasValidPrice = currentPrice !== null && currentPrice > 0
-                  const hasValidSupply = totalSupply > 0
-                  const isDataLoading = totalSupplyLoading || priceLoading || !hasValidPrice || !hasValidSupply
-                  
+                  const hasValidPrice =
+                    currentPrice !== null && currentPrice > 0;
+                  const hasValidSupply = totalSupply > 0;
+                  const isDataLoading =
+                    totalSupplyLoading ||
+                    priceLoading ||
+                    !hasValidPrice ||
+                    !hasValidSupply;
+
                   if (isDataLoading) {
-                    return <span className="text-gray-400">Loading...</span>
+                    return <span className="text-gray-400">Loading...</span>;
                   }
-                  
-                  return `${formatNumber(totalSupply)} LQD`
+
+                  return `${formatNumber(totalSupply)} LQD`;
                 })()}
               </span>
             </div>
@@ -417,5 +438,5 @@ export default function ProofOfReservePage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

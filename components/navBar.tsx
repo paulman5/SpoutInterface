@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Navbar as ResizableNavbar,
   NavBody,
@@ -7,36 +7,36 @@ import {
   MobileNav,
   MobileNavHeader,
   MobileNavMenu,
-} from "./ui/resizable-navbar"
-import React, { useState } from "react"
-import Link from "next/link"
-import { useAuthContext } from "@/context/AuthContext"
+} from "./ui/resizable-navbar";
+import React, { useState } from "react";
+import Link from "next/link";
+import { useAuthContext } from "@/context/AuthContext";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-} from "@/components/ui/dropdown-menu"
-import { LogOut } from "lucide-react"
-import { signOut } from "@/lib/supabase/auth"
+} from "@/components/ui/dropdown-menu";
+import { LogOut } from "lucide-react";
+import { signOut } from "@/lib/supabase/auth";
 const navItems = [
   // { name: "Markets", link: "/app/markets", soon: true },
   { name: "Trade", link: "/app/trade" },
   { name: "Earn", link: "/app/earn", soon: true },
-]
+];
 
 export default function Navbar() {
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const { user, profile } = useAuthContext()
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, profile } = useAuthContext();
 
   const handleSignOut = async () => {
-    await signOut()
-    window.location.reload()
-  }
+    await signOut();
+    window.location.reload();
+  };
 
   const displayName = profile?.first_name
     ? `${profile.first_name} ${profile.last_name ?? ""}`
-    : user?.email
+    : user?.email;
 
   return (
     <ResizableNavbar>
@@ -113,5 +113,5 @@ export default function Navbar() {
         </MobileNavMenu>
       </MobileNav>
     </ResizableNavbar>
-  )
+  );
 }

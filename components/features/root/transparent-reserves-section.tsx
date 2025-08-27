@@ -24,5 +24,5 @@ export function TransparentReservesSection() {
         </li>
       </ul>
     </div>
-  )
+  );
 }

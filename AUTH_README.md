@@ -83,6 +83,7 @@ CREATE POLICY "Users can insert their own profile" ON profiles
 ### 1. Authentication Pages
 
 The authentication pages are available at:
+
 - **Login**: `/auth/login`
 - **Register**: `/auth/register`
 
@@ -91,48 +92,44 @@ The authentication pages are available at:
 #### Check Authentication Status
 
 ```tsx
-import { useAuthContext } from "@/context/AuthContext"
+import { useAuthContext } from "@/context/AuthContext";
 
 function MyComponent() {
-  const { user, profile, loading } = useAuthContext()
+  const { user, profile, loading } = useAuthContext();
 
-  if (loading) return <div>Loading...</div>
-  
-  if (!user) return <div>Please log in</div>
+  if (loading) return <div>Loading...</div>;
 
-  return (
-    <div>
-      Welcome, {profile?.first_name}!
-    </div>
-  )
+  if (!user) return <div>Please log in</div>;
+
+  return <div>Welcome, {profile?.first_name}!</div>;
 }
 ```
 
 #### Protect Routes
 
 ```tsx
-import ProtectedRoute from "@/components/ProtectedRoute"
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function MyProtectedPage() {
   return (
     <ProtectedRoute>
       <div>This content is only visible to authenticated users</div>
     </ProtectedRoute>
-  )
+  );
 }
 ```
 
 #### Sign Out
 
 ```tsx
-import SignOutButton from "@/components/SignOutButton"
+import SignOutButton from "@/components/SignOutButton";
 
 function MyComponent() {
   return (
     <SignOutButton className="bg-red-600 text-white px-4 py-2 rounded">
       Sign Out
     </SignOutButton>
-  )
+  );
 }
 ```
 
@@ -141,51 +138,51 @@ function MyComponent() {
 #### Sign Up
 
 ```tsx
-import { signUpWithProfile } from "@/lib/supabase/auth"
+import { signUpWithProfile } from "@/lib/supabase/auth";
 
 const result = await signUpWithProfile({
   email: "user@example.com",
   password: "password123",
   firstName: "John",
   lastName: "Doe",
-  companyName: "Acme Corp" // Optional
-})
+  companyName: "Acme Corp", // Optional
+});
 
 if (result.error) {
-  console.error("Signup failed:", result.error)
+  console.error("Signup failed:", result.error);
 } else {
-  console.log("Signup successful!")
+  console.log("Signup successful!");
 }
 ```
 
 #### Sign In
 
 ```tsx
-import { signInWithProfile } from "@/lib/supabase/auth"
+import { signInWithProfile } from "@/lib/supabase/auth";
 
 const result = await signInWithProfile({
   email: "user@example.com",
-  password: "password123"
-})
+  password: "password123",
+});
 
 if (result.error) {
-  console.error("Login failed:", result.error)
+  console.error("Login failed:", result.error);
 } else {
-  console.log("Login successful!", result.user, result.profile)
+  console.log("Login successful!", result.user, result.profile);
 }
 ```
 
 #### Sign Out
 
 ```tsx
-import { signOut } from "@/lib/supabase/auth"
+import { signOut } from "@/lib/supabase/auth";
 
-const result = await signOut()
+const result = await signOut();
 
 if (result.error) {
-  console.error("Sign out failed:", result.error)
+  console.error("Sign out failed:", result.error);
 } else {
-  console.log("Sign out successful!")
+  console.log("Sign out successful!");
 }
 ```
 
@@ -233,4 +230,4 @@ You can customize the authentication system by:
 
 ### Debug Mode
 
-To enable debug logging, you can add console.log statements in the auth functions or use the browser's developer tools to inspect the authentication state. 
+To enable debug logging, you can add console.log statements in the auth functions or use the browser's developer tools to inspect the authentication state.

@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { useForm } from "react-hook-form"
-import { signInWithProfile } from "@/lib/supabase/auth"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { Waves } from "@/components/wave-background"
-import Image from "next/image"
-import { Eye, EyeOff } from "lucide-react"
+import { useForm } from "react-hook-form";
+import { signInWithProfile } from "@/lib/supabase/auth";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Waves } from "@/components/wave-background";
+import Image from "next/image";
+import { Eye, EyeOff } from "lucide-react";
 
 interface SignInFormData {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export default function SignInForm() {
@@ -19,28 +19,28 @@ export default function SignInForm() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SignInFormData>()
-  const [serverError, setServerError] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
-  const [showPassword, setShowPassword] = useState(false)
+  } = useForm<SignInFormData>();
+  const [serverError, setServerError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data: SignInFormData) => {
-    setServerError("")
-    setIsLoading(true)
+    setServerError("");
+    setIsLoading(true);
     try {
-      const result = await signInWithProfile(data)
+      const result = await signInWithProfile(data);
       if (result.error) {
-        setServerError(result.error)
+        setServerError(result.error);
       } else {
-        router.push("/app")
+        router.push("/app");
       }
     } catch (error) {
-      setServerError("An unexpected error occurred")
+      setServerError("An unexpected error occurred");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-white to-emerald-50">
@@ -159,5 +159,5 @@ export default function SignInForm() {
         </div>
       </div>
     </div>
-  )
+  );
 }

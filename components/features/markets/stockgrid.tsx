@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { StockCard } from "./stockcard"
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { StockCard } from "./stockcard";
 
 interface StockData {
-  ticker: string
-  name: string
-  price: number | null
-  change: number | null
-  changePercent: number | null
-  volume: string
-  marketCap: string
-  dataSource?: string
+  ticker: string;
+  name: string;
+  price: number | null;
+  change: number | null;
+  changePercent: number | null;
+  volume: string;
+  marketCap: string;
+  dataSource?: string;
 }
 
 interface StockGridProps {
-  stocks: StockData[]
-  loading: boolean
+  stocks: StockData[];
+  loading: boolean;
 }
 
 export function StockGrid({ stocks, loading }: StockGridProps) {
@@ -49,7 +49,7 @@ export function StockGrid({ stocks, loading }: StockGridProps) {
           </Card>
         ))}
       </div>
-    )
+    );
   }
 
   return (
@@ -58,5 +58,5 @@ export function StockGrid({ stocks, loading }: StockGridProps) {
         <StockCard key={stock.ticker} stock={stock} />
       ))}
     </div>
-  )
+  );
 }

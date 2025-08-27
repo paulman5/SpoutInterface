@@ -1,12 +1,12 @@
-import React from "react"
-import StockChart from "@/components/stockChart"
-import { LoadingSpinner } from "@/components/loadingSpinner"
+import React from "react";
+import StockChart from "@/components/stockChart";
+import { LoadingSpinner } from "@/components/loadingSpinner";
 
 type TradeChartProps = {
-  loading: boolean
-  tokenData: any[]
-  selectedToken: string
-}
+  loading: boolean;
+  tokenData: any[];
+  selectedToken: string;
+};
 
 export default function TradeChart({
   loading,
@@ -25,5 +25,5 @@ export default function TradeChart({
         <StockChart data={tokenData} ticker={selectedToken} />
       )}
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Card,
@@ -6,9 +6,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   BarChart3,
   TrendingUp,
@@ -18,7 +18,7 @@ import {
   Target,
   Shield,
   Users,
-} from "lucide-react"
+} from "lucide-react";
 
 export default function EarnPage() {
   const comingSoonFeatures = [
@@ -54,7 +54,7 @@ export default function EarnPage() {
       color: "text-orange-600",
       bgColor: "bg-orange-50",
     },
-  ]
+  ];
 
   const benefits = [
     {
@@ -72,7 +72,7 @@ export default function EarnPage() {
       title: "Community Driven",
       description: "Governed by token holders",
     },
-  ]
+  ];
 
   return (
     <div className="space-y-8">
@@ -110,7 +110,7 @@ export default function EarnPage() {
       {/* Coming Soon Features */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {comingSoonFeatures.map((feature, index) => {
-          const IconComponent = feature.icon
+          const IconComponent = feature.icon;
           return (
             <Card key={index} className="border-0 shadow-md group">
               <CardHeader className="pb-4">
@@ -142,7 +142,7 @@ export default function EarnPage() {
                 </Button>
               </CardContent>
             </Card>
-          )
+          );
         })}
       </div>
 
@@ -159,7 +159,7 @@ export default function EarnPage() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {benefits.map((benefit, index) => {
-              const IconComponent = benefit.icon
+              const IconComponent = benefit.icon;
               return (
                 <div
                   key={index}
@@ -173,7 +173,7 @@ export default function EarnPage() {
                   </h3>
                   <p className="text-sm text-gray-600">{benefit.description}</p>
                 </div>
-              )
+              );
             })}
           </div>
         </CardContent>
@@ -259,5 +259,5 @@ export default function EarnPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

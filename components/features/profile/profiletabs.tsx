@@ -1,36 +1,36 @@
-"use client"
+"use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { User, Shield } from "lucide-react"
-import KYCFlow from "@/components/kycFlow"
-import { useSearchParams, useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { User, Shield } from "lucide-react";
+import KYCFlow from "@/components/kycFlow";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
 
 export default function ProfileTabs() {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const initialTab = searchParams?.get("tab") || "profile"
-  const [tab, setTab] = useState(initialTab)
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const initialTab = searchParams?.get("tab") || "profile";
+  const [tab, setTab] = useState(initialTab);
 
   // Keep tab in sync with URL
   useEffect(() => {
-    setTab(initialTab)
+    setTab(initialTab);
     if (initialTab !== "kyc") {
-      router.replace("/app/profile?tab=kyc")
+      router.replace("/app/profile?tab=kyc");
     }
-  }, [initialTab, router])
+  }, [initialTab, router]);
 
   const handleTabChange = (value: string) => {
-    if (value === "profile") return
-    setTab(value)
-    router.replace(`/app/profile?tab=${value}`)
-  }
+    if (value === "profile") return;
+    setTab(value);
+    router.replace(`/app/profile?tab=${value}`);
+  };
 
   return (
     <Tabs value={tab} onValueChange={handleTabChange} className="space-y-6">
@@ -69,5 +69,5 @@ export default function ProfileTabs() {
         <KYCFlow />
       </TabsContent>
     </Tabs>
-  )
+  );
 }

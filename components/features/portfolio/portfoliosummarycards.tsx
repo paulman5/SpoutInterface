@@ -1,14 +1,14 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { TrendingUp, TrendingDown, DollarSign, Clock } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { TrendingUp, TrendingDown, DollarSign, Clock } from "lucide-react";
 
 type PortfolioSummaryCardsProps = {
-  portfolioValue: number
-  dayChange: number
-  dayChangePercent: number
-  totalReturn: number
-  totalReturnPercent: number
-  holdings: any[] // Replace with a more specific type if available
-}
+  portfolioValue: number;
+  dayChange: number;
+  dayChangePercent: number;
+  totalReturn: number;
+  totalReturnPercent: number;
+  holdings: any[]; // Replace with a more specific type if available
+};
 
 export default function PortfolioSummaryCards({
   portfolioValue,
@@ -20,9 +20,12 @@ export default function PortfolioSummaryCards({
 }: PortfolioSummaryCardsProps) {
   // Format number to 3 decimals, matching holdings value
   const formatNumber = (num: number) => {
-    return num.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })
-  }
-  const formatPercent = (num: number) => Number(num.toFixed(2))
+    return num.toLocaleString(undefined, {
+      minimumFractionDigits: 3,
+      maximumFractionDigits: 3,
+    });
+  };
+  const formatPercent = (num: number) => Number(num.toFixed(2));
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {/* Total Value Card */}
@@ -86,5 +89,5 @@ export default function PortfolioSummaryCards({
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

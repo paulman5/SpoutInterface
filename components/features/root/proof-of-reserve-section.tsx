@@ -1,4 +1,4 @@
-import { Waves } from "@/components/wave-background"
+import { Waves } from "@/components/wave-background";
 
 export function ProofOfReserveSection() {
   return (
@@ -19,5 +19,5 @@ export function ProofOfReserveSection() {
         </div>
       </div>
     </>
-  )
+  );
 }
