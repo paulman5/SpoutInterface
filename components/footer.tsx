@@ -17,7 +17,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({
   leftLinks,
-  rightLinks,                                                          
+  rightLinks,
   copyrightText,
 }) => {
   const waveRefs = useRef<(HTMLDivElement | null)[]>([]);

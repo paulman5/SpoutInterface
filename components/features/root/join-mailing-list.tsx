@@ -1,8 +1,5 @@
 "use client";
 
-// Mailing list functionality temporarily disabled
-// TODO: Re-enable when email service is set up
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button as JoinButton } from "@/components/ui/button";
@@ -11,49 +8,75 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
 
 export function JoinMailingList() {
-  // Temporarily disabled - return empty component
-  return null;
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [joined, setJoined] = useState(false);
 
-  /*
-  const [email, setEmail] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState<string | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [joined, setJoined] = useState(false)
+  // Email validation function
+  const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email.trim());
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newEmail = e.target.value;
+    setEmail(newEmail);
+    // Do not set errors while typing to avoid disruptive UX
+  };
+
+  const handleEmailBlur = () => {
+    if (email && !isValidEmail(email)) {
+      setError("Please enter a valid email address");
+    } else {
+      setError(null);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setMessage(null)
-    setError(null)
-    if (!email) {
-      setError("Please enter your email.")
-      return
+    e.preventDefault();
+    setMessage(null);
+
+    const trimmedEmail = email.trim();
+
+    if (!trimmedEmail) {
+      setError("Please enter your email.");
+      return;
     }
-    setLoading(true)
+
+    if (!isValidEmail(trimmedEmail)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+
+    setError(null);
+    setLoading(true);
     try {
       const res = await fetch("/api/mailing-list", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      })
-      const data = await res.json()
+        body: JSON.stringify({ email: trimmedEmail }),
+      });
+      const data = await res.json();
       if (res.ok) {
-        setMessage(data.message || "Thank you for joining!")
-        setEmail("")
-        setJoined(true)
+        setMessage(data.message || "Thank you for joining!");
+        setEmail("");
+        setJoined(true);
       } else {
-        setError(data.error || data.message || "Something went wrong.")
+        setError(data.error || data.message || "Something went wrong.");
       }
     } catch (err) {
-      setError("Network error. Please try again.")
+      setError("Network error. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <form
       onSubmit={handleSubmit}
+      noValidate
       className="flex flex-col sm:flex-row gap-2 w-full max-w-xs mx-auto items-center"
     >
       {!joined && (
@@ -61,10 +84,13 @@ export function JoinMailingList() {
           type="email"
           placeholder="Join our mailing list"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="flex-1 bg-white/80 border-slate-200 focus-visible:ring-emerald-600"
+          onChange={handleEmailChange}
+          onBlur={handleEmailBlur}
+          autoComplete="email"
+          className={`flex-1 w-56 bg-white/80 border-slate-200 focus-visible:ring-emerald-600 ${
+            error ? "border-red-300 focus-visible:ring-red-400" : ""
+          }`}
           disabled={loading}
-          required
         />
       )}
       <AnimatePresence initial={false} mode="wait">
@@ -79,8 +105,10 @@ export function JoinMailingList() {
           >
             <JoinButton
               type="submit"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-xl font-semibold"
-              isDisabled={loading}
+              className="bg-emerald-600 hover:bg-emerald-700 data-[hovered]:bg-emerald-700 text-white px-6 py-2 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              isDisabled={
+                loading || (email.length > 0 && !isValidEmail(email.trim()))
+              }
             >
               {loading ? <LoadingSpinner size="sm" /> : "Join"}
             </JoinButton>
@@ -101,6 +129,5 @@ export function JoinMailingList() {
         </div>
       )}
     </form>
-  )
-  */
+  );
 }
