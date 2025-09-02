@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   useAccount,
   useWriteContract,
@@ -62,6 +62,8 @@ export default function KYCFlow() {
   );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
+  const [cooldownRemaining, setCooldownRemaining] = useState<number>(0);
+  const cooldownIntervalRef = useRef<number | null>(null);
   const [claimAdded, setClaimAdded] = useState(false);
   const gatewayAddress = useContractAddress("gateway");
   const idFactoryAddress = useContractAddress("idfactory");
@@ -144,6 +146,26 @@ export default function KYCFlow() {
   );
 
   console.log("hasclaimaddedtohim", hasKYCClaim);
+
+  const startCooldown = (seconds: number = 60) => {
+    if (cooldownIntervalRef.current) {
+      window.clearInterval(cooldownIntervalRef.current);
+    }
+    setCooldownRemaining(seconds);
+    const id = window.setInterval(() => {
+      setCooldownRemaining((prev) => {
+        if (prev <= 1) {
+          if (cooldownIntervalRef.current) {
+            window.clearInterval(cooldownIntervalRef.current);
+            cooldownIntervalRef.current = null;
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    cooldownIntervalRef.current = id;
+  };
 
   const steps = [
     {
@@ -231,6 +253,10 @@ export default function KYCFlow() {
 
   // Handle KYC signature request
   const handleKYCSignature = async () => {
+    if (cooldownRemaining > 0) {
+      setError(`Please wait ${cooldownRemaining}s before retrying.`);
+      return;
+    }
     if (!address || !onchainIDAddress) return;
 
     try {
@@ -296,6 +322,7 @@ export default function KYCFlow() {
         );
       }
       console.error("KYC signature error:", err);
+      startCooldown(60);
     } finally {
       setIsLoading(false);
     }
@@ -372,6 +399,16 @@ export default function KYCFlow() {
       console.log("KYC claim added successfully to identity");
     }
   }, [isClaimAdded]);
+
+  // Cleanup cooldown interval on unmount
+  useEffect(() => {
+    return () => {
+      if (cooldownIntervalRef.current) {
+        window.clearInterval(cooldownIntervalRef.current);
+        cooldownIntervalRef.current = null;
+      }
+    };
+  }, []);
 
   const getStepIcon = (step: (typeof steps)[0]) => {
     if (
@@ -643,7 +680,7 @@ export default function KYCFlow() {
 
                       <Button
                         onClick={handleKYCSignature}
-                        isDisabled={!address || !onchainIDAddress || isLoading}
+                        isDisabled={!address || !onchainIDAddress || isLoading || cooldownRemaining > 0}
                         className="w-full"
                       >
                         {isLoading ? (
@@ -651,6 +688,8 @@ export default function KYCFlow() {
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             Getting KYC Signature...
                           </>
+                        ) : cooldownRemaining > 0 ? (
+                          `Retry in ${cooldownRemaining}s`
                         ) : (
                           "Get KYC Signature"
                         )}
@@ -714,12 +753,10 @@ export default function KYCFlow() {
                         )}
                       </Button>
 
-                      {(error || addClaimError) && (
+                      {addClaimError && (
                         <div className="flex items-center space-x-2 p-3 bg-red-50 rounded-lg">
                           <AlertCircle className="h-4 w-4 text-red-600" />
-                          <span className="text-sm text-red-600">
-                            {error || addClaimError}
-                          </span>
+                          <span className="text-sm text-red-600">{addClaimError}</span>
                         </div>
                       )}
                     </div>
